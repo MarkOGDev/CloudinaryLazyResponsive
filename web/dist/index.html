@@ -1,0 +1,49 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <style>
+        img {
+            /* Allow img to scale down when browser width is reduced. */
+            max-width: 100%;
+        }
+    </style>
+
+</head>
+<body id="body">
+
+    Scroll Down
+    <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+    <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+    NON Responsive Image - NON Lazy - 400px wide
+    <br />
+    <img src="https://res.cloudinary.com/demo/image/upload/w_400,c_scale/smiling_man.jpg" />
+    <br /><br />
+
+    Non Responsive Image - Lazy Loading Image - 400px wide
+    <br />
+    <img data-src-lazy="https://res.cloudinary.com/demo/image/upload/w_400,c_scale/sample.jpg" />
+    <br /><br />
+
+    <!--Responsive Image Using CLoudinoryJS - NON Lazy
+    <br />
+    <img data-src="https://res.cloudinary.com/demo/image/upload/w_auto,c_scale/smiling_man.jpg"
+         class="cld-responsive" />
+    <br /><br />-->
+    Responsive Image Using CloudinoryJS and Lazy Loading Image
+    <br />
+    <img data-src="https://res.cloudinary.com/demo/image/upload/w_auto,c_scale/sample.jpg"
+         class="cld-responsive" />
+    <br /><br />
+
+
+    <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+    <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+    Scroll Up
+
+    <script src="bundle.js"></script>
+
+</body>
+</html>
