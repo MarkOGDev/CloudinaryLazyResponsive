@@ -1,7 +1,7 @@
 ﻿"use strict";
 
 module.exports = {
-    entry: "./src/script.ts",
+    entry: "./src/main.ts",
     output: {
         filename: "./dist/bundle.js",
         libraryTarget: 'var'
@@ -38,9 +38,9 @@ module.exports = {
                     cacheDirectory: true
                 }
             }]
-        }
-
-        ]
-    }
+        }]
+    }, resolve: { extensions: ['.ts', '.tsx', '.js'] }
 
 };
+
+

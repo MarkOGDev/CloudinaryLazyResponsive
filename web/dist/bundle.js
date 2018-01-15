@@ -60,11 +60,22 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 2);
+/******/ 	return __webpack_require__(__webpack_require__.s = 0);
 /******/ })
 /************************************************************************/
 /******/ ([
 /* 0 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+//import { LazyResponsiveImages } from './lazy-responsive-images'
+
+Object.defineProperty(exports, "__esModule", { value: true });
+__webpack_require__(3); //import like this to force render of js without actually needing to create and use the class
+
+/***/ }),
+/* 1 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -94,7 +105,7 @@ try {
 module.exports = g;
 
 /***/ }),
-/* 1 */
+/* 2 */
 /***/ (function(module, exports) {
 
 /* WEBPACK VAR INJECTION */(function(__webpack_amd_options__) {/* globals __webpack_amd_options__ */
@@ -103,7 +114,7 @@ module.exports = __webpack_amd_options__;
 /* WEBPACK VAR INJECTION */}.call(exports, {}))
 
 /***/ }),
-/* 2 */
+/* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -116,10 +127,10 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var cloudinaryJS = __webpack_require__(3);
+var cloudinaryJS = __webpack_require__(4);
 var debounce = __webpack_require__(12);
 var inViewPort = __webpack_require__(14);
-var lazyLoad = __webpack_require__(11);
+var lazyLoad = __webpack_require__(15);
 /*
 
 First Page Load:
@@ -133,10 +144,6 @@ for Each Lazy Image:
         off screen: remove src. Force Cloudinory to update attribute data-src-lazy.
 
         on screen: let Cloudinory update attribute src.
-
-
-
-
 */
 // #region - Override cloudinary-core Util functions
 cloudinaryJS.Util.setAttribute = function (element, name, value) {
@@ -215,6 +222,10 @@ var LazyResponsiveImages = function () {
             //set the initial screen width values 
             this.updatePrevScreenWidth();
             this.updateLazyResetTriggerWidth();
+            //setup Lazy Load
+            this.lazyLoadInit();
+            //set up resize Listener
+            //this.addWindowWidthListener();
         }
     }, {
         key: "resetLazyStatus",
@@ -252,15 +263,15 @@ var LazyResponsiveImages = function () {
 
     return LazyResponsiveImages;
 }();
+
+exports.LazyResponsiveImages = LazyResponsiveImages;
 //Set up LazyResponsiveImages
-
-
+console.log('LazyResponsiveImages Setting Up');
 var myLazyResponsiveImages = new LazyResponsiveImages();
 myLazyResponsiveImages.init();
 myLazyResponsiveImages.lazyLoadInit();
 //Listen for browser resize
 window.addEventListener('resize', debounce(300, function (e) {
-    //console.log('myLazyResponsiveImages._resizeNeeded()', myLazyResponsiveImages._resetNeeded());
     //Check if imges need resetting to lazy
     myLazyResponsiveImages.resetLazyStatus();
     //update prev screen width
@@ -268,7 +279,7 @@ window.addEventListener('resize', debounce(300, function (e) {
 }));
 
 /***/ }),
-/* 3 */
+/* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -295,7 +306,7 @@ var slice = [].slice,
 (function (root, factory) {
   var name, ref, results, value;
   if (true) {
-    return !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(9)], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
+    return !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(10)], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
 				__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
 				(__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__),
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
@@ -4556,10 +4567,10 @@ var slice = [].slice,
   };
   return cloudinary;
 });
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4).Buffer, __webpack_require__(8)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(5).Buffer, __webpack_require__(9)))
 
 /***/ }),
-/* 4 */
+/* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4573,9 +4584,9 @@ var slice = [].slice,
 
 
 
-var base64 = __webpack_require__(5);
-var ieee754 = __webpack_require__(6);
-var isArray = __webpack_require__(7);
+var base64 = __webpack_require__(6);
+var ieee754 = __webpack_require__(7);
+var isArray = __webpack_require__(8);
 
 exports.Buffer = Buffer;
 exports.SlowBuffer = SlowBuffer;
@@ -6300,10 +6311,10 @@ function blitBuffer(src, dst, offset, length) {
 function isnan(val) {
   return val !== val; // eslint-disable-line no-self-compare
 }
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
 
 /***/ }),
-/* 5 */
+/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6423,7 +6434,7 @@ function fromByteArray(uint8) {
 }
 
 /***/ }),
-/* 6 */
+/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6515,7 +6526,7 @@ exports.write = function (buffer, value, offset, isLE, mLen, nBytes) {
 };
 
 /***/ }),
-/* 7 */
+/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6528,7 +6539,7 @@ module.exports = Array.isArray || function (arr) {
 };
 
 /***/ }),
-/* 8 */
+/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6721,7 +6732,7 @@ process.umask = function () {
 };
 
 /***/ }),
-/* 9 */
+/* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -16159,7 +16170,7 @@ LazyWrapper.prototype.clone=lazyClone;LazyWrapper.prototype.reverse=lazyReverse;
 lodash.prototype.at=wrapperAt;lodash.prototype.chain=wrapperChain;lodash.prototype.commit=wrapperCommit;lodash.prototype.next=wrapperNext;lodash.prototype.plant=wrapperPlant;lodash.prototype.reverse=wrapperReverse;lodash.prototype.toJSON=lodash.prototype.valueOf=lodash.prototype.value=wrapperValue;// Add lazy aliases.
 lodash.prototype.first=lodash.prototype.head;if(symIterator){lodash.prototype[symIterator]=wrapperToIterator;}return lodash;};/*--------------------------------------------------------------------------*/// Export lodash.
 var _=runInContext();// Some AMD build optimizers, like r.js, check for condition patterns like:
-if("function"=='function'&&_typeof(__webpack_require__(1))=='object'&&__webpack_require__(1)){// Expose Lodash on the global object to prevent errors when Lodash is
+if("function"=='function'&&_typeof(__webpack_require__(2))=='object'&&__webpack_require__(2)){// Expose Lodash on the global object to prevent errors when Lodash is
 // loaded by a script tag in the presence of an AMD loader.
 // See http://requirejs.org/docs/errors.html#mismatch for more details.
 // Use `_.noConflict` to remove Lodash from the global object.
@@ -16171,10 +16182,10 @@ else if(freeModule){// Export for Node.js.
 (freeModule.exports=_)._=_;// Export for CommonJS support.
 freeExports._=_;}else{// Export to the global object.
 root._=_;}}).call(undefined);
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0), __webpack_require__(10)(module)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1), __webpack_require__(11)(module)))
 
 /***/ }),
-/* 10 */
+/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -16202,142 +16213,6 @@ module.exports = function (module) {
 	}
 	return module;
 };
-
-/***/ }),
-/* 11 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;
-
-var _typeof2 = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
-
-var _extends = Object.assign || function (e) {
-  for (var t = 1; t < arguments.length; t++) {
-    var n = arguments[t];for (var o in n) {
-      Object.prototype.hasOwnProperty.call(n, o) && (e[o] = n[o]);
-    }
-  }return e;
-},
-    _typeof = "function" == typeof Symbol && "symbol" == _typeof2(Symbol.iterator) ? function (e) {
-  return typeof e === "undefined" ? "undefined" : _typeof2(e);
-} : function (e) {
-  return e && "function" == typeof Symbol && e.constructor === Symbol && e !== Symbol.prototype ? "symbol" : typeof e === "undefined" ? "undefined" : _typeof2(e);
-};!function (e, t) {
-  "object" === ( false ? "undefined" : _typeof(exports)) && "undefined" != typeof module ? module.exports = t() :  true ? !(__WEBPACK_AMD_DEFINE_FACTORY__ = (t),
-				__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
-				(__WEBPACK_AMD_DEFINE_FACTORY__.call(exports, __webpack_require__, exports, module)) :
-				__WEBPACK_AMD_DEFINE_FACTORY__),
-				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__)) : e.LazyLoad = t();
-}(undefined, function () {
-  "use strict";
-  var e = { elements_selector: "img", container: window, threshold: 300, throttle: 150, data_src: "original", data_srcset: "original-set", class_loading: "loading", class_loaded: "loaded", class_error: "error", class_initial: "initial", skip_invisible: !0, callback_load: null, callback_error: null, callback_set: null, callback_processed: null },
-      t = !("onscroll" in window) || /glebot/.test(navigator.userAgent),
-      n = function n(e, t) {
-    e && e(t);
-  },
-      o = function o(e) {
-    return e.getBoundingClientRect().top + window.pageYOffset - e.ownerDocument.documentElement.clientTop;
-  },
-      i = function i(e, t, n) {
-    return (t === window ? window.innerHeight + window.pageYOffset : o(t) + t.offsetHeight) <= o(e) - n;
-  },
-      s = function s(e) {
-    return e.getBoundingClientRect().left + window.pageXOffset - e.ownerDocument.documentElement.clientLeft;
-  },
-      r = function r(e, t, n) {
-    var o = window.innerWidth;return (t === window ? o + window.pageXOffset : s(t) + o) <= s(e) - n;
-  },
-      l = function l(e, t, n) {
-    return (t === window ? window.pageYOffset : o(t)) >= o(e) + n + e.offsetHeight;
-  },
-      a = function a(e, t, n) {
-    return (t === window ? window.pageXOffset : s(t)) >= s(e) + n + e.offsetWidth;
-  },
-      c = function c(e, t, n) {
-    return !(i(e, t, n) || l(e, t, n) || r(e, t, n) || a(e, t, n));
-  },
-      u = function u(e, t) {
-    var n = new e(t),
-        o = new CustomEvent("LazyLoad::Initialized", { detail: { instance: n } });window.dispatchEvent(o);
-  },
-      d = function d(e, t) {
-    return e.getAttribute("data-" + t);
-  },
-      h = function h(e, t, n) {
-    return e.setAttribute("data-" + t, n);
-  },
-      f = function f(e, t) {
-    var n = e.parentElement;if ("PICTURE" === n.tagName) for (var o = 0; o < n.children.length; o++) {
-      var i = n.children[o];if ("SOURCE" === i.tagName) {
-        var s = d(i, t);s && i.setAttribute("srcset", s);
-      }
-    }
-  },
-      _ = function _(e, t, n) {
-    var o = e.tagName,
-        i = d(e, n);if ("IMG" === o) {
-      f(e, t);var s = d(e, t);return s && e.setAttribute("srcset", s), void (i && e.setAttribute("src", i));
-    }"IFRAME" !== o ? i && (e.style.backgroundImage = 'url("' + i + '")') : i && e.setAttribute("src", i);
-  },
-      p = !!document.body.classList,
-      m = function m(e, t) {
-    p ? e.classList.add(t) : e.className += (e.className ? " " : "") + t;
-  },
-      g = function g(e, t) {
-    p ? e.classList.remove(t) : e.className = e.className.replace(new RegExp("(^|\\s+)" + t + "(\\s+|$)"), " ").replace(/^\s+/, "").replace(/\s+$/, "");
-  },
-      v = function v(t) {
-    this._settings = _extends({}, e, t), this._queryOriginNode = this._settings.container === window ? document : this._settings.container, this._previousLoopTime = 0, this._loopTimeout = null, this._boundHandleScroll = this.handleScroll.bind(this), this._isFirstLoop = !0, window.addEventListener("resize", this._boundHandleScroll), this.update();
-  };v.prototype = { _reveal: function _reveal(e) {
-      var t = this._settings,
-          o = function o() {
-        t && (e.removeEventListener("load", i), e.removeEventListener("error", o), g(e, t.class_loading), m(e, t.class_error), n(t.callback_error, e));
-      },
-          i = function i() {
-        t && (g(e, t.class_loading), m(e, t.class_loaded), e.removeEventListener("load", i), e.removeEventListener("error", o), n(t.callback_load, e));
-      };"IMG" !== e.tagName && "IFRAME" !== e.tagName || (e.addEventListener("load", i), e.addEventListener("error", o), m(e, t.class_loading)), _(e, t.data_srcset, t.data_src), n(t.callback_set, e);
-    }, _loopThroughElements: function _loopThroughElements() {
-      var e = this._settings,
-          o = this._elements,
-          i = o ? o.length : 0,
-          s = void 0,
-          r = [],
-          l = this._isFirstLoop;for (s = 0; s < i; s++) {
-        var a = o[s];e.skip_invisible && null === a.offsetParent || (t || c(a, e.container, e.threshold)) && (l && m(a, e.class_initial), this._reveal(a), r.push(s), h(a, "was-processed", !0));
-      }for (; r.length;) {
-        o.splice(r.pop(), 1), n(e.callback_processed, o.length);
-      }0 === i && this._stopScrollHandler(), l && (this._isFirstLoop = !1);
-    }, _purgeElements: function _purgeElements() {
-      var e = this._elements,
-          t = e.length,
-          n = void 0,
-          o = [];for (n = 0; n < t; n++) {
-        var i = e[n];d(i, "was-processed") && o.push(n);
-      }for (; o.length > 0;) {
-        e.splice(o.pop(), 1);
-      }
-    }, _startScrollHandler: function _startScrollHandler() {
-      this._isHandlingScroll || (this._isHandlingScroll = !0, this._settings.container.addEventListener("scroll", this._boundHandleScroll));
-    }, _stopScrollHandler: function _stopScrollHandler() {
-      this._isHandlingScroll && (this._isHandlingScroll = !1, this._settings.container.removeEventListener("scroll", this._boundHandleScroll));
-    }, handleScroll: function handleScroll() {
-      var e = this._settings.throttle;if (0 !== e) {
-        var t = Date.now(),
-            n = e - (t - this._previousLoopTime);n <= 0 || n > e ? (this._loopTimeout && (clearTimeout(this._loopTimeout), this._loopTimeout = null), this._previousLoopTime = t, this._loopThroughElements()) : this._loopTimeout || (this._loopTimeout = setTimeout(function () {
-          this._previousLoopTime = Date.now(), this._loopTimeout = null, this._loopThroughElements();
-        }.bind(this), n));
-      } else this._loopThroughElements();
-    }, update: function update() {
-      this._elements = Array.prototype.slice.call(this._queryOriginNode.querySelectorAll(this._settings.elements_selector)), this._purgeElements(), this._loopThroughElements(), this._startScrollHandler();
-    }, destroy: function destroy() {
-      window.removeEventListener("resize", this._boundHandleScroll), this._loopTimeout && (clearTimeout(this._loopTimeout), this._loopTimeout = null), this._stopScrollHandler(), this._elements = null, this._queryOriginNode = null, this._settings = null;
-    } };var w = window.lazyLoadOptions;return w && function (e, t) {
-    var n = t.length;if (n) for (var o = 0; o < n; o++) {
-      u(e, t[o]);
-    } else u(e, t);
-  }(v, w), v;
-});
 
 /***/ }),
 /* 12 */
@@ -16734,7 +16609,143 @@ function observeDOM(watches, container, cb) {
     return filter.call(nodes, watches.isWatched).length > 0;
   }
 }
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
+
+/***/ }),
+/* 15 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;
+
+var _typeof2 = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+var _extends = Object.assign || function (e) {
+  for (var t = 1; t < arguments.length; t++) {
+    var n = arguments[t];for (var o in n) {
+      Object.prototype.hasOwnProperty.call(n, o) && (e[o] = n[o]);
+    }
+  }return e;
+},
+    _typeof = "function" == typeof Symbol && "symbol" == _typeof2(Symbol.iterator) ? function (e) {
+  return typeof e === "undefined" ? "undefined" : _typeof2(e);
+} : function (e) {
+  return e && "function" == typeof Symbol && e.constructor === Symbol && e !== Symbol.prototype ? "symbol" : typeof e === "undefined" ? "undefined" : _typeof2(e);
+};!function (e, t) {
+  "object" === ( false ? "undefined" : _typeof(exports)) && "undefined" != typeof module ? module.exports = t() :  true ? !(__WEBPACK_AMD_DEFINE_FACTORY__ = (t),
+				__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
+				(__WEBPACK_AMD_DEFINE_FACTORY__.call(exports, __webpack_require__, exports, module)) :
+				__WEBPACK_AMD_DEFINE_FACTORY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__)) : e.LazyLoad = t();
+}(undefined, function () {
+  "use strict";
+  var e = { elements_selector: "img", container: window, threshold: 300, throttle: 150, data_src: "original", data_srcset: "original-set", class_loading: "loading", class_loaded: "loaded", class_error: "error", class_initial: "initial", skip_invisible: !0, callback_load: null, callback_error: null, callback_set: null, callback_processed: null },
+      t = !("onscroll" in window) || /glebot/.test(navigator.userAgent),
+      n = function n(e, t) {
+    e && e(t);
+  },
+      o = function o(e) {
+    return e.getBoundingClientRect().top + window.pageYOffset - e.ownerDocument.documentElement.clientTop;
+  },
+      i = function i(e, t, n) {
+    return (t === window ? window.innerHeight + window.pageYOffset : o(t) + t.offsetHeight) <= o(e) - n;
+  },
+      s = function s(e) {
+    return e.getBoundingClientRect().left + window.pageXOffset - e.ownerDocument.documentElement.clientLeft;
+  },
+      r = function r(e, t, n) {
+    var o = window.innerWidth;return (t === window ? o + window.pageXOffset : s(t) + o) <= s(e) - n;
+  },
+      l = function l(e, t, n) {
+    return (t === window ? window.pageYOffset : o(t)) >= o(e) + n + e.offsetHeight;
+  },
+      a = function a(e, t, n) {
+    return (t === window ? window.pageXOffset : s(t)) >= s(e) + n + e.offsetWidth;
+  },
+      c = function c(e, t, n) {
+    return !(i(e, t, n) || l(e, t, n) || r(e, t, n) || a(e, t, n));
+  },
+      u = function u(e, t) {
+    var n = new e(t),
+        o = new CustomEvent("LazyLoad::Initialized", { detail: { instance: n } });window.dispatchEvent(o);
+  },
+      d = function d(e, t) {
+    return e.getAttribute("data-" + t);
+  },
+      h = function h(e, t, n) {
+    return e.setAttribute("data-" + t, n);
+  },
+      f = function f(e, t) {
+    var n = e.parentElement;if ("PICTURE" === n.tagName) for (var o = 0; o < n.children.length; o++) {
+      var i = n.children[o];if ("SOURCE" === i.tagName) {
+        var s = d(i, t);s && i.setAttribute("srcset", s);
+      }
+    }
+  },
+      _ = function _(e, t, n) {
+    var o = e.tagName,
+        i = d(e, n);if ("IMG" === o) {
+      f(e, t);var s = d(e, t);return s && e.setAttribute("srcset", s), void (i && e.setAttribute("src", i));
+    }"IFRAME" !== o ? i && (e.style.backgroundImage = 'url("' + i + '")') : i && e.setAttribute("src", i);
+  },
+      p = !!document.body.classList,
+      m = function m(e, t) {
+    p ? e.classList.add(t) : e.className += (e.className ? " " : "") + t;
+  },
+      g = function g(e, t) {
+    p ? e.classList.remove(t) : e.className = e.className.replace(new RegExp("(^|\\s+)" + t + "(\\s+|$)"), " ").replace(/^\s+/, "").replace(/\s+$/, "");
+  },
+      v = function v(t) {
+    this._settings = _extends({}, e, t), this._queryOriginNode = this._settings.container === window ? document : this._settings.container, this._previousLoopTime = 0, this._loopTimeout = null, this._boundHandleScroll = this.handleScroll.bind(this), this._isFirstLoop = !0, window.addEventListener("resize", this._boundHandleScroll), this.update();
+  };v.prototype = { _reveal: function _reveal(e) {
+      var t = this._settings,
+          o = function o() {
+        t && (e.removeEventListener("load", i), e.removeEventListener("error", o), g(e, t.class_loading), m(e, t.class_error), n(t.callback_error, e));
+      },
+          i = function i() {
+        t && (g(e, t.class_loading), m(e, t.class_loaded), e.removeEventListener("load", i), e.removeEventListener("error", o), n(t.callback_load, e));
+      };"IMG" !== e.tagName && "IFRAME" !== e.tagName || (e.addEventListener("load", i), e.addEventListener("error", o), m(e, t.class_loading)), _(e, t.data_srcset, t.data_src), n(t.callback_set, e);
+    }, _loopThroughElements: function _loopThroughElements() {
+      var e = this._settings,
+          o = this._elements,
+          i = o ? o.length : 0,
+          s = void 0,
+          r = [],
+          l = this._isFirstLoop;for (s = 0; s < i; s++) {
+        var a = o[s];e.skip_invisible && null === a.offsetParent || (t || c(a, e.container, e.threshold)) && (l && m(a, e.class_initial), this._reveal(a), r.push(s), h(a, "was-processed", !0));
+      }for (; r.length;) {
+        o.splice(r.pop(), 1), n(e.callback_processed, o.length);
+      }0 === i && this._stopScrollHandler(), l && (this._isFirstLoop = !1);
+    }, _purgeElements: function _purgeElements() {
+      var e = this._elements,
+          t = e.length,
+          n = void 0,
+          o = [];for (n = 0; n < t; n++) {
+        var i = e[n];d(i, "was-processed") && o.push(n);
+      }for (; o.length > 0;) {
+        e.splice(o.pop(), 1);
+      }
+    }, _startScrollHandler: function _startScrollHandler() {
+      this._isHandlingScroll || (this._isHandlingScroll = !0, this._settings.container.addEventListener("scroll", this._boundHandleScroll));
+    }, _stopScrollHandler: function _stopScrollHandler() {
+      this._isHandlingScroll && (this._isHandlingScroll = !1, this._settings.container.removeEventListener("scroll", this._boundHandleScroll));
+    }, handleScroll: function handleScroll() {
+      var e = this._settings.throttle;if (0 !== e) {
+        var t = Date.now(),
+            n = e - (t - this._previousLoopTime);n <= 0 || n > e ? (this._loopTimeout && (clearTimeout(this._loopTimeout), this._loopTimeout = null), this._previousLoopTime = t, this._loopThroughElements()) : this._loopTimeout || (this._loopTimeout = setTimeout(function () {
+          this._previousLoopTime = Date.now(), this._loopTimeout = null, this._loopThroughElements();
+        }.bind(this), n));
+      } else this._loopThroughElements();
+    }, update: function update() {
+      this._elements = Array.prototype.slice.call(this._queryOriginNode.querySelectorAll(this._settings.elements_selector)), this._purgeElements(), this._loopThroughElements(), this._startScrollHandler();
+    }, destroy: function destroy() {
+      window.removeEventListener("resize", this._boundHandleScroll), this._loopTimeout && (clearTimeout(this._loopTimeout), this._loopTimeout = null), this._stopScrollHandler(), this._elements = null, this._queryOriginNode = null, this._settings = null;
+    } };var w = window.lazyLoadOptions;return w && function (e, t) {
+    var n = t.length;if (n) for (var o = 0; o < n; o++) {
+      u(e, t[o]);
+    } else u(e, t);
+  }(v, w), v;
+});
 
 /***/ })
 /******/ ]);

@@ -18,22 +18,18 @@ for Each Lazy Image:
     if Resize Needed and:
         off screen: remove src. Force Cloudinory to update attribute data-src-lazy.
 
-        on screen: let Cloudinory update attribute src.
-
-
-
-
+        on screen: let Cloudinory update attribute src. 
 */
 
 
 // #region - Override cloudinary-core Util functions
 
 cloudinaryJS.Util.setAttribute = function (element, name, value) {
-    const isInViewPort = inViewPort(element, { offset: 300 }); 
+    const isInViewPort = inViewPort(element, { offset: 300 });
 
     if (!isInViewPort && name == 'src') //make lazy
     {
-        name = 'data-src-lazy'; 
+        name = 'data-src-lazy';
     }
 
     switch (false) {
@@ -55,14 +51,14 @@ class LazyResponsiveImages {
     private _cloudImgHtmlTags: NodeListOf<Element> = null;
     private _lazyLoad: ILazyLoad = null;
 
-    private _prevScreenWidth: number = null;  
-    private _lazyResetTriggerWidth: number = null;   
+    private _prevScreenWidth: number = null;
+    private _lazyResetTriggerWidth: number = null;
 
+    constructor() {
 
-    constructor() { 
     }
 
-      updatePrevScreenWidth() { 
+    updatePrevScreenWidth() {
         this._prevScreenWidth = window.outerWidth;
     }
 
@@ -77,7 +73,7 @@ class LazyResponsiveImages {
     /**
      * Returns True if the browser width has increased past the point where new images should be loaded
      */
-    _resetNeeded(): boolean { 
+    _resetNeeded(): boolean {
 
         const currentScreenWidth = window.outerWidth;
         console.log('currentScreenWidth', currentScreenWidth);
@@ -104,6 +100,7 @@ class LazyResponsiveImages {
     }
 
     init() {
+
         //Setup Cloudinory Responsive JS
         //https://cloudinary.com/documentation/responsive_images#automating_responsive_images_with_javascript
 
@@ -116,10 +113,17 @@ class LazyResponsiveImages {
         //set the initial screen width values 
         this.updatePrevScreenWidth();
         this.updateLazyResetTriggerWidth();
+
+        //setup Lazy Load
+        this.lazyLoadInit();
+
+        //set up resize Listener
+        //this.addWindowWidthListener();
+
     }
 
     resetLazyStatus() {
-         
+
         if (this._resetNeeded()) {
 
             //Get All Lazy img tags 
@@ -159,25 +163,37 @@ class LazyResponsiveImages {
         }
 
     }
-}
 
+    //addWindowWidthListener() {
+    //    //Listen for browser resize
+    //    window.addEventListener('resize', debounce(300, function (e) {
+    //        //Check if imges need resetting to lazy
+    //        this.resetLazyStatus();
+
+    //        //update prev screen width
+    //        this.updatePrevScreenWidth();
+    //    }));
+    //}
+
+} 
+
+ 
 
 //Set up LazyResponsiveImages
+console.log('LazyResponsiveImages Setting Up');
 const myLazyResponsiveImages = new LazyResponsiveImages();
 myLazyResponsiveImages.init();
 myLazyResponsiveImages.lazyLoadInit();
-
+ 
 
 
 //Listen for browser resize
 window.addEventListener('resize', debounce(300, function (e) {
-
-    //console.log('myLazyResponsiveImages._resizeNeeded()', myLazyResponsiveImages._resetNeeded());
-
     //Check if imges need resetting to lazy
     myLazyResponsiveImages.resetLazyStatus();
-
-
     //update prev screen width
     myLazyResponsiveImages.updatePrevScreenWidth();
 }));
+
+
+export { LazyResponsiveImages };

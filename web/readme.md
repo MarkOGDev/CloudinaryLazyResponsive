@@ -12,7 +12,7 @@ Cloudinary has a good responsive feature but it loads images instantly. If we lo
 
 **How:**
  
-I have Modified CloudinoryJS **setAttribute** function to update attribute **data-lazy** rather than **src** when 'element' has class **LazyLoad**
+I have Modified CloudinoryJS **setAttribute** function to update attribute **data-src-lazy** rather than **src** when 'element' has class **LazyLoad**
 
 This means that the image will not load instantly.
 
@@ -22,9 +22,9 @@ Now a LazyLoad lib can manage the image loading rather than have all images load
 #### Example
 Normal Responsive Cloudinory Image 
 ```html 
-<img class="cld-responsive"  data-img="/v1511253818/rss/vehicles/maybach62/maybach_wedding1.jpg" />
+<img class="cld-responsive" data-src="https://res.cloudinary.com/demo/image/upload/w_auto,c_scale/sample.jpg" />
 ```
 Lazy Responsive Cloudinory Image 
 ```html 
-<img class="cld-responsive"  data-img="/v1511253818/rss/vehicles/maybach62/maybach_wedding1.jpg" />
+<img class="cld-responsive" data-src-lazy="https://res.cloudinary.com/demo/image/upload/w_auto,c_scale/sample.jpg" />
 ```
