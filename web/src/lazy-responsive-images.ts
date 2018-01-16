@@ -5,6 +5,9 @@ import * as cloudinaryJS from "cloudinary-core";
 import * as debounce from 'throttle-debounce/debounce';
 import * as inViewPort from 'in-viewport';
 import * as lazyLoad from 'vanilla-lazyload';
+import * as viewportSize from 'viewport-size';   //https://github.com/jarvys/viewportSize
+
+
 
 /*
 
@@ -56,16 +59,22 @@ class LazyResponsiveImages {
 
     constructor() {
 
+        const info = document.getElementById('info');
+        info.innerText = viewportSize.getWidth() + ' * ' + viewportSize.getHeight();
+
+    }
+
+    private getviewportWidth() {
+        return viewportSize.getWidth();
     }
 
     updatePrevScreenWidth() {
-        this._prevScreenWidth = window.outerWidth;
+        this._prevScreenWidth = this.getviewportWidth();
     }
 
     private updateLazyResetTriggerWidth() {
         //round up to nearest 100.  
-        const width = Math.ceil(window.outerWidth / 100) * 100;
-        //using window.outerWidth as out container width. If images in different containers that change width at different rates, We would need to listen for a change in the image
+        const width = Math.ceil(this.getviewportWidth() / 100) * 100;
         this._lazyResetTriggerWidth = width;
     }
 
@@ -75,7 +84,7 @@ class LazyResponsiveImages {
      */
     _resetNeeded(): boolean {
 
-        const currentScreenWidth = window.outerWidth;
+        const currentScreenWidth = this.getviewportWidth();
         console.log('currentScreenWidth', currentScreenWidth);
 
 
@@ -175,16 +184,16 @@ class LazyResponsiveImages {
     //    }));
     //}
 
-} 
+}
 
- 
+
 
 //Set up LazyResponsiveImages
 console.log('LazyResponsiveImages Setting Up');
 const myLazyResponsiveImages = new LazyResponsiveImages();
 myLazyResponsiveImages.init();
 myLazyResponsiveImages.lazyLoadInit();
- 
+
 
 
 //Listen for browser resize

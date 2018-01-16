@@ -131,6 +131,7 @@ var cloudinaryJS = __webpack_require__(4);
 var debounce = __webpack_require__(12);
 var inViewPort = __webpack_require__(14);
 var lazyLoad = __webpack_require__(15);
+var viewportSize = __webpack_require__(16); //https://github.com/jarvys/viewportSize
 /*
 
 First Page Load:
@@ -170,19 +171,25 @@ var LazyResponsiveImages = function () {
         this._lazyLoad = null;
         this._prevScreenWidth = null;
         this._lazyResetTriggerWidth = null;
+        var info = document.getElementById('info');
+        info.innerText = viewportSize.getWidth() + ' * ' + viewportSize.getHeight();
     }
 
     _createClass(LazyResponsiveImages, [{
+        key: "getviewportWidth",
+        value: function getviewportWidth() {
+            return viewportSize.getWidth();
+        }
+    }, {
         key: "updatePrevScreenWidth",
         value: function updatePrevScreenWidth() {
-            this._prevScreenWidth = window.outerWidth;
+            this._prevScreenWidth = this.getviewportWidth();
         }
     }, {
         key: "updateLazyResetTriggerWidth",
         value: function updateLazyResetTriggerWidth() {
             //round up to nearest 100.  
-            var width = Math.ceil(window.outerWidth / 100) * 100;
-            //using window.outerWidth as out container width. If images in different containers that change width at different rates, We would need to listen for a change in the image
+            var width = Math.ceil(this.getviewportWidth() / 100) * 100;
             this._lazyResetTriggerWidth = width;
         }
         /**
@@ -192,7 +199,7 @@ var LazyResponsiveImages = function () {
     }, {
         key: "_resetNeeded",
         value: function _resetNeeded() {
-            var currentScreenWidth = window.outerWidth;
+            var currentScreenWidth = this.getviewportWidth();
             console.log('currentScreenWidth', currentScreenWidth);
             var screenGotBigger = currentScreenWidth > this._prevScreenWidth;
             console.log('screenGotBigger', screenGotBigger);
@@ -16746,6 +16753,60 @@ var _extends = Object.assign || function (e) {
     } else u(e, t);
   }(v, w), v;
 });
+
+/***/ }),
+/* 16 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var getSize = function getSize(Name) {
+	var size;
+	var name = Name.toLowerCase();
+	var document = window.document;
+	var documentElement = document.documentElement;
+	if (window["inner" + Name] === undefined) {
+		// IE6 & IE7 don't have window.innerWidth or innerHeight
+		size = documentElement["client" + Name];
+	} else if (window["inner" + Name] != documentElement["client" + Name]) {
+		// WebKit doesn't include scrollbars while calculating viewport size so we have to get fancy
+
+		// Insert markup to test if a media query will match document.doumentElement["client" + Name]
+		var bodyElement = document.createElement("body");
+		bodyElement.id = "vpw-test-b";
+		bodyElement.style.cssText = "overflow:scroll";
+		var divElement = document.createElement("div");
+		divElement.id = "vpw-test-d";
+		divElement.style.cssText = "position:absolute;top:-1000px";
+		// Getting specific on the CSS selector so it won't get overridden easily
+		divElement.innerHTML = "<style>@media(" + name + ":" + documentElement["client" + Name] + "px){body#vpw-test-b div#vpw-test-d{" + name + ":7px!important}}</style>";
+		bodyElement.appendChild(divElement);
+		documentElement.insertBefore(bodyElement, document.head);
+
+		if (divElement["offset" + Name] == 7) {
+			// Media query matches document.documentElement["client" + Name]
+			size = documentElement["client" + Name];
+		} else {
+			// Media query didn't match, use window["inner" + Name]
+			size = window["inner" + Name];
+		}
+		// Cleanup
+		documentElement.removeChild(bodyElement);
+	} else {
+		// Default to use window["inner" + Name]
+		size = window["inner" + Name];
+	}
+	return size;
+};
+
+module.exports.getHeight = function () {
+	return getSize("Height");
+};
+
+module.exports.getWidth = function () {
+	return getSize("Width");
+};
 
 /***/ })
 /******/ ]);

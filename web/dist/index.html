@@ -3,6 +3,7 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title></title>
     <style>
         img {
@@ -17,6 +18,8 @@
     Scroll Down
     <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
     <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+
+    <br />
     NON Responsive Image - NON Lazy - 400px wide
     <br />
     <img src="https://res.cloudinary.com/demo/image/upload/w_400,c_scale/smiling_man.jpg" />
@@ -27,11 +30,45 @@
     <img data-src-lazy="https://res.cloudinary.com/demo/image/upload/w_400,c_scale/sample.jpg" />
     <br /><br />
 
- 
+
     Responsive Image Using CloudinoryJS and Lazy Loading Image
     <br />
-    <img data-src="https://res.cloudinary.com/demo/image/upload/w_auto,c_scale/sample.jpg"
+
+
+    <br />
+
+    <img id="imgLazyResponsive" data-src="https://res.cloudinary.com/demo/image/upload/w_auto,c_scale/sample.jpg" onload="CheckWidth(this,imgLazyResponsiveInfo)"
          class="cld-responsive" />
+    <br />
+    <div id="imgLazyResponsiveInfo">
+    </div>
+    <div id="info">
+
+    </div>
+
+    <script type="text/javascript">
+        document.write('window.outerWidth ', window.outerWidth);
+        document.write('<br />window.innerWidth ', window.innerWidth);
+
+        document.write('<br />window.outerHeight ', window.outerHeight);
+        document.write('<br />window.innerHeight ', window.innerHeight);
+
+        document.write("<br />document.getElementsByTagName('body')[0].clientWidth ", document.getElementsByTagName('body')[0].clientWidth);
+
+
+    
+
+        //document.write('<br />documentElement.clientWidth ', documentElement.clientWidth);
+
+        function CheckWidth(element, infoElemnt) {
+
+            infoElemnt.innerText = 'element.clientWidth' + element.clientWidth;
+            //document.write('<br />lazyResponsiveImg.clientWidth ', element.clientWidth);
+
+        }
+    </script>
+
+
     <br /><br />
 
 
