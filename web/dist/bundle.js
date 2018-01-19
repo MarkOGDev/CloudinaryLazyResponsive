@@ -60,22 +60,11 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 0);
+/******/ 	return __webpack_require__(__webpack_require__.s = 2);
 /******/ })
 /************************************************************************/
 /******/ ([
 /* 0 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-//import { LazyResponsiveImages } from './lazy-responsive-images'
-
-Object.defineProperty(exports, "__esModule", { value: true });
-__webpack_require__(3); //import like this to force render of js without actually needing to create and use the class
-
-/***/ }),
-/* 1 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -105,13 +94,27 @@ try {
 module.exports = g;
 
 /***/ }),
-/* 2 */
+/* 1 */
 /***/ (function(module, exports) {
 
 /* WEBPACK VAR INJECTION */(function(__webpack_amd_options__) {/* globals __webpack_amd_options__ */
 module.exports = __webpack_amd_options__;
 
 /* WEBPACK VAR INJECTION */}.call(exports, {}))
+
+/***/ }),
+/* 2 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+//import { LazyResponsiveImages } from './lazy-responsive-images'
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var lazy_responsive_images_1 = __webpack_require__(3); //import like this to force render of js without actually needing to create and use the class
+//Test here. in reality we could call this from the main script
+var myLazyResponsiveImagesLoader = new lazy_responsive_images_1.LazyResponsiveImagesLoader();
+myLazyResponsiveImagesLoader.init();
 
 /***/ }),
 /* 3 */
@@ -171,6 +174,7 @@ var LazyResponsiveImages = function () {
         this._lazyLoad = null;
         this._prevScreenWidth = null;
         this._lazyResetTriggerWidth = null;
+        //Display viewport dimension on the page.
         var info = document.getElementById('info');
         info.innerText = viewportSize.getWidth() + ' * ' + viewportSize.getHeight();
     }
@@ -180,6 +184,10 @@ var LazyResponsiveImages = function () {
         value: function getviewportWidth() {
             return viewportSize.getWidth();
         }
+        /**
+         * used by window.resize
+         */
+
     }, {
         key: "updatePrevScreenWidth",
         value: function updatePrevScreenWidth() {
@@ -216,24 +224,11 @@ var LazyResponsiveImages = function () {
                 return true;
             }
         }
-    }, {
-        key: "init",
-        value: function init() {
-            //Setup Cloudinory Responsive JS
-            //https://cloudinary.com/documentation/responsive_images#automating_responsive_images_with_javascript
-            if (this._cloudinary == null) {
-                this._cloudinary = new cloudinaryJS.Cloudinary({ cloud_name: "demo" });
-                //Setup Responsive images.  
-                this._cloudinary.responsive();
-            }
-            //set the initial screen width values 
-            this.updatePrevScreenWidth();
-            this.updateLazyResetTriggerWidth();
-            //setup Lazy Load
-            this.lazyLoadInit();
-            //set up resize Listener
-            //this.addWindowWidthListener();
-        }
+        /**
+         * used by window.resize
+         * Rest Lazy images to Not loaded if off screen. If 100 images are on screeen and user changes screen width, we dont want to load 100 images again if they are off screen.
+         */
+
     }, {
         key: "resetLazyStatus",
         value: function resetLazyStatus() {
@@ -255,13 +250,43 @@ var LazyResponsiveImages = function () {
                 this.updateLazyResetTriggerWidth();
             }
         }
+        /**
+         * Sets up Responsive / Lazy images
+         * @param lazyClassName
+         */
+
+    }, {
+        key: "init",
+        value: function init(lazyClassName) {
+            this.responsiveImagesInit(); //setup responsive images.
+            this.lazyLoadInit(lazyClassName); //setup Lazy Images.    Pass through the ClassName used to indicate a Lazy Image
+        }
+    }, {
+        key: "responsiveImagesInit",
+        value: function responsiveImagesInit() {
+            //Setup Cloudinory Responsive JS
+            //https://cloudinary.com/documentation/responsive_images#automating_responsive_images_with_javascript
+            if (this._cloudinary == null) {
+                this._cloudinary = new cloudinaryJS.Cloudinary({ cloud_name: "demo" });
+                //Setup Responsive images.  
+                this._cloudinary.responsive();
+            }
+            //set the initial screen width values 
+            this.updatePrevScreenWidth();
+            this.updateLazyResetTriggerWidth();
+            //setup Lazy Load
+            //this.lazyLoadInit();
+            //set up resize Listener
+            //this.addWindowWidthListener();
+        }
     }, {
         key: "lazyLoadInit",
-        value: function lazyLoadInit() {
+        value: function lazyLoadInit(className) {
             //#### Setup Lazy Load ####
             if (this._lazyLoad == null) {
                 this._lazyLoad = new lazyLoad({
-                    data_src: 'src-lazy' //Data attribute storing the src url.
+                    // data_src: 'src-lazy' //Data attribute storing the src url.
+                    data_src: className //Data attribute storing the src url.
                 });
                 //console.log('lazyLoad object created', lazyLoad);
             }
@@ -270,20 +295,42 @@ var LazyResponsiveImages = function () {
 
     return LazyResponsiveImages;
 }();
+/**
+ * Sets up Lazy Responsive Images
+ */
 
-exports.LazyResponsiveImages = LazyResponsiveImages;
-//Set up LazyResponsiveImages
-console.log('LazyResponsiveImages Setting Up');
-var myLazyResponsiveImages = new LazyResponsiveImages();
-myLazyResponsiveImages.init();
-myLazyResponsiveImages.lazyLoadInit();
-//Listen for browser resize
-window.addEventListener('resize', debounce(300, function (e) {
-    //Check if imges need resetting to lazy
-    myLazyResponsiveImages.resetLazyStatus();
-    //update prev screen width
-    myLazyResponsiveImages.updatePrevScreenWidth();
-}));
+
+var LazyResponsiveImagesLoader = function () {
+    function LazyResponsiveImagesLoader() {
+        _classCallCheck(this, LazyResponsiveImagesLoader);
+    }
+
+    _createClass(LazyResponsiveImagesLoader, [{
+        key: "init",
+
+        /**
+         * Sets up LazyResponsiveImages
+         */
+        value: function init() {
+            //Set up LazyResponsiveImages
+            console.log('LazyResponsiveImages Setting Up');
+            var myLazyResponsiveImages = new LazyResponsiveImages();
+            myLazyResponsiveImages.init('src-lazy'); //setup responsive images/Lazy Images. Pass through the ClassName used to indicate a Lazy Image
+            //Listen for browser resize- Resets Lazy Images. If 100 images are on screeen and user changes screen width, we dont want to load 100 images again if they are off screen.
+            window.addEventListener('resize', debounce(300, function (e) {
+                console.log('resize');
+                //Check if imges need resetting to lazy
+                myLazyResponsiveImages.resetLazyStatus();
+                //update prev screen width
+                myLazyResponsiveImages.updatePrevScreenWidth();
+            }));
+        }
+    }]);
+
+    return LazyResponsiveImagesLoader;
+}();
+
+exports.LazyResponsiveImagesLoader = LazyResponsiveImagesLoader;
 
 /***/ }),
 /* 4 */
@@ -6318,7 +6365,7 @@ function blitBuffer(src, dst, offset, length) {
 function isnan(val) {
   return val !== val; // eslint-disable-line no-self-compare
 }
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
 /* 6 */
@@ -16177,7 +16224,7 @@ LazyWrapper.prototype.clone=lazyClone;LazyWrapper.prototype.reverse=lazyReverse;
 lodash.prototype.at=wrapperAt;lodash.prototype.chain=wrapperChain;lodash.prototype.commit=wrapperCommit;lodash.prototype.next=wrapperNext;lodash.prototype.plant=wrapperPlant;lodash.prototype.reverse=wrapperReverse;lodash.prototype.toJSON=lodash.prototype.valueOf=lodash.prototype.value=wrapperValue;// Add lazy aliases.
 lodash.prototype.first=lodash.prototype.head;if(symIterator){lodash.prototype[symIterator]=wrapperToIterator;}return lodash;};/*--------------------------------------------------------------------------*/// Export lodash.
 var _=runInContext();// Some AMD build optimizers, like r.js, check for condition patterns like:
-if("function"=='function'&&_typeof(__webpack_require__(2))=='object'&&__webpack_require__(2)){// Expose Lodash on the global object to prevent errors when Lodash is
+if("function"=='function'&&_typeof(__webpack_require__(1))=='object'&&__webpack_require__(1)){// Expose Lodash on the global object to prevent errors when Lodash is
 // loaded by a script tag in the presence of an AMD loader.
 // See http://requirejs.org/docs/errors.html#mismatch for more details.
 // Use `_.noConflict` to remove Lodash from the global object.
@@ -16189,7 +16236,7 @@ else if(freeModule){// Export for Node.js.
 (freeModule.exports=_)._=_;// Export for CommonJS support.
 freeExports._=_;}else{// Export to the global object.
 root._=_;}}).call(undefined);
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1), __webpack_require__(11)(module)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0), __webpack_require__(11)(module)))
 
 /***/ }),
 /* 11 */
@@ -16616,7 +16663,7 @@ function observeDOM(watches, container, cb) {
     return filter.call(nodes, watches.isWatched).length > 0;
   }
 }
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
 /* 15 */

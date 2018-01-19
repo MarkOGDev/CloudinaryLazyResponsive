@@ -30,7 +30,7 @@ for Each Lazy Image:
 cloudinaryJS.Util.setAttribute = function (element, name, value) {
     const isInViewPort = inViewPort(element, { offset: 300 });
 
-    if (!isInViewPort && name == 'src') //make lazy
+    if (!isInViewPort && name == 'src') //make lazy (not in view port)
     {
         name = 'data-src-lazy';
     }
@@ -59,6 +59,7 @@ class LazyResponsiveImages {
 
     constructor() {
 
+        //Display viewport dimension on the page.
         const info = document.getElementById('info');
         info.innerText = viewportSize.getWidth() + ' * ' + viewportSize.getHeight();
 
@@ -68,6 +69,9 @@ class LazyResponsiveImages {
         return viewportSize.getWidth();
     }
 
+    /**
+     * used by window.resize 
+     */
     updatePrevScreenWidth() {
         this._prevScreenWidth = this.getviewportWidth();
     }
@@ -78,11 +82,10 @@ class LazyResponsiveImages {
         this._lazyResetTriggerWidth = width;
     }
 
-
     /**
      * Returns True if the browser width has increased past the point where new images should be loaded
      */
-    _resetNeeded(): boolean {
+    private _resetNeeded(): boolean {
 
         const currentScreenWidth = this.getviewportWidth();
         console.log('currentScreenWidth', currentScreenWidth);
@@ -108,29 +111,10 @@ class LazyResponsiveImages {
 
     }
 
-    init() {
-
-        //Setup Cloudinory Responsive JS
-        //https://cloudinary.com/documentation/responsive_images#automating_responsive_images_with_javascript
-
-        if (this._cloudinary == null) {
-            this._cloudinary = new cloudinaryJS.Cloudinary({ cloud_name: "demo" });
-            //Setup Responsive images.  
-            this._cloudinary.responsive();
-        }
-
-        //set the initial screen width values 
-        this.updatePrevScreenWidth();
-        this.updateLazyResetTriggerWidth();
-
-        //setup Lazy Load
-        this.lazyLoadInit();
-
-        //set up resize Listener
-        //this.addWindowWidthListener();
-
-    }
-
+    /**
+     * used by window.resize
+     * Rest Lazy images to Not loaded if off screen. If 100 images are on screeen and user changes screen width, we dont want to load 100 images again if they are off screen.
+     */
     resetLazyStatus() {
 
         if (this._resetNeeded()) {
@@ -159,50 +143,96 @@ class LazyResponsiveImages {
         }
     }
 
+    /**
+     * Sets up Responsive / Lazy images
+     * @param lazyClassName
+     */
+    init(lazyClassName) {
+        this.responsiveImagesInit();              //setup responsive images.
+        this.lazyLoadInit(lazyClassName);         //setup Lazy Images.    Pass through the ClassName used to indicate a Lazy Image
+    }
 
-    lazyLoadInit() {
+    private responsiveImagesInit() {
+
+        //Setup Cloudinory Responsive JS
+        //https://cloudinary.com/documentation/responsive_images#automating_responsive_images_with_javascript
+
+        if (this._cloudinary == null) {
+            this._cloudinary = new cloudinaryJS.Cloudinary({ cloud_name: "demo" });
+            //Setup Responsive images.  
+            this._cloudinary.responsive();
+        }
+
+        //set the initial screen width values 
+        this.updatePrevScreenWidth();
+        this.updateLazyResetTriggerWidth();
+
+        //setup Lazy Load
+        //this.lazyLoadInit();
+
+        //set up resize Listener
+        //this.addWindowWidthListener();
+
+    }
+
+    private lazyLoadInit(className) {
 
         //#### Setup Lazy Load ####
         if (this._lazyLoad == null) {
 
             this._lazyLoad = new lazyLoad({
-                data_src: 'src-lazy' //Data attribute storing the src url.
+                // data_src: 'src-lazy' //Data attribute storing the src url.
+                data_src: className //Data attribute storing the src url.
             });
             //console.log('lazyLoad object created', lazyLoad);
         }
 
     }
 
+    //#region window.resize test
+    //We can not add the window EventListener here because it want a reference to this object instance. Ie the window event cant see this instance.
     //addWindowWidthListener() {
     //    //Listen for browser resize
     //    window.addEventListener('resize', debounce(300, function (e) {
+
+    //        console.log('resize');
+
     //        //Check if imges need resetting to lazy
     //        this.resetLazyStatus();
 
     //        //update prev screen width
     //        this.updatePrevScreenWidth();
-    //    }));
+    //    }));  
     //}
-
+    //#endregion
 }
 
 
 
-//Set up LazyResponsiveImages
-console.log('LazyResponsiveImages Setting Up');
-const myLazyResponsiveImages = new LazyResponsiveImages();
-myLazyResponsiveImages.init();
-myLazyResponsiveImages.lazyLoadInit();
+/**
+ * Sets up Lazy Responsive Images
+ */
+class LazyResponsiveImagesLoader {
+    /**
+     * Sets up LazyResponsiveImages
+     */
+    init() {
+        //Set up LazyResponsiveImages
+        console.log('LazyResponsiveImages Setting Up');
+        const myLazyResponsiveImages = new LazyResponsiveImages();
+        myLazyResponsiveImages.init('src-lazy');                    //setup responsive images/Lazy Images. Pass through the ClassName used to indicate a Lazy Image
 
 
+        //Listen for browser resize- Resets Lazy Images. If 100 images are on screeen and user changes screen width, we dont want to load 100 images again if they are off screen.
+        window.addEventListener('resize', debounce(300, function (e) {
+            console.log('resize');
+            //Check if imges need resetting to lazy
+            myLazyResponsiveImages.resetLazyStatus();
+            //update prev screen width
+            myLazyResponsiveImages.updatePrevScreenWidth();
+        }));
+    }
+}
 
-//Listen for browser resize
-window.addEventListener('resize', debounce(300, function (e) {
-    //Check if imges need resetting to lazy
-    myLazyResponsiveImages.resetLazyStatus();
-    //update prev screen width
-    myLazyResponsiveImages.updatePrevScreenWidth();
-}));
 
-
-export { LazyResponsiveImages };
+export { LazyResponsiveImagesLoader };
