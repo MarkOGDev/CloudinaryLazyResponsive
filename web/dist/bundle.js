@@ -112,7 +112,7 @@ module.exports = __webpack_amd_options__;
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var lazy_responsive_images_1 = __webpack_require__(3); //import like this to force render of js without actually needing to create and use the class
-//Test here. in reality we could call this from the main script
+//Load and Run Lazy Repsonive
 var myLazyResponsiveImagesLoader = new lazy_responsive_images_1.LazyResponsiveImagesLoader();
 myLazyResponsiveImagesLoader.init();
 
