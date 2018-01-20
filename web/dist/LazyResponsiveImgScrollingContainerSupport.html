@@ -1,0 +1,111 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title></title>
+    <style>
+        img {
+            /* Allow img to scale down when browser width is reduced. */
+            max-width: 100%;
+        }
+    </style>
+
+</head>
+<body id="body">
+    <h1>Demo of Lazy Loaded Responsive Images with Scrolling constainer support</h1>
+    Scroll Down
+    <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+    <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+
+
+    Non Responsive Image - Lazy Loading Image - 400px wide
+    <br />
+    <img data-src-lazy="https://res.cloudinary.com/demo/image/upload/w_400,c_scale/sample.jpg" />
+    <br /><br />
+
+
+    Responsive Image Using CloudinoryJS and Lazy Loading Image
+    <br />
+
+
+    <br />
+
+    <img id="imgLazyResponsive" data-src="https://res.cloudinary.com/demo/image/upload/w_auto,c_scale/sample.jpg"  
+         class="cld-responsive" />
+    <br />
+
+
+
+    <div id="scrolContainer" style="margin:60px;border:1px solid silver;overflow:scroll;height:400px;"
+         class="lazy-container">
+
+        Scroll Down
+        <br /><br /><br /><br /><br /><br /><br /><br /><br />  <br /><br /><br /><br /><br /><br /><br /><br /><br />  <br /><br /><br /><br /><br /><br /><br /><br /><br />  <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+        <img class="cld-responsive" data-src="https://res.cloudinary.com/idemo/image/upload/ar_200:131,c_fill,dpr_1.0,g_faces,w_auto/sofa_cat.jpg" />
+        <br /><br />  <br /><br />  <br /><br />  <br /><br />  <br /><br />  <br /><br />  <br /><br />
+        <img class="cld-responsive" data-src="https://res.cloudinary.com/idemo/image/upload/ar_200:131,c_fill,dpr_1.0,g_faces,w_auto/woman.jpg" />
+        <br /><br />  <br /><br />  <br /><br />  <br /><br />  <br /><br />  <br /><br />  <br /><br />
+        <img class="cld-responsive" data-src="https://res.cloudinary.com/idemo/image/upload/ar_200:131,c_fill,dpr_1.0,g_faces,w_auto/friends.jpg" />
+        <br /><br />  <br /><br />  <br /><br />  <br /><br />  <br /><br />  <br /><br />  <br /><br />
+        <img class="cld-responsive" data-src="https://res.cloudinary.com/idemo/image/upload/ar_200:131,c_fill,dpr_1.0,g_faces,w_auto/car_lady_dog.jpg" />
+        <br /><br />  <br /><br />  <br /><br />  <br /><br />  <br /><br />  <br /><br />  <br /><br />
+        <img class="cld-responsive" data-src="https://res.cloudinary.com/idemo/image/upload/ar_200:131,c_fill,dpr_1.0,g_faces,w_auto/balloons.jpg" />
+
+    </div>
+
+
+
+
+    <div id="info">
+
+    </div>
+
+    <script type="text/javascript">
+        document.write('window.outerWidth ', window.outerWidth);
+        document.write('<br />window.innerWidth ', window.innerWidth);
+
+        document.write('<br />window.outerHeight ', window.outerHeight);
+        document.write('<br />window.innerHeight ', window.innerHeight);
+
+        document.write("<br />document.getElementsByTagName('body')[0].clientWidth ", document.getElementsByTagName('body')[0].clientWidth);
+
+
+
+
+        //document.write('<br />documentElement.clientWidth ', documentElement.clientWidth);
+
+        function CheckWidth(element, infoElemnt) {
+
+            infoElemnt.innerText = 'element.clientWidth' + element.clientWidth;
+            //document.write('<br />lazyResponsiveImg.clientWidth ', element.clientWidth);
+
+        }
+
+
+
+
+    </script>
+
+
+    <br /><br />
+
+
+    <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+    <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+    Scroll Up
+
+    <script src="cloudinaryLazyResponsiveImagesScrollingContainers/cloudinaryLazyResponsiveImagesScrollingContainers.js"></script>
+    <script type="text/javascript">
+        //  console.log(clri.cloudinaryLazyResponsiveImages.LazyResponsiveImagesLoader);
+        //create hte instance
+      //  var clri = new clri.cloudinaryLazyResponsiveImagesScrollingContainers.LazyResponsiveImagesContainerSupport();
+        //run setup function
+       // clri.init('src-lazy');
+
+
+    </script>
+
+</body>
+</html>

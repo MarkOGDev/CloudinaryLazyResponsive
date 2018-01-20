@@ -1,10 +1,22 @@
 ﻿"use strict";
 
+const path = require('path');
+const IS_DEV = process.env.NODE_ENV === 'development';  //visual studio uses vaiable called 'NODE_ENV'
+const IS_PROD = process.env.NODE_ENV === 'production';
+
 module.exports = {
-    entry: "./src/main.ts",
-    output: {
-        filename: "./dist/bundle.js",
-        libraryTarget: 'var'
+    entry: {
+        bundle: [path.resolve('./src/main.ts')]
+        , cloudinaryLazyResponsiveImages: [path.resolve('./src/cloudinary-lazy-responsive-images.ts')]
+        , cloudinaryLazyResponsiveImagesScrollingContainers: [path.resolve('./src/cloudinary-lazy-responsive-images-scrolling-containers.ts')]
+        // "./src/main.ts"
+    }
+    , output: {
+        filename: './dist/[name]/[name].' + (IS_PROD ? 'min.' : '') + 'js',
+        // filename: "./dist/bundle.js",
+        // libraryTarget: 'var',
+        libraryTarget: 'umd',
+        library: ['clri', '[name]']
     },
     devServer: {
         contentBase: ".",
