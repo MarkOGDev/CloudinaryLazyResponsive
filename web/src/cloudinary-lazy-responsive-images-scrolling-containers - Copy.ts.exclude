@@ -1,7 +1,4 @@
-﻿/// <reference path="../node_modules/vanilla-lazyload/typings/lazyload.d.ts" />
-/// <reference path="../node_modules/cloudinary-core/cloudinary-core.d.ts" />
-
-import * as cloudinaryJS from "cloudinary-core"; import * as lazyLoad from 'vanilla-lazyload';
+﻿import * as lazyLoad from 'vanilla-lazyload';
 import * as inViewPort from 'in-viewport';
 import { LazyResponsiveImages } from './cloudinary-lazy-responsive-images';
 
@@ -11,24 +8,18 @@ class LazyResponsiveImagesContainerSupport extends LazyResponsiveImages {
     //    private _lazyLoad: ILazyLoad = null;
     protected _lazyLoadInstances: Array<ILazyLoad> = [];
 
-    public lazyContainorClassName: string;
-
     constructor() {
 
         //create base class
         super();
 
-        // this._lazyContainorClassName = lazyContainorClassName;
-
     }
 
 
-    //override the base class functions 
-
+    //override the base class functions
 
     protected lazyLoadInit(lazyDataAttribute: string) {
-        console.log('lazyLoadInit called', lazyDataAttribute);
-        console.log('this.lazyContainorClassName', this.lazyContainorClassName);
+
         //#### Setup Lazy Load ####
         if (this._lazyLoadInstances.length == 0) {
 
@@ -59,7 +50,7 @@ class LazyResponsiveImagesContainerSupport extends LazyResponsiveImages {
             // The "lazyLazy" instance of lazyload is used (kinda improperly)
             // to check when the Container divs enter the viewport
             var lazyLazy = new lazyLoad({
-                elements_selector: '.' + this.lazyContainorClassName, //'.lazy-container',
+                elements_selector: '.lazy-container',
                 // When the .horzContainer div enters the viewport...
                 callback_set: callback()
             });
@@ -71,13 +62,10 @@ class LazyResponsiveImagesContainerSupport extends LazyResponsiveImages {
             //add an extra class to these images
             //target only images with that new class 
 
-
+ 
             const fullDataAttibName: string = 'data-' + lazyDataAttribute;
             let lazyImagesArray = Array.prototype.slice.call(document.querySelectorAll('img[' + fullDataAttibName + ']'));                               //convert to an array 
-
-            const lazyContainerImagesArray = Array.prototype.slice.call(document.querySelectorAll('.' + this.lazyContainorClassName + ' img[' + fullDataAttibName + ']'));
-
-            // const lazyContainerImagesArray = Array.prototype.slice.call(document.querySelectorAll('.lazy-container img[' + fullDataAttibName + ']'));
+            const lazyContainerImagesArray = Array.prototype.slice.call(document.querySelectorAll('.lazy-container img[' + fullDataAttibName + ']'));
 
 
 
@@ -89,7 +77,7 @@ class LazyResponsiveImagesContainerSupport extends LazyResponsiveImages {
             console.log('lazyImagesArray', lazyImagesArray);
             console.log('lazyContainerImagesArray', lazyContainerImagesArray);
             console.log('nonLazyContainerImages1', lazyImagesWithoutContainer);
-
+            
 
 
             for (var i = 0; i < lazyImagesWithoutContainer.length; i++) {
@@ -104,72 +92,32 @@ class LazyResponsiveImagesContainerSupport extends LazyResponsiveImages {
             });
             //Add the normal LazyLoad instance to the array
             this._lazyLoadInstances.push(myLazyLoad);
-
+            
         }
     }
 
 
     protected updateLazyLoad() {
-        console.log('updateLazyLoad called');
         for (var i = 0; i < this._lazyLoadInstances.length; i++) {
             console.log('updateLazyLoadInstances', this._lazyLoadInstances[i]);
             this._lazyLoadInstances[i].update();
         }
     }
 
- 
 
-    protected updateLazyLoadInstances() {
-        for (var i = 0; i < this._lazyLoadInstances.length; i++) {
-            console.log('updateLazyLoadInstances', this._lazyLoadInstances[i]);
-            this._lazyLoadInstances[i].update();
-        }
-    }
-
-    /**
- * used by window.resize
- * Rest Lazy images to Not loaded if off screen. If 100 images are on screeen and user changes screen width, we dont want to load 100 images again if they are off screen.
- */
-    protected  resetLazyStatus() {
-
-        if (this._resetNeeded()) {
- 
-            //Get All Lazy img tags 
-            this._cloudImgHtmlTags = document.querySelectorAll('img[data-src-lazy]');
-            // console.log('_cloudImgHtmlTags', this._cloudImgHtmlTags);
-
-            for (var i = 0; i < this._cloudImgHtmlTags.length; i++) {
-
-                //If not in view port then make LazyLoad manage the image by removing the Attribute data-was-processed
-                const isInViewPort = inViewPort(this._cloudImgHtmlTags[i], { offset: 300 });
-                if (!isInViewPort) {
-                    //LAZYLOAD: remove data-was-processed="true" so that Lazy Load knows the image is fresh
-                    this._cloudImgHtmlTags[i].removeAttribute('data-was-processed');
-                }
-            }
-
-            //tell LazyLoad to manage the images that we have just reset.
-            // this._lazyLoad.update();
-            this.updateLazyLoadInstances();
-
-            //update ImageReloadTriggerWidth
-            this.updateLazyResetTriggerWidth();
-
-        }
-    }
 
 
 }
 
 
 
-//var clri = new LazyResponsiveImagesContainerSupport();
-////run setup function
-//clri.init('src-lazy');
+var clri = new LazyResponsiveImagesContainerSupport();
+//run setup function
+clri.init('src-lazy');
 
 
 
-export { LazyResponsiveImagesContainerSupport };
+
 
 
 
@@ -648,3 +596,4 @@ export { LazyResponsiveImagesContainerSupport };
 //}
 
 
+//export { LazyResponsiveImages };
