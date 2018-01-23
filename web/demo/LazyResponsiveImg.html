@@ -18,68 +18,45 @@
     Scroll Down
     <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
     <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
-
+    <br />
     <br />
     NON Responsive Image - NON Lazy - 400px wide
     <br />
     <img src="https://res.cloudinary.com/demo/image/upload/w_400,c_scale/smiling_man.jpg" />
-    <br /><br />
-
+    <br />
+    <br />
     Non Responsive Image - Lazy Loading Image - 400px wide
     <br />
     <img data-src-lazy="https://res.cloudinary.com/demo/image/upload/w_400,c_scale/sample.jpg" />
-    <br /><br />
-
-
+    <br />
+    <br />
+    <br />
     Responsive Image Using CloudinoryJS and Lazy Loading Image
     <br />
-
-
-    <br />
-
-    <img id="imgLazyResponsive" data-src="https://res.cloudinary.com/demo/image/upload/w_auto,c_scale/sample.jpg" onload="CheckWidth(this,imgLazyResponsiveInfo)"
+    <img id="imgLazyResponsive" data-src="https://res.cloudinary.com/idemo/image/upload/w_auto,c_scale/woman.jpg" onload="CheckWidth(this, info)"
          class="cld-responsive" />
-    <br />
-    <div id="imgLazyResponsiveInfo">
-    </div>
-    <div id="info">
-
-    </div>
-
- 
-
-    <script type="text/javascript">
-        document.write('window.outerWidth ', window.outerWidth);
-        document.write('<br />window.innerWidth ', window.innerWidth);
-
-        document.write('<br />window.outerHeight ', window.outerHeight);
-        document.write('<br />window.innerHeight ', window.innerHeight);
-
-        document.write("<br />document.getElementsByTagName('body')[0].clientWidth ", document.getElementsByTagName('body')[0].clientWidth);
-
-
-    
-
-        //document.write('<br />documentElement.clientWidth ', documentElement.clientWidth);
-
-        function CheckWidth(element, infoElemnt) {
-
-            infoElemnt.innerText = 'element.clientWidth' + element.clientWidth;
-            //document.write('<br />lazyResponsiveImg.clientWidth ', element.clientWidth);
-
-        }
-
-    </script>
-
-
     <br /><br />
 
+    <div id="info">
+    </div>
 
+    <br /><br />
     <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
     <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
     Scroll Up
 
-    <script src="bundle/bundle.js"></script>
 
+    <script type="text/javascript">
+        function CheckWidth(element, infoElemnt) {
+
+            infoElemnt.innerHTML = 'Image element.clientWidth: ' + element.clientWidth
+                + '<br />document.getElementsByTagName("body")[0].clientWidth: ' + document.getElementsByTagName("body")[0].clientWidth
+                + '<br />window.outerWidth: ' + window.outerWidth
+                + '<br />window.innerWidth: ' + window.innerWidth
+                + '<br />window.outerHeight: ' + window.outerHeight
+                + '<br />window.innerHeight: ' + window.innerHeight;
+        }
+    </script>
+    <script src="../dist/bundle/bundle.js"></script>
 </body>
 </html>

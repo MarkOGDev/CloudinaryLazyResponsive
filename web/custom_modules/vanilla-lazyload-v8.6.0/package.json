@@ -1,0 +1,74 @@
+{
+  "_from": "vanilla-lazyload@8.6.0",
+  "_id": "vanilla-lazyload@8.6.0",
+  "_inBundle": false,
+  "_integrity": "sha512-M2hJ4plNXYb4X0E1XXtlNJ1yz/1ceIYb37hpbP5iB3Y5dOzZWucupGDh8rrWx3IL2e4ySd5AsN4UU3ib4ICjGA==",
+  "_location": "/vanilla-lazyload",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "version",
+    "registry": true,
+    "raw": "vanilla-lazyload@8.6.0",
+    "name": "vanilla-lazyload",
+    "escapedName": "vanilla-lazyload",
+    "rawSpec": "8.6.0",
+    "saveSpec": null,
+    "fetchSpec": "8.6.0"
+  },
+  "_requiredBy": [
+    "#DEV:/",
+    "#USER"
+  ],
+  "_resolved": "https://registry.npmjs.org/vanilla-lazyload/-/vanilla-lazyload-8.6.0.tgz",
+  "_shasum": "4eb44b08120a7fd2f089f194d38dfd027eab3b49",
+  "_spec": "vanilla-lazyload@8.6.0",
+  "_where": "C:\\Work\\Components\\CloudinaryLazyResponsive\\web",
+  "author": {
+    "name": "Andrea \"verlok\" Verlicchi"
+  },
+  "bugs": {
+    "url": "https://github.com/verlok/lazyload/issues"
+  },
+  "bundleDependencies": false,
+  "deprecated": false,
+  "description": "A fast, lightweight script to load images as they enter the viewport. SEO friendly, it supports responsive images (both srcset + sizes and picture) and progressive JPEG",
+  "devDependencies": {
+    "babel-core": "^6.26.0",
+    "babel-plugin-transform-object-assign": "^6.22.0",
+    "babel-preset-env": "^1.6.0",
+    "babel-preset-es2015": "^6.24.1",
+    "gulp": "^3.9.1",
+    "gulp-babel": "^7.0.0",
+    "gulp-eslint": "^4.0.0",
+    "gulp-notify": "^3.0.0",
+    "gulp-rename": "^1.2.2",
+    "gulp-rollup": "^2.14.0",
+    "gulp-uglify": "^3.0.0"
+  },
+  "homepage": "http://verlok.github.io/lazyload",
+  "keywords": [
+    "lazyload",
+    "vanilla",
+    "responsive",
+    "images",
+    "picture",
+    "srcset",
+    "SEO",
+    "sizes",
+    "progressive",
+    "performance",
+    "perfmatters",
+    "no-jquery",
+    "gulp",
+    "async"
+  ],
+  "license": "MIT",
+  "main": "dist/lazyload.min.js",
+  "name": "vanilla-lazyload",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/verlok/lazyload.git"
+  },
+  "scripts": {},
+  "version": "8.6.0"
+}

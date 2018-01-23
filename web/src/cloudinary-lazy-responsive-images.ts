@@ -4,12 +4,11 @@
 import * as cloudinaryJS from "cloudinary-core";
 import * as debounce from 'throttle-debounce/debounce';
 import * as inViewPort from 'in-viewport';
-import * as lazyLoad from 'vanilla-lazyload';
+import * as lazyLoad from './../node_modules/vanilla-lazyload/dist/lazyload.js';
+import * as lazyLoad8 from './../custom_modules/vanilla-lazyload-v8.6.0/';         //older version supports browsers without IntersectionObserver feature. e.g. ie 11.
 import * as viewportSize from 'viewport-size';   //https://github.com/jarvys/viewportSize
 
-
-
-/*
+/* 
 
 First Page Load:
 Load Cloudinory Images
@@ -19,95 +18,92 @@ Any lazy images will not be loaded, their data will be updated by Cloudinory Res
 OnResize:
 for Each Lazy Image:
     if Resize Needed and:
-        off screen: remove src. Force Cloudinory to update attribute data-src-lazy.
+        off screen: Force Cloudinory to update attribute 'data-src-lazy' instead of 'src'
 
         on screen: let Cloudinory update attribute src. 
 */
 
 
-
-interface scrollingContainerClassInfo {
-    [constainerClassName: string]: string;
-}
-
-
 class LazyResponsiveImages {
 
     //The protected modifier acts much like the private modifier with the exception that members declared protected can also be accessed by instances of deriving classes.
-
     protected _cloudinary: cloudinaryJS.Cloudinary = null;
-   // protected _bodyElement: Element = null;
-    protected _cloudImgHtmlTags: NodeListOf<Element> = null;
-    protected _lazyLoad: ILazyLoad = null;
+    // protected _cloudImgHtmlTags: NodeListOf<Element> = null;
 
+    protected _lazyLoad: ILazyLoad = null;
     protected _prevScreenWidth: number = null;
     protected _lazyResetTriggerWidth: number = null;
 
-    //TODO: add a LazyDataAttribute Property so user can set it when user creates instance of this class
-
-    //reference to the cloudinary  
-
-   // protected _test: string = 'lsalal';
-   // protected _cloudinaryJSLib = cloudinaryJS;
 
     constructor() {
-
         console.log('LazyResponsiveImages constructor called');
-
-
-
-        //Display viewport dimension on the page.
-        // const info = document.getElementById('info');
-        // info.innerText = viewportSize.getWidth() + ' * ' + viewportSize.getHeight();
-
     }
 
+
+    /**
+     * Returns true if we should use LazyLoad V8
+     */
+    protected static useLazyLoadVersionV8(): boolean {
+        //new version uses IntersectionObserver which is not supported in older browsers
+
+        const intersectionObserverSupported = ("IntersectionObserver" in window);
+
+        console.log('intersectionObserverSupported', intersectionObserverSupported); 
+        if (intersectionObserverSupported) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * Returns a new instance of lazy load. Different version of LazyLoad depending on whether the browser supports intersectionObserverSupported
+     * @param options
+     */
+    protected static lazyLoadProvider(options) {
+        if (LazyResponsiveImages.useLazyLoadVersionV8()) {
+           //Load old version
+            console.log('intersectionObserverSupported: OLD Version Selected');         
+            return new lazyLoad8(options);
+        }
+
+         //Load latest Version v10x
+        console.log('intersectionObserverSupported: Latest Version Selected');
+        return new lazyLoad(options);
+    }
+
+    /**
+ * Retruns true if element near or in viewport
+ * @param element
+ */
+    protected static isElementInViewPort(element: Element) {
+        return inViewPort(element, { offset: 300 });
+    }
+
+    /**
+     * Overrides cloudinary-core.Util.setAttribute. Takes the new function.
+     * @param newFunction
+     */
     protected modifyCloudinarySetAttribute(newFunction) {
         console.log('modifyCloudinarySetAttribute called');
-
-
         cloudinaryJS.Util.setAttribute = newFunction;
+    }
 
-        // #region - Override cloudinary-core Util functions
 
-        //cloudinaryJS.Util.setAttribute = function (element, name, value) {
-
-        //    console.log('cloudinaryJS.Util.setAttribute', name);
-
-        //    //See if image is in view port.
-        //    const isInViewPort = inViewPort(element, { offset: 300 });
-
-        //    if (!isInViewPort && name == 'src') //make lazy (not in view port)
-        //    {
-        //        name = 'data-src-lazy';
-        //    }
-
-        //    switch (false) {
-        //        case !(element == null):
-        //            return void 0;
-        //        case !cloudinaryJS.Util.isFunction(element.setAttribute):
-        //            return element.setAttribute(name, value);
-        //    }
-        //};
-
-        // #endregion
-
-    } 
-
+    /**
+     * Define a new function for cloudinary-core.Util.setAttribute.
+     */
     protected cloudinaryJS_setAttribute() {
-
         return function (element, name, value) {
-
             console.log('cloudinaryJS.Util.setAttribute', name);
 
             //See if image is in view port.
-            const isInViewPort = inViewPort(element, { offset: 300 });
+            let isInViewPort: boolean = LazyResponsiveImages.isElementInViewPort(element);
+            //const isInViewPort = inViewPort(element, { offset: 300 });
 
-            if (!isInViewPort && name == 'src') //make lazy (not in view port)
+            if (!isInViewPort && name == 'src') //make lazy (image not in view port)
             {
                 name = 'data-src-lazy';
             }
-
             switch (false) {
                 case !(element == null):
                     return void 0;
@@ -115,25 +111,27 @@ class LazyResponsiveImages {
                     return element.setAttribute(name, value);
             }
         };
-
-
     }
 
-
-
+    /**
+     * Returns the Viewport width
+     */
     protected getviewportWidth() {
         console.log('getviewportWidth called');
         return viewportSize.getWidth();
     }
 
     /**
-     * used by window.resize 
+     * Updates the variable '_prevScreenWidth'.  used by window.resize
      */
     protected updatePrevScreenWidth() {
         console.log('updatePrevScreenWidth called');
         this._prevScreenWidth = this.getviewportWidth();
     }
 
+    /**
+     * Updates the variable '_lazyResetTriggerWidth'. Rounds up the width to the nearest 100 to match Cloudinary's resize steps. used by window.resize
+     */
     protected updateLazyResetTriggerWidth() {
         console.log('updateLazyResetTriggerWidth called');
         //round up to nearest 100.  
@@ -170,7 +168,9 @@ class LazyResponsiveImages {
 
     }
 
-
+    /**
+     * Calls the LazyLoad Update Method.
+     */
     protected updateLazyLoad() {
         //tell LazyLoad to manage the images that we have just reset.
         this._lazyLoad.update();
@@ -185,16 +185,15 @@ class LazyResponsiveImages {
         if (this._resetNeeded()) {
 
             //Get All Lazy img tags 
-            this._cloudImgHtmlTags = document.querySelectorAll('img[data-src-lazy]');
-            // console.log('_cloudImgHtmlTags', this._cloudImgHtmlTags);
+            const processedLazyElements: NodeListOf<Element> = document.querySelectorAll('[data-was-processed]');
+            // console.log('processedLazyElements', processedLazyElements);
 
-            for (var i = 0; i < this._cloudImgHtmlTags.length; i++) {
-
+            for (var i = 0; i < processedLazyElements.length; i++) {
                 //If not in view port then make LazyLoad manage the image by removing the Attribute data-was-processed
-                const isInViewPort = inViewPort(this._cloudImgHtmlTags[i], { offset: 300 });
+                const isInViewPort = inViewPort(processedLazyElements[i], { offset: 300 });
                 if (!isInViewPort) {
-                    //LAZYLOAD: remove data-was-processed="true" so that Lazy Load knows the image is fresh
-                    this._cloudImgHtmlTags[i].removeAttribute('data-was-processed');
+                    //LAZYLOAD: remove data-was-processed="true" so that Lazy Load knows it has not procedded this element
+                    processedLazyElements[i].removeAttribute('data-was-processed');
                 }
             }
 
@@ -203,26 +202,13 @@ class LazyResponsiveImages {
 
             //update ImageReloadTriggerWidth
             this.updateLazyResetTriggerWidth();
-
         }
     }
 
+
     /**
-     * Sets up Responsive / Lazy images
-     * @param lazyDataAttribute
+     * Sets up Cloudinary Responsive Images.
      */
-    init(lazyDataAttribute) {
-        console.log('LazyResponsiveImages init');
-
-        this.modifyCloudinarySetAttribute(this.cloudinaryJS_setAttribute());
-
-        this.responsiveImagesInit();              //setup responsive images. THis will update image urls to the responsive url
-        this.lazyLoadInit(lazyDataAttribute);         //setup Lazy Images.    Pass through the ClassName used to indicate a Lazy Image
-
-        this.setupResizeListener();
-
-    }
-
     protected responsiveImagesInit() {
         console.log('responsiveImagesInit called');
         //Setup Cloudinory Responsive JS
@@ -240,21 +226,24 @@ class LazyResponsiveImages {
 
     }
 
+    /**
+     * Sets up Lazy Load
+     * @param lazyDataAttribute
+     */
     protected lazyLoadInit(lazyDataAttribute) {
         console.log('lazyLoadInit called', lazyDataAttribute);
         //#### Setup Lazy Load ####
         if (this._lazyLoad == null) {
 
-            this._lazyLoad = new lazyLoad({
-                // data_src: 'src-lazy' //Data attribute storing the src url.
+            this._lazyLoad = LazyResponsiveImages.lazyLoadProvider({
                 data_src: lazyDataAttribute //Data attribute storing the src url.
             });
-            //console.log('lazyLoad object created', lazyLoad);
         }
-
     }
 
-    //#region window.resize 
+    /**
+     * Sets up the Window Resize Listener. OnrResize Resests Lazy images so they can be reloaded.
+     */
     protected setupResizeListener() {
 
         const lazyResponsiveImagesInstance = this;
@@ -274,44 +263,27 @@ class LazyResponsiveImages {
             callback();
         }));
     }
-    //#endregion
 
-}
+    /**
+    * Sets up Responsive / Lazy images
+    * @param lazyDataAttribute
+    */
+    init(lazyDataAttribute) {
+        console.log('LazyResponsiveImages init');
 
+        //Add our custom Set Attribute to Cloudinary
+        this.modifyCloudinarySetAttribute(this.cloudinaryJS_setAttribute());
 
-/*
+        //setup responsive images. THis will update image urls to the responsive url or Load the image if it is on screen.
+        this.responsiveImagesInit();
 
+        //setup Lazy Images. Pass through the Data attribute used to indicate a Lazy Image. E.g. 'src-lazy'
+        this.lazyLoadInit(lazyDataAttribute);
 
+        //set up the Window Resize Listener.
+        this.setupResizeListener();
 
-class LazyResponsiveImagesLoader {
-    
-    init() {
-        //Set up LazyResponsiveImages
-        console.log('LazyResponsiveImages Setting Up');
-        const myLazyResponsiveImages = new LazyResponsiveImages();
-        myLazyResponsiveImages.init('src-lazy');                    //setup responsive images/Lazy Images. Pass through the ClassName used to indicate a Lazy Image
-
-
-        //Listen for browser resize- Resets Lazy Images. If 100 images are on screeen and user changes screen width, we dont want to load 100 images again if they are off screen.
-        window.addEventListener('resize', debounce(300, function (e) {
-            console.log('resize');
-            //Check if imges need resetting to lazy
-            myLazyResponsiveImages.resetLazyStatus();
-            //update prev screen width
-            myLazyResponsiveImages.updatePrevScreenWidth();
-        }));
     }
 }
 
-
-//Listen for browser resize
-window.addEventListener('resize', debounce(300, function (e) {
-    //Check if imges need resetting to lazy
-    myLazyResponsiveImages.resetLazyStatus();
-    //update prev screen width
-    myLazyResponsiveImages.updatePrevScreenWidth();
-}));
-
-*/
-
-export { LazyResponsiveImages };
+export { LazyResponsiveImages, lazyLoad, lazyLoad8 };

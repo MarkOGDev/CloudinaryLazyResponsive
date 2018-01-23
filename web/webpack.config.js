@@ -9,6 +9,9 @@ module.exports = {
         bundle: [path.resolve('./src/main.ts')]
         , cloudinaryLazyResponsiveImages: [path.resolve('./src/cloudinary-lazy-responsive-images.ts')]
         , cloudinaryLazyResponsiveImagesScrollingContainers: [path.resolve('./src/cloudinary-lazy-responsive-images-scrolling-containers.ts')]
+       // , cloudinaryLazyResponsiveImagesFixedBgScrollReveal: [path.resolve('./src/cloudinary-lazy-responsive-images-fixedbg-scroll-reveal.ts')]
+        
+
         // "./src/main.ts"
     }
     , output: {
@@ -26,6 +29,7 @@ module.exports = {
     module: {
         rules: [{
             test: /\.ts$/,
+      
             // exclude: /node_modules/,
 
             use: [{
@@ -42,7 +46,7 @@ module.exports = {
         {
             test: /\.js$/,
             // exclude: [/node_modules/,/bower_components/], Get errors if exclude node. not sure why????
-
+    
             use: [{
                 loader: 'babel-loader',
                 options: {
