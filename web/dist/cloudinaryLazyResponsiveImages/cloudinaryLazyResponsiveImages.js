@@ -70,7 +70,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 20);
+/******/ 	return __webpack_require__(__webpack_require__.s = 19);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -117,6 +117,322 @@ module.exports = __webpack_amd_options__;
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
+
+/// <reference path="../node_modules/vanilla-lazyload/typings/lazyload.d.ts" />
+/// <reference path="../node_modules/cloudinary-core/cloudinary-core.d.ts" />
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var cloudinaryJS = __webpack_require__(3);
+var debounce = __webpack_require__(11);
+var inViewPort = __webpack_require__(13);
+var lazyLoad = __webpack_require__(14);
+exports.lazyLoad = lazyLoad;
+var lazyLoad8 = __webpack_require__(15); //older version supports browsers without IntersectionObserver feature. e.g. ie 11.
+exports.lazyLoad8 = lazyLoad8;
+var viewportSize = __webpack_require__(16); //https://github.com/jarvys/viewportSize
+;
+/**
+ * Lazy Responsive Images
+ */
+
+var LazyResponsiveImages = function () {
+    function LazyResponsiveImages(options) {
+        _classCallCheck(this, LazyResponsiveImages);
+
+        //The protected modifier acts much like the private modifier with the exception that members declared protected can also be accessed by instances of deriving classes.
+        this._cloudinary = null;
+        this._cloudinaryOptions = { cloud_name: 'demo' }; //default options
+        // protected _cloudImgHtmlTags: NodeListOf<Element> = null;
+        this._lazyLoad = null;
+        this._prevScreenWidth = null;
+        this._lazyResetTriggerWidth = null;
+        /**
+         * The data Attribute that indicates a Lazy Image.
+         * Omit the first word 'data'. E.g. Set it to  'src-lazy'
+         * Defaults to 'src-lazy'
+         */
+        this._lazyDataAttribute = 'src-lazy'; //default options
+        console.log('LazyResponsiveImages constructor called', options);
+        this._cloudinaryOptions = options.cloudinaryOptions;
+        this._lazyDataAttribute = options.lazyDataAttribute;
+    }
+    /**
+     * Returns true if we should use LazyLoad V8
+     */
+
+
+    _createClass(LazyResponsiveImages, [{
+        key: "modifyCloudinarySetAttribute",
+
+        /**
+         * Overrides cloudinary-core.Util.setAttribute. Takes the new function.
+         * @param newFunction
+         */
+        value: function modifyCloudinarySetAttribute(newFunction) {
+            console.log('modifyCloudinarySetAttribute called');
+            cloudinaryJS.Util.setAttribute = newFunction;
+        }
+        /**
+         * Define a new function for cloudinary-core.Util.setAttribute.
+         */
+
+    }, {
+        key: "cloudinaryJS_setAttribute",
+        value: function cloudinaryJS_setAttribute() {
+            return function (element, name, value) {
+                console.log('cloudinaryJS.Util.setAttribute', name);
+                //See if image is in view port.
+                var isInViewPort = LazyResponsiveImages.isElementInViewPort(element);
+                //const isInViewPort = inViewPort(element, { offset: 300 });
+                if (!isInViewPort && name == 'src') {
+                    name = 'data-src-lazy';
+                }
+                switch (false) {
+                    case !(element == null):
+                        return void 0;
+                    case !cloudinaryJS.Util.isFunction(element.setAttribute):
+                        return element.setAttribute(name, value);
+                }
+            };
+        }
+        /**
+         * Returns the Viewport width
+         */
+
+    }, {
+        key: "getviewportWidth",
+        value: function getviewportWidth() {
+            console.log('getviewportWidth called');
+            return viewportSize.getWidth();
+        }
+        /**
+         * Updates the variable '_prevScreenWidth'.  used by window.resize
+         */
+
+    }, {
+        key: "updatePrevScreenWidth",
+        value: function updatePrevScreenWidth() {
+            console.log('updatePrevScreenWidth called');
+            this._prevScreenWidth = this.getviewportWidth();
+        }
+        /**
+         * Updates the variable '_lazyResetTriggerWidth'. Rounds up the width to the nearest 100 to match Cloudinary's resize steps. used by window.resize
+         */
+
+    }, {
+        key: "updateLazyResetTriggerWidth",
+        value: function updateLazyResetTriggerWidth() {
+            console.log('updateLazyResetTriggerWidth called');
+            //round up to nearest 100.  
+            var width = Math.ceil(this.getviewportWidth() / 100) * 100;
+            this._lazyResetTriggerWidth = width;
+        }
+        /**
+         * Returns True if the browser width has increased past the point where new images should be loaded
+         */
+
+    }, {
+        key: "_resetNeeded",
+        value: function _resetNeeded() {
+            console.log('_resetNeeded called');
+            var currentScreenWidth = this.getviewportWidth();
+            console.log('currentScreenWidth', currentScreenWidth);
+            var screenGotBigger = currentScreenWidth > this._prevScreenWidth;
+            console.log('screenGotBigger', screenGotBigger);
+            console.log('this.prevScreenWidth', this._prevScreenWidth);
+            if (!screenGotBigger) {
+                return false;
+            }
+            var screenWidthBiggerThanTriggerWidth = currentScreenWidth > this._lazyResetTriggerWidth;
+            console.log('screenWidthBiggerThanTriggerWidth', screenWidthBiggerThanTriggerWidth);
+            console.log('this.lazyResetTriggerWidth', this._lazyResetTriggerWidth);
+            if (!screenWidthBiggerThanTriggerWidth) {
+                return false;
+            } else {
+                return true;
+            }
+        }
+        /**
+         * Calls the LazyLoad Update Method.
+         */
+
+    }, {
+        key: "updateLazyLoad",
+        value: function updateLazyLoad() {
+            //tell LazyLoad to manage the images that we have just reset.
+            this._lazyLoad.update();
+        }
+        /**
+         * used by window.resize
+         * Rest Lazy images and allow LazyLoader to load them again at the appropiate time.
+         */
+
+    }, {
+        key: "resetLazyStatus",
+        value: function resetLazyStatus() {
+            console.log('resetLazyStatus called');
+            if (this._resetNeeded()) {
+                //Get All Lazy img tags 
+                var processedLazyElements = document.querySelectorAll('[data-was-processed]');
+                // console.log('processedLazyElements', processedLazyElements);
+                for (var i = 0; i < processedLazyElements.length; i++) {
+                    //If not in view port then make LazyLoad manage the image by removing the Attribute data-was-processed
+                    var isInViewPort = inViewPort(processedLazyElements[i], { offset: 300 });
+                    if (!isInViewPort) {
+                        //LAZYLOAD: remove data-was-processed="true" so that Lazy Load knows it has not procedded this element
+                        processedLazyElements[i].removeAttribute('data-was-processed');
+                    }
+                }
+                //tell LazyLoad to manage the images that we have just reset.
+                this.updateLazyLoad();
+                //update ImageReloadTriggerWidth
+                this.updateLazyResetTriggerWidth();
+            }
+        }
+        /**
+         * Creates a new Instence of Cloudinory
+         */
+
+    }, {
+        key: "responsiveImagesInit",
+
+        /**
+         * Sets up Cloudinary Responsive Images.
+         */
+        value: function responsiveImagesInit() {
+            console.log('responsiveImagesInit called');
+            //Setup Cloudinory Responsive JS
+            //https://cloudinary.com/documentation/responsive_images#automating_responsive_images_with_javascript
+            if (this._cloudinary == null) {
+                //Set up Cloudinary
+                this._cloudinary = LazyResponsiveImages.cloudinarySetup(this._cloudinaryOptions);
+                //  this._cloudinary = new cloudinaryJS.Cloudinary({ cloud_name: "demo" });
+                //Setup Responsive images.  
+                this._cloudinary.responsive();
+            }
+            //set the initial screen width values 
+            this.updatePrevScreenWidth();
+            this.updateLazyResetTriggerWidth();
+        }
+        /**
+         * Sets up Lazy Load
+         * @param lazyDataAttribute
+         */
+
+    }, {
+        key: "lazyLoadInit",
+        value: function lazyLoadInit() {
+            console.log('lazyLoadInit called: this._lazyDataAttribute', this._lazyDataAttribute);
+            //#### Setup Lazy Load ####
+            if (this._lazyLoad == null) {
+                this._lazyLoad = LazyResponsiveImages.lazyLoadProvider({
+                    data_src: this._lazyDataAttribute //Data attribute storing the src url.
+                });
+            }
+        }
+        /**
+         * Sets up the Window Resize Listener. OnrResize Resests Lazy images so they can be reloaded.
+         */
+
+    }, {
+        key: "setupResizeListener",
+        value: function setupResizeListener() {
+            var lazyResponsiveImagesInstance = this;
+            console.log('setupResizeListener called', lazyResponsiveImagesInstance);
+            //## define the calback here so that 'this' instance is in scope.
+            function callback() {
+                console.log('resize callback', lazyResponsiveImagesInstance);
+                //Check if imges need resetting to lazy
+                lazyResponsiveImagesInstance.resetLazyStatus();
+                //update prev screen width
+                lazyResponsiveImagesInstance.updatePrevScreenWidth();
+            }
+            //Listen for browser resize- Resets Lazy Images. If 100 images are on screeen and user changes screen width, we dont want to load 100 images again if they are off screen.
+            window.addEventListener('resize', debounce(300, function (e) {
+                callback();
+            }));
+        }
+        /**
+        * Sets up Responsive / Lazy images
+        */
+
+    }, {
+        key: "init",
+        value: function init() {
+            console.log('LazyResponsiveImages init');
+            //Add our custom Set Attribute to Cloudinary
+            this.modifyCloudinarySetAttribute(this.cloudinaryJS_setAttribute());
+            //setup responsive images. THis will update image urls to the responsive url or Load the image if it is on screen.
+            this.responsiveImagesInit();
+            //setup Lazy Images. Pass through the Data attribute used to indicate a Lazy Image. E.g. 'src-lazy'
+            this.lazyLoadInit();
+            //set up the Window Resize Listener.
+            this.setupResizeListener();
+        }
+    }], [{
+        key: "useLazyLoadVersionV8",
+        value: function useLazyLoadVersionV8() {
+            //new version uses IntersectionObserver which is not supported in older browsers
+            var intersectionObserverSupported = "IntersectionObserver" in window;
+            console.log('intersectionObserverSupported', intersectionObserverSupported);
+            if (intersectionObserverSupported) {
+                return false;
+            }
+            return true;
+        }
+        /**
+         * Returns a new instance of lazy load. Different version of LazyLoad depending on whether the browser supports intersectionObserverSupported
+         * @param options
+         */
+
+    }, {
+        key: "lazyLoadProvider",
+        value: function lazyLoadProvider(options) {
+            if (LazyResponsiveImages.useLazyLoadVersionV8()) {
+                //Load old version
+                console.log('intersectionObserverSupported: OLD Version Selected');
+                return new lazyLoad8(options);
+            }
+            //Load latest Version v10x
+            console.log('intersectionObserverSupported: Latest Version Selected');
+            return new lazyLoad(options);
+        }
+        /**
+        * Retruns true if element near or in viewport
+        * @param element
+        */
+
+    }, {
+        key: "isElementInViewPort",
+        value: function isElementInViewPort(element) {
+            return inViewPort(element, { offset: 300 });
+        }
+    }, {
+        key: "cloudinarySetup",
+        value: function cloudinarySetup(options) {
+            //if no options passed then use demo options.
+            //// if (options == null) {
+            //     options = { cloud_name: "demo" };
+            // }
+            return new cloudinaryJS.Cloudinary(options);
+            // return new cloudinaryJS.Cloudinary({ cloud_name: "demo" });
+        }
+    }]);
+
+    return LazyResponsiveImages;
+}();
+
+exports.LazyResponsiveImages = LazyResponsiveImages;
+
+/***/ }),
+/* 3 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
 /* WEBPACK VAR INJECTION */(function(Buffer, process) {var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
@@ -140,7 +456,7 @@ var slice = [].slice,
 (function (root, factory) {
   var name, ref, results, value;
   if (true) {
-    return !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(10)], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
+    return !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(9)], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
 				__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
 				(__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__),
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
@@ -4401,584 +4717,10 @@ var slice = [].slice,
   };
   return cloudinary;
 });
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(5).Buffer, __webpack_require__(9)))
-
-/***/ }),
-/* 3 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-/* WEBPACK VAR INJECTION */(function(global) {
-
-module.exports = inViewport;
-
-var instances = [];
-var supportsMutationObserver = typeof global.MutationObserver === 'function';
-
-function inViewport(elt, params, cb) {
-  var opts = {
-    container: global.document.body,
-    offset: 0,
-    debounce: 15,
-    failsafe: 150
-  };
-
-  if (params === undefined || typeof params === 'function') {
-    cb = params;
-    params = {};
-  }
-
-  var container = opts.container = params.container || opts.container;
-  var offset = opts.offset = params.offset || opts.offset;
-  var debounceValue = opts.debounce = params.debounce || opts.debounce;
-  var failsafe = opts.failsafe = params.failsafe || opts.failsafe;
-
-  // ensure backward compatibility with failsafe as boolean
-  if (failsafe === true) {
-    failsafe = 150;
-  } else if (failsafe === false) {
-    failsafe = 0;
-  }
-
-  // failsafe check always needs to be higher than debounceValue
-  if (failsafe > 0 && failsafe < debounceValue) {
-    failsafe = debounceValue + 50;
-  }
-
-  for (var i = 0; i < instances.length; i++) {
-    if (instances[i].container === container && instances[i]._debounce === debounceValue && instances[i]._failsafe === failsafe) {
-      return instances[i].isInViewport(elt, offset, cb);
-    }
-  }
-
-  return instances[instances.push(createInViewport(container, debounceValue, failsafe)) - 1].isInViewport(elt, offset, cb);
-}
-
-function addEvent(el, type, fn) {
-  if (el.attachEvent) {
-    el.attachEvent('on' + type, fn);
-  } else {
-    el.addEventListener(type, fn, false);
-  }
-}
-
-function debounce(func, wait, immediate) {
-  var timeout;
-  return function () {
-    var context = this,
-        args = arguments;
-    var callNow = immediate && !timeout;
-    clearTimeout(timeout);
-    timeout = setTimeout(later, wait);
-    if (callNow) func.apply(context, args);
-
-    function later() {
-      timeout = null;
-      if (!immediate) func.apply(context, args);
-    }
-  };
-}
-
-// https://github.com/jquery/sizzle/blob/3136f48b90e3edc84cbaaa6f6f7734ef03775a07/sizzle.js#L708
-var contains = function contains() {
-  if (!global.document) {
-    return true;
-  }
-  return global.document.documentElement.compareDocumentPosition ? function (a, b) {
-    return !!(a.compareDocumentPosition(b) & 16);
-  } : global.document.documentElement.contains ? function (a, b) {
-    return a !== b && (a.contains ? a.contains(b) : false);
-  } : function (a, b) {
-    while (b = b.parentNode) {
-      if (b === a) {
-        return true;
-      }
-    }
-    return false;
-  };
-};
-
-function createInViewport(container, debounceValue, failsafe) {
-  var watches = createWatches();
-
-  var scrollContainer = container === global.document.body ? global : container;
-  var debouncedCheck = debounce(watches.checkAll(watchInViewport), debounceValue);
-
-  addEvent(scrollContainer, 'scroll', debouncedCheck);
-
-  if (scrollContainer === global) {
-    addEvent(global, 'resize', debouncedCheck);
-  }
-
-  if (supportsMutationObserver) {
-    observeDOM(watches, container, debouncedCheck);
-  }
-
-  // failsafe check, every X we check for visible images
-  // usecase: a hidden parent containing eleements
-  // when the parent becomes visible, we have no event that the children
-  // became visible
-  if (failsafe > 0) {
-    setInterval(debouncedCheck, failsafe);
-  }
-
-  function isInViewport(elt, offset, cb) {
-    if (!cb) {
-      return isVisible(elt, offset);
-    }
-
-    var remote = createRemote(elt, offset, cb);
-    remote.watch();
-    return remote;
-  }
-
-  function createRemote(elt, offset, cb) {
-    function watch() {
-      watches.add(elt, offset, cb);
-    }
-
-    function dispose() {
-      watches.remove(elt);
-    }
-
-    return {
-      watch: watch,
-      dispose: dispose
-    };
-  }
-
-  function watchInViewport(elt, offset, cb) {
-    if (isVisible(elt, offset)) {
-      watches.remove(elt);
-      cb(elt);
-    }
-  }
-
-  function isVisible(elt, offset) {
-    if (!elt) {
-      return false;
-    }
-
-    if (!contains(global.document.documentElement, elt) || !contains(global.document.documentElement, container)) {
-      return false;
-    }
-
-    // Check if the element is visible
-    // https://github.com/jquery/jquery/blob/740e190223d19a114d5373758127285d14d6b71e/src/css/hiddenVisibleSelectors.js
-    if (!elt.offsetWidth || !elt.offsetHeight) {
-      return false;
-    }
-
-    var eltRect = elt.getBoundingClientRect();
-    var viewport = {};
-
-    if (container === global.document.body) {
-      viewport = {
-        top: -offset,
-        left: -offset,
-        right: global.document.documentElement.clientWidth + offset,
-        bottom: global.document.documentElement.clientHeight + offset
-      };
-    } else {
-      var containerRect = container.getBoundingClientRect();
-      viewport = {
-        top: containerRect.top - offset,
-        left: containerRect.left - offset,
-        right: containerRect.right + offset,
-        bottom: containerRect.bottom + offset
-      };
-    }
-
-    // The element must overlap with the visible part of the viewport
-    var visible = eltRect.right >= viewport.left && eltRect.left <= viewport.right && eltRect.bottom >= viewport.top && eltRect.top <= viewport.bottom;
-
-    return visible;
-  }
-
-  return {
-    container: container,
-    isInViewport: isInViewport,
-    _debounce: debounceValue,
-    _failsafe: failsafe
-  };
-}
-
-function createWatches() {
-  var watches = [];
-
-  function add(elt, offset, cb) {
-    if (!isWatched(elt)) {
-      watches.push([elt, offset, cb]);
-    }
-  }
-
-  function remove(elt) {
-    var pos = indexOf(elt);
-    if (pos !== -1) {
-      watches.splice(pos, 1);
-    }
-  }
-
-  function indexOf(elt) {
-    for (var i = watches.length - 1; i >= 0; i--) {
-      if (watches[i][0] === elt) {
-        return i;
-      }
-    }
-    return -1;
-  }
-
-  function isWatched(elt) {
-    return indexOf(elt) !== -1;
-  }
-
-  function checkAll(cb) {
-    return function () {
-      for (var i = watches.length - 1; i >= 0; i--) {
-        cb.apply(this, watches[i]);
-      }
-    };
-  }
-
-  return {
-    add: add,
-    remove: remove,
-    isWatched: isWatched,
-    checkAll: checkAll
-  };
-}
-
-function observeDOM(watches, container, cb) {
-  var observer = new MutationObserver(watch);
-  var filter = Array.prototype.filter;
-  var concat = Array.prototype.concat;
-
-  observer.observe(container, {
-    childList: true,
-    subtree: true,
-    // changes like style/width/height/display will be catched
-    attributes: true
-  });
-
-  function watch(mutations) {
-    // some new DOM nodes where previously watched
-    // we should check their positions
-    if (mutations.some(knownNodes) === true) {
-      setTimeout(cb, 0);
-    }
-  }
-
-  function knownNodes(mutation) {
-    var nodes = concat.call([], Array.prototype.slice.call(mutation.addedNodes), mutation.target);
-    return filter.call(nodes, watches.isWatched).length > 0;
-  }
-}
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4).Buffer, __webpack_require__(8)))
 
 /***/ }),
 /* 4 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-/// <reference path="../node_modules/vanilla-lazyload/typings/lazyload.d.ts" />
-/// <reference path="../node_modules/cloudinary-core/cloudinary-core.d.ts" />
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-Object.defineProperty(exports, "__esModule", { value: true });
-var cloudinaryJS = __webpack_require__(2);
-var debounce = __webpack_require__(12);
-var inViewPort = __webpack_require__(3);
-var lazyLoad = __webpack_require__(14);
-exports.lazyLoad = lazyLoad;
-var lazyLoad8 = __webpack_require__(15); //older version supports browsers without IntersectionObserver feature. e.g. ie 11.
-exports.lazyLoad8 = lazyLoad8;
-var viewportSize = __webpack_require__(16); //https://github.com/jarvys/viewportSize
-/*
-
-First Page Load:
-Load Cloudinory Images
-Call Cloudinory Responsive function
-Any lazy images will not be loaded, their data will be updated by Cloudinory Responsive function
-
-OnResize:
-for Each Lazy Image:
-    if Resize Needed and:
-        off screen: Force Cloudinory to update attribute 'data-src-lazy' instead of 'src'
-
-        on screen: let Cloudinory update attribute src.
-*/
-
-var LazyResponsiveImages = function () {
-    function LazyResponsiveImages() {
-        _classCallCheck(this, LazyResponsiveImages);
-
-        //The protected modifier acts much like the private modifier with the exception that members declared protected can also be accessed by instances of deriving classes.
-        this._cloudinary = null;
-        // protected _cloudImgHtmlTags: NodeListOf<Element> = null;
-        this._lazyLoad = null;
-        this._prevScreenWidth = null;
-        this._lazyResetTriggerWidth = null;
-        console.log('LazyResponsiveImages constructor called');
-    }
-    /**
-     * Returns true if we should use LazyLoad V8
-     */
-
-
-    _createClass(LazyResponsiveImages, [{
-        key: "modifyCloudinarySetAttribute",
-
-        /**
-         * Overrides cloudinary-core.Util.setAttribute. Takes the new function.
-         * @param newFunction
-         */
-        value: function modifyCloudinarySetAttribute(newFunction) {
-            console.log('modifyCloudinarySetAttribute called');
-            cloudinaryJS.Util.setAttribute = newFunction;
-        }
-        /**
-         * Define a new function for cloudinary-core.Util.setAttribute.
-         */
-
-    }, {
-        key: "cloudinaryJS_setAttribute",
-        value: function cloudinaryJS_setAttribute() {
-            return function (element, name, value) {
-                console.log('cloudinaryJS.Util.setAttribute', name);
-                //See if image is in view port.
-                var isInViewPort = LazyResponsiveImages.isElementInViewPort(element);
-                //const isInViewPort = inViewPort(element, { offset: 300 });
-                if (!isInViewPort && name == 'src') {
-                    name = 'data-src-lazy';
-                }
-                switch (false) {
-                    case !(element == null):
-                        return void 0;
-                    case !cloudinaryJS.Util.isFunction(element.setAttribute):
-                        return element.setAttribute(name, value);
-                }
-            };
-        }
-        /**
-         * Returns the Viewport width
-         */
-
-    }, {
-        key: "getviewportWidth",
-        value: function getviewportWidth() {
-            console.log('getviewportWidth called');
-            return viewportSize.getWidth();
-        }
-        /**
-         * Updates the variable '_prevScreenWidth'.  used by window.resize
-         */
-
-    }, {
-        key: "updatePrevScreenWidth",
-        value: function updatePrevScreenWidth() {
-            console.log('updatePrevScreenWidth called');
-            this._prevScreenWidth = this.getviewportWidth();
-        }
-        /**
-         * Updates the variable '_lazyResetTriggerWidth'. Rounds up the width to the nearest 100 to match Cloudinary's resize steps. used by window.resize
-         */
-
-    }, {
-        key: "updateLazyResetTriggerWidth",
-        value: function updateLazyResetTriggerWidth() {
-            console.log('updateLazyResetTriggerWidth called');
-            //round up to nearest 100.  
-            var width = Math.ceil(this.getviewportWidth() / 100) * 100;
-            this._lazyResetTriggerWidth = width;
-        }
-        /**
-         * Returns True if the browser width has increased past the point where new images should be loaded
-         */
-
-    }, {
-        key: "_resetNeeded",
-        value: function _resetNeeded() {
-            console.log('_resetNeeded called');
-            var currentScreenWidth = this.getviewportWidth();
-            console.log('currentScreenWidth', currentScreenWidth);
-            var screenGotBigger = currentScreenWidth > this._prevScreenWidth;
-            console.log('screenGotBigger', screenGotBigger);
-            console.log('this.prevScreenWidth', this._prevScreenWidth);
-            if (!screenGotBigger) {
-                return false;
-            }
-            var screenWidthBiggerThanTriggerWidth = currentScreenWidth > this._lazyResetTriggerWidth;
-            console.log('screenWidthBiggerThanTriggerWidth', screenWidthBiggerThanTriggerWidth);
-            console.log('this.lazyResetTriggerWidth', this._lazyResetTriggerWidth);
-            if (!screenWidthBiggerThanTriggerWidth) {
-                return false;
-            } else {
-                return true;
-            }
-        }
-        /**
-         * Calls the LazyLoad Update Method.
-         */
-
-    }, {
-        key: "updateLazyLoad",
-        value: function updateLazyLoad() {
-            //tell LazyLoad to manage the images that we have just reset.
-            this._lazyLoad.update();
-        }
-        /**
-         * used by window.resize
-         * Rest Lazy images and allow LazyLoader to load them again at the appropiate time.
-         */
-
-    }, {
-        key: "resetLazyStatus",
-        value: function resetLazyStatus() {
-            console.log('resetLazyStatus called');
-            if (this._resetNeeded()) {
-                //Get All Lazy img tags 
-                var processedLazyElements = document.querySelectorAll('[data-was-processed]');
-                // console.log('processedLazyElements', processedLazyElements);
-                for (var i = 0; i < processedLazyElements.length; i++) {
-                    //If not in view port then make LazyLoad manage the image by removing the Attribute data-was-processed
-                    var isInViewPort = inViewPort(processedLazyElements[i], { offset: 300 });
-                    if (!isInViewPort) {
-                        //LAZYLOAD: remove data-was-processed="true" so that Lazy Load knows it has not procedded this element
-                        processedLazyElements[i].removeAttribute('data-was-processed');
-                    }
-                }
-                //tell LazyLoad to manage the images that we have just reset.
-                this.updateLazyLoad();
-                //update ImageReloadTriggerWidth
-                this.updateLazyResetTriggerWidth();
-            }
-        }
-        /**
-         * Sets up Cloudinary Responsive Images.
-         */
-
-    }, {
-        key: "responsiveImagesInit",
-        value: function responsiveImagesInit() {
-            console.log('responsiveImagesInit called');
-            //Setup Cloudinory Responsive JS
-            //https://cloudinary.com/documentation/responsive_images#automating_responsive_images_with_javascript
-            if (this._cloudinary == null) {
-                this._cloudinary = new cloudinaryJS.Cloudinary({ cloud_name: "demo" });
-                //Setup Responsive images.  
-                this._cloudinary.responsive();
-            }
-            //set the initial screen width values 
-            this.updatePrevScreenWidth();
-            this.updateLazyResetTriggerWidth();
-        }
-        /**
-         * Sets up Lazy Load
-         * @param lazyDataAttribute
-         */
-
-    }, {
-        key: "lazyLoadInit",
-        value: function lazyLoadInit(lazyDataAttribute) {
-            console.log('lazyLoadInit called', lazyDataAttribute);
-            //#### Setup Lazy Load ####
-            if (this._lazyLoad == null) {
-                this._lazyLoad = LazyResponsiveImages.lazyLoadProvider({
-                    data_src: lazyDataAttribute //Data attribute storing the src url.
-                });
-            }
-        }
-        /**
-         * Sets up the Window Resize Listener. OnrResize Resests Lazy images so they can be reloaded.
-         */
-
-    }, {
-        key: "setupResizeListener",
-        value: function setupResizeListener() {
-            var lazyResponsiveImagesInstance = this;
-            console.log('setupResizeListener called', lazyResponsiveImagesInstance);
-            //## define the calback here so that 'this' instance is in scope.
-            function callback() {
-                console.log('resize callback', lazyResponsiveImagesInstance);
-                //Check if imges need resetting to lazy
-                lazyResponsiveImagesInstance.resetLazyStatus();
-                //update prev screen width
-                lazyResponsiveImagesInstance.updatePrevScreenWidth();
-            }
-            //Listen for browser resize- Resets Lazy Images. If 100 images are on screeen and user changes screen width, we dont want to load 100 images again if they are off screen.
-            window.addEventListener('resize', debounce(300, function (e) {
-                callback();
-            }));
-        }
-        /**
-        * Sets up Responsive / Lazy images
-        * @param lazyDataAttribute
-        */
-
-    }, {
-        key: "init",
-        value: function init(lazyDataAttribute) {
-            console.log('LazyResponsiveImages init');
-            //Add our custom Set Attribute to Cloudinary
-            this.modifyCloudinarySetAttribute(this.cloudinaryJS_setAttribute());
-            //setup responsive images. THis will update image urls to the responsive url or Load the image if it is on screen.
-            this.responsiveImagesInit();
-            //setup Lazy Images. Pass through the Data attribute used to indicate a Lazy Image. E.g. 'src-lazy'
-            this.lazyLoadInit(lazyDataAttribute);
-            //set up the Window Resize Listener.
-            this.setupResizeListener();
-        }
-    }], [{
-        key: "useLazyLoadVersionV8",
-        value: function useLazyLoadVersionV8() {
-            //new version uses IntersectionObserver which is not supported in older browsers
-            var intersectionObserverSupported = "IntersectionObserver" in window;
-            console.log('intersectionObserverSupported', intersectionObserverSupported);
-            if (intersectionObserverSupported) {
-                return false;
-            }
-            return true;
-        }
-        /**
-         * Returns a new instance of lazy load. Different version of LazyLoad depending on whether the browser supports intersectionObserverSupported
-         * @param options
-         */
-
-    }, {
-        key: "lazyLoadProvider",
-        value: function lazyLoadProvider(options) {
-            if (LazyResponsiveImages.useLazyLoadVersionV8()) {
-                //Load old version
-                console.log('intersectionObserverSupported: OLD Version Selected');
-                return new lazyLoad8(options);
-            }
-            //Load latest Version v10x
-            console.log('intersectionObserverSupported: Latest Version Selected');
-            return new lazyLoad(options);
-        }
-        /**
-        * Retruns true if element near or in viewport
-        * @param element
-        */
-
-    }, {
-        key: "isElementInViewPort",
-        value: function isElementInViewPort(element) {
-            return inViewPort(element, { offset: 300 });
-        }
-    }]);
-
-    return LazyResponsiveImages;
-}();
-
-exports.LazyResponsiveImages = LazyResponsiveImages;
-
-/***/ }),
-/* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4992,9 +4734,9 @@ exports.LazyResponsiveImages = LazyResponsiveImages;
 
 
 
-var base64 = __webpack_require__(6);
-var ieee754 = __webpack_require__(7);
-var isArray = __webpack_require__(8);
+var base64 = __webpack_require__(5);
+var ieee754 = __webpack_require__(6);
+var isArray = __webpack_require__(7);
 
 exports.Buffer = Buffer;
 exports.SlowBuffer = SlowBuffer;
@@ -6722,7 +6464,7 @@ function isnan(val) {
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 6 */
+/* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6842,7 +6584,7 @@ function fromByteArray(uint8) {
 }
 
 /***/ }),
-/* 7 */
+/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6934,7 +6676,7 @@ exports.write = function (buffer, value, offset, isLE, mLen, nBytes) {
 };
 
 /***/ }),
-/* 8 */
+/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6947,7 +6689,7 @@ module.exports = Array.isArray || function (arr) {
 };
 
 /***/ }),
-/* 9 */
+/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7140,7 +6882,7 @@ process.umask = function () {
 };
 
 /***/ }),
-/* 10 */
+/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -16590,10 +16332,10 @@ else if(freeModule){// Export for Node.js.
 (freeModule.exports=_)._=_;// Export for CommonJS support.
 freeExports._=_;}else{// Export to the global object.
 root._=_;}}).call(undefined);
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0), __webpack_require__(11)(module)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0), __webpack_require__(10)(module)))
 
 /***/ }),
-/* 11 */
+/* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -16623,7 +16365,7 @@ module.exports = function (module) {
 };
 
 /***/ }),
-/* 12 */
+/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -16631,7 +16373,7 @@ module.exports = function (module) {
 
 /* eslint-disable no-undefined */
 
-var throttle = __webpack_require__(13);
+var throttle = __webpack_require__(12);
 
 /**
  * Debounce execution of a function. Debouncing, unlike throttling,
@@ -16652,7 +16394,7 @@ module.exports = function (delay, atBegin, callback) {
 };
 
 /***/ }),
-/* 13 */
+/* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -16746,6 +16488,278 @@ module.exports = function (delay, noTrailing, callback, debounceMode) {
 	// Return the wrapper function.
 	return wrapper;
 };
+
+/***/ }),
+/* 13 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function(global) {
+
+module.exports = inViewport;
+
+var instances = [];
+var supportsMutationObserver = typeof global.MutationObserver === 'function';
+
+function inViewport(elt, params, cb) {
+  var opts = {
+    container: global.document.body,
+    offset: 0,
+    debounce: 15,
+    failsafe: 150
+  };
+
+  if (params === undefined || typeof params === 'function') {
+    cb = params;
+    params = {};
+  }
+
+  var container = opts.container = params.container || opts.container;
+  var offset = opts.offset = params.offset || opts.offset;
+  var debounceValue = opts.debounce = params.debounce || opts.debounce;
+  var failsafe = opts.failsafe = params.failsafe || opts.failsafe;
+
+  // ensure backward compatibility with failsafe as boolean
+  if (failsafe === true) {
+    failsafe = 150;
+  } else if (failsafe === false) {
+    failsafe = 0;
+  }
+
+  // failsafe check always needs to be higher than debounceValue
+  if (failsafe > 0 && failsafe < debounceValue) {
+    failsafe = debounceValue + 50;
+  }
+
+  for (var i = 0; i < instances.length; i++) {
+    if (instances[i].container === container && instances[i]._debounce === debounceValue && instances[i]._failsafe === failsafe) {
+      return instances[i].isInViewport(elt, offset, cb);
+    }
+  }
+
+  return instances[instances.push(createInViewport(container, debounceValue, failsafe)) - 1].isInViewport(elt, offset, cb);
+}
+
+function addEvent(el, type, fn) {
+  if (el.attachEvent) {
+    el.attachEvent('on' + type, fn);
+  } else {
+    el.addEventListener(type, fn, false);
+  }
+}
+
+function debounce(func, wait, immediate) {
+  var timeout;
+  return function () {
+    var context = this,
+        args = arguments;
+    var callNow = immediate && !timeout;
+    clearTimeout(timeout);
+    timeout = setTimeout(later, wait);
+    if (callNow) func.apply(context, args);
+
+    function later() {
+      timeout = null;
+      if (!immediate) func.apply(context, args);
+    }
+  };
+}
+
+// https://github.com/jquery/sizzle/blob/3136f48b90e3edc84cbaaa6f6f7734ef03775a07/sizzle.js#L708
+var contains = function contains() {
+  if (!global.document) {
+    return true;
+  }
+  return global.document.documentElement.compareDocumentPosition ? function (a, b) {
+    return !!(a.compareDocumentPosition(b) & 16);
+  } : global.document.documentElement.contains ? function (a, b) {
+    return a !== b && (a.contains ? a.contains(b) : false);
+  } : function (a, b) {
+    while (b = b.parentNode) {
+      if (b === a) {
+        return true;
+      }
+    }
+    return false;
+  };
+};
+
+function createInViewport(container, debounceValue, failsafe) {
+  var watches = createWatches();
+
+  var scrollContainer = container === global.document.body ? global : container;
+  var debouncedCheck = debounce(watches.checkAll(watchInViewport), debounceValue);
+
+  addEvent(scrollContainer, 'scroll', debouncedCheck);
+
+  if (scrollContainer === global) {
+    addEvent(global, 'resize', debouncedCheck);
+  }
+
+  if (supportsMutationObserver) {
+    observeDOM(watches, container, debouncedCheck);
+  }
+
+  // failsafe check, every X we check for visible images
+  // usecase: a hidden parent containing eleements
+  // when the parent becomes visible, we have no event that the children
+  // became visible
+  if (failsafe > 0) {
+    setInterval(debouncedCheck, failsafe);
+  }
+
+  function isInViewport(elt, offset, cb) {
+    if (!cb) {
+      return isVisible(elt, offset);
+    }
+
+    var remote = createRemote(elt, offset, cb);
+    remote.watch();
+    return remote;
+  }
+
+  function createRemote(elt, offset, cb) {
+    function watch() {
+      watches.add(elt, offset, cb);
+    }
+
+    function dispose() {
+      watches.remove(elt);
+    }
+
+    return {
+      watch: watch,
+      dispose: dispose
+    };
+  }
+
+  function watchInViewport(elt, offset, cb) {
+    if (isVisible(elt, offset)) {
+      watches.remove(elt);
+      cb(elt);
+    }
+  }
+
+  function isVisible(elt, offset) {
+    if (!elt) {
+      return false;
+    }
+
+    if (!contains(global.document.documentElement, elt) || !contains(global.document.documentElement, container)) {
+      return false;
+    }
+
+    // Check if the element is visible
+    // https://github.com/jquery/jquery/blob/740e190223d19a114d5373758127285d14d6b71e/src/css/hiddenVisibleSelectors.js
+    if (!elt.offsetWidth || !elt.offsetHeight) {
+      return false;
+    }
+
+    var eltRect = elt.getBoundingClientRect();
+    var viewport = {};
+
+    if (container === global.document.body) {
+      viewport = {
+        top: -offset,
+        left: -offset,
+        right: global.document.documentElement.clientWidth + offset,
+        bottom: global.document.documentElement.clientHeight + offset
+      };
+    } else {
+      var containerRect = container.getBoundingClientRect();
+      viewport = {
+        top: containerRect.top - offset,
+        left: containerRect.left - offset,
+        right: containerRect.right + offset,
+        bottom: containerRect.bottom + offset
+      };
+    }
+
+    // The element must overlap with the visible part of the viewport
+    var visible = eltRect.right >= viewport.left && eltRect.left <= viewport.right && eltRect.bottom >= viewport.top && eltRect.top <= viewport.bottom;
+
+    return visible;
+  }
+
+  return {
+    container: container,
+    isInViewport: isInViewport,
+    _debounce: debounceValue,
+    _failsafe: failsafe
+  };
+}
+
+function createWatches() {
+  var watches = [];
+
+  function add(elt, offset, cb) {
+    if (!isWatched(elt)) {
+      watches.push([elt, offset, cb]);
+    }
+  }
+
+  function remove(elt) {
+    var pos = indexOf(elt);
+    if (pos !== -1) {
+      watches.splice(pos, 1);
+    }
+  }
+
+  function indexOf(elt) {
+    for (var i = watches.length - 1; i >= 0; i--) {
+      if (watches[i][0] === elt) {
+        return i;
+      }
+    }
+    return -1;
+  }
+
+  function isWatched(elt) {
+    return indexOf(elt) !== -1;
+  }
+
+  function checkAll(cb) {
+    return function () {
+      for (var i = watches.length - 1; i >= 0; i--) {
+        cb.apply(this, watches[i]);
+      }
+    };
+  }
+
+  return {
+    add: add,
+    remove: remove,
+    isWatched: isWatched,
+    checkAll: checkAll
+  };
+}
+
+function observeDOM(watches, container, cb) {
+  var observer = new MutationObserver(watch);
+  var filter = Array.prototype.filter;
+  var concat = Array.prototype.concat;
+
+  observer.observe(container, {
+    childList: true,
+    subtree: true,
+    // changes like style/width/height/display will be catched
+    attributes: true
+  });
+
+  function watch(mutations) {
+    // some new DOM nodes where previously watched
+    // we should check their positions
+    if (mutations.some(knownNodes) === true) {
+      setTimeout(cb, 0);
+    }
+  }
+
+  function knownNodes(mutation) {
+    var nodes = concat.call([], Array.prototype.slice.call(mutation.addedNodes), mutation.target);
+    return filter.call(nodes, watches.isWatched).length > 0;
+  }
+}
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
 /* 14 */
@@ -17206,11 +17220,10 @@ module.exports.getWidth = function () {
 /***/ }),
 /* 17 */,
 /* 18 */,
-/* 19 */,
-/* 20 */
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(4);
+module.exports = __webpack_require__(2);
 
 
 /***/ })

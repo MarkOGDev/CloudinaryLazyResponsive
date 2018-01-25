@@ -10,7 +10,7 @@
             /* Allow img to scale down when browser width is reduced. */
             max-width: 100%;
         }
-    </style> 
+    </style>
 </head>
 <body id="body">
     <h1>Demo of Lazy Loaded Responsive Images with Scrolling Container Support</h1>
@@ -53,10 +53,10 @@
         <img class="cld-responsive" data-src="https://res.cloudinary.com/idemo/image/upload/ar_200:131,c_fill,dpr_1.0,g_faces,w_auto/car_lady_dog.jpg" />
         <br /><br />  <br /><br />  <br /><br />  <br /><br />  <br /><br />  <br /><br />  <br /><br />
         <img class="cld-responsive" data-src="https://res.cloudinary.com/idemo/image/upload/ar_200:131,c_fill,dpr_1.0,g_faces,w_auto/balloons.jpg" />
-    </div>  
+    </div>
 
     <div id="info">
-    </div>   
+    </div>
 
 
     <br /><br />
@@ -80,12 +80,15 @@
     <script src="../dist/cloudinaryLazyResponsiveImagesScrollingContainers/cloudinaryLazyResponsiveImagesScrollingContainers.js"></script>
     <script type="text/javascript">
         //  console.log(clri.cloudinaryLazyResponsiveImages.LazyResponsiveImagesLoader);
-        //create hte instance
-        var clri = new clri.cloudinaryLazyResponsiveImagesScrollingContainers.LazyResponsiveImagesContainerSupport();
-        clri.lazyContainorClassName = 'lazy-container';
+        //create the instance
+
+
+        var clri = new clri.cloudinaryLazyResponsiveImagesScrollingContainers.LazyResponsiveImagesContainerSupport({ lazyDataAttribute: 'src-lazy', lazyContainorClassName: 'lazy-container' });
+        // clri.lazyContainorClassName = 'lazy-container';
         //run setup function
-        clri.init('src-lazy');
-         
+        clri.init();
+           // clri.init('src-lazy');
+
 
     </script>
 

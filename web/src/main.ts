@@ -6,8 +6,7 @@ import * as debounce from 'throttle-debounce/debounce';
 
 
 //Load and Run Lazy Repsonive
-const myLazyResponsiveImages = new LazyResponsiveImages();
-myLazyResponsiveImages.init('src-lazy');
+const myLazyResponsiveImages = new LazyResponsiveImages({ lazyDataAttribute: 'src-lazy' });
+myLazyResponsiveImages.init();
 
 
- 

@@ -24,19 +24,42 @@ for Each Lazy Image:
 */
 
 
+/**
+ * Class Settings Interface
+ */
+interface isettings {
+    cloudinaryOptions?: cloudinaryJS.Configuration.Options,
+    lazyDataAttribute?: string
+};
+
+/**
+ * Lazy Responsive Images
+ */
 class LazyResponsiveImages {
 
     //The protected modifier acts much like the private modifier with the exception that members declared protected can also be accessed by instances of deriving classes.
     protected _cloudinary: cloudinaryJS.Cloudinary = null;
+    protected _cloudinaryOptions: cloudinaryJS.Configuration.Options = { cloud_name: 'demo' };      //default options
     // protected _cloudImgHtmlTags: NodeListOf<Element> = null;
 
     protected _lazyLoad: ILazyLoad = null;
     protected _prevScreenWidth: number = null;
     protected _lazyResetTriggerWidth: number = null;
 
+   /**
+    * The data Attribute that indicates a Lazy Image.
+    * Omit the first word 'data'. E.g. Set it to  'src-lazy'
+    * Defaults to 'src-lazy'
+    */
+    protected _lazyDataAttribute: string = 'src-lazy';                                               //default options
+     
 
-    constructor() {
-        console.log('LazyResponsiveImages constructor called');
+
+    constructor(options?: isettings) { 
+        console.log('LazyResponsiveImages constructor called', options);
+
+        this._cloudinaryOptions = options.cloudinaryOptions;
+        this._lazyDataAttribute = options.lazyDataAttribute;
     }
 
 
@@ -48,7 +71,7 @@ class LazyResponsiveImages {
 
         const intersectionObserverSupported = ("IntersectionObserver" in window);
 
-        console.log('intersectionObserverSupported', intersectionObserverSupported); 
+        console.log('intersectionObserverSupported', intersectionObserverSupported);
         if (intersectionObserverSupported) {
             return false;
         }
@@ -61,12 +84,12 @@ class LazyResponsiveImages {
      */
     protected static lazyLoadProvider(options) {
         if (LazyResponsiveImages.useLazyLoadVersionV8()) {
-           //Load old version
-            console.log('intersectionObserverSupported: OLD Version Selected');         
+            //Load old version
+            console.log('intersectionObserverSupported: OLD Version Selected');
             return new lazyLoad8(options);
         }
 
-         //Load latest Version v10x
+        //Load latest Version v10x
         console.log('intersectionObserverSupported: Latest Version Selected');
         return new lazyLoad(options);
     }
@@ -206,6 +229,20 @@ class LazyResponsiveImages {
     }
 
 
+
+    /**
+     * Creates a new Instence of Cloudinory
+     */
+    protected static cloudinarySetup(options?: cloudinaryJS.Configuration.Options): cloudinaryJS.Cloudinary {
+        //if no options passed then use demo options.
+       //// if (options == null) {
+       //     options = { cloud_name: "demo" };
+       // }
+
+        return new cloudinaryJS.Cloudinary(options);
+        // return new cloudinaryJS.Cloudinary({ cloud_name: "demo" });
+    }
+
     /**
      * Sets up Cloudinary Responsive Images.
      */
@@ -215,7 +252,12 @@ class LazyResponsiveImages {
         //https://cloudinary.com/documentation/responsive_images#automating_responsive_images_with_javascript
 
         if (this._cloudinary == null) {
-            this._cloudinary = new cloudinaryJS.Cloudinary({ cloud_name: "demo" });
+
+            //Set up Cloudinary
+            this._cloudinary = LazyResponsiveImages.cloudinarySetup(this._cloudinaryOptions);
+
+            //  this._cloudinary = new cloudinaryJS.Cloudinary({ cloud_name: "demo" });
+
             //Setup Responsive images.  
             this._cloudinary.responsive();
         }
@@ -230,13 +272,13 @@ class LazyResponsiveImages {
      * Sets up Lazy Load
      * @param lazyDataAttribute
      */
-    protected lazyLoadInit(lazyDataAttribute) {
-        console.log('lazyLoadInit called', lazyDataAttribute);
+    protected lazyLoadInit() {
+        console.log('lazyLoadInit called: this._lazyDataAttribute', this._lazyDataAttribute);
         //#### Setup Lazy Load ####
         if (this._lazyLoad == null) {
 
             this._lazyLoad = LazyResponsiveImages.lazyLoadProvider({
-                data_src: lazyDataAttribute //Data attribute storing the src url.
+                data_src: this._lazyDataAttribute //Data attribute storing the src url.
             });
         }
     }
@@ -266,9 +308,8 @@ class LazyResponsiveImages {
 
     /**
     * Sets up Responsive / Lazy images
-    * @param lazyDataAttribute
     */
-    init(lazyDataAttribute) {
+    init() {
         console.log('LazyResponsiveImages init');
 
         //Add our custom Set Attribute to Cloudinary
@@ -278,7 +319,7 @@ class LazyResponsiveImages {
         this.responsiveImagesInit();
 
         //setup Lazy Images. Pass through the Data attribute used to indicate a Lazy Image. E.g. 'src-lazy'
-        this.lazyLoadInit(lazyDataAttribute);
+        this.lazyLoadInit();
 
         //set up the Window Resize Listener.
         this.setupResizeListener();
@@ -286,4 +327,4 @@ class LazyResponsiveImages {
     }
 }
 
-export { LazyResponsiveImages, lazyLoad, lazyLoad8 };
+export { LazyResponsiveImages, lazyLoad, lazyLoad8, isettings };
