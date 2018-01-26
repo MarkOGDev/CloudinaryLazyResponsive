@@ -130,9 +130,7 @@ var cloudinaryJS = __webpack_require__(3);
 var debounce = __webpack_require__(11);
 var inViewPort = __webpack_require__(13);
 var lazyLoad = __webpack_require__(14);
-exports.lazyLoad = lazyLoad;
 var lazyLoad8 = __webpack_require__(15); //older version supports browsers without IntersectionObserver feature. e.g. ie 11.
-exports.lazyLoad8 = lazyLoad8;
 var viewportSize = __webpack_require__(16); //https://github.com/jarvys/viewportSize
 ;
 /**
@@ -238,7 +236,7 @@ var LazyResponsiveImages = function () {
     }, {
         key: "_resetNeeded",
         value: function _resetNeeded() {
-            console.log('_resetNeeded called');
+            console.groupCollapsed('_resetNeeded called');
             var currentScreenWidth = this.getviewportWidth();
             console.log('currentScreenWidth', currentScreenWidth);
             var screenGotBigger = currentScreenWidth > this._prevScreenWidth;
@@ -250,6 +248,7 @@ var LazyResponsiveImages = function () {
             var screenWidthBiggerThanTriggerWidth = currentScreenWidth > this._lazyResetTriggerWidth;
             console.log('screenWidthBiggerThanTriggerWidth', screenWidthBiggerThanTriggerWidth);
             console.log('this.lazyResetTriggerWidth', this._lazyResetTriggerWidth);
+            console.groupEnd();
             if (!screenWidthBiggerThanTriggerWidth) {
                 return false;
             } else {
@@ -311,6 +310,7 @@ var LazyResponsiveImages = function () {
                 //Set up Cloudinary
                 this._cloudinary = LazyResponsiveImages.cloudinarySetup(this._cloudinaryOptions);
                 //  this._cloudinary = new cloudinaryJS.Cloudinary({ cloud_name: "demo" });
+                //  console.log('YOYOYOYYOthis._cloudinaryOptions', this._cloudinaryOptions);
                 //Setup Responsive images.  
                 this._cloudinary.responsive();
             }
@@ -363,7 +363,7 @@ var LazyResponsiveImages = function () {
     }, {
         key: "init",
         value: function init() {
-            console.log('LazyResponsiveImages init');
+            console.groupCollapsed('LazyResponsiveImages init');
             //Add our custom Set Attribute to Cloudinary
             this.modifyCloudinarySetAttribute(this.cloudinaryJS_setAttribute());
             //setup responsive images. THis will update image urls to the responsive url or Load the image if it is on screen.
@@ -372,6 +372,7 @@ var LazyResponsiveImages = function () {
             this.lazyLoadInit();
             //set up the Window Resize Listener.
             this.setupResizeListener();
+            console.groupEnd();
         }
     }], [{
         key: "useLazyLoadVersionV8",
@@ -427,6 +428,7 @@ var LazyResponsiveImages = function () {
 }();
 
 exports.LazyResponsiveImages = LazyResponsiveImages;
+//export { LazyResponsiveImages, lazyLoad, lazyLoad8 };
 
 /***/ }),
 /* 3 */

@@ -1,17 +1,21 @@
 ﻿/// <reference path="../node_modules/vanilla-lazyload/typings/lazyload.d.ts" />
 /// <reference path="../node_modules/cloudinary-core/cloudinary-core.d.ts" />
 
-import { LazyResponsiveImages, isettings } from './cloudinary-lazy-responsive-images';
+import { LazyResponsiveImages, isettings as isettingsBase } from './cloudinary-lazy-responsive-images';
 
 
 /**
  * Class Settings Interface. Adds lazyContainorClassName
  */
-interface isettings2 extends isettings {
-    lazyContainerClassName: string
+//export interface isettings2 extends isettings {
+//    lazyContainerClassName: string
+//};
+
+export interface isettings extends isettingsBase {
+    lazyContainerClassName?: string
 };
 
-class LazyResponsiveImagesContainerSupport extends LazyResponsiveImages {
+export class LazyResponsiveImagesContainerSupport extends LazyResponsiveImages {
 
     protected _lazyLoadInstances: Array<ILazyLoad> = [];
 
@@ -19,7 +23,7 @@ class LazyResponsiveImagesContainerSupport extends LazyResponsiveImages {
 
 
 
-    constructor(options?: isettings2) {
+    constructor(options?: isettings) {
         super(options);
         console.log('LazyResponsiveImages constructor called', options);
 
@@ -131,5 +135,5 @@ class LazyResponsiveImagesContainerSupport extends LazyResponsiveImages {
 }
 
 
-export { LazyResponsiveImagesContainerSupport };
+//export { LazyResponsiveImagesContainerSupport };
 

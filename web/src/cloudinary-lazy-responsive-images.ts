@@ -27,7 +27,7 @@ for Each Lazy Image:
 /**
  * Class Settings Interface
  */
-interface isettings {
+export interface isettings {
     cloudinaryOptions?: cloudinaryJS.Configuration.Options,
     lazyDataAttribute?: string
 };
@@ -35,7 +35,7 @@ interface isettings {
 /**
  * Lazy Responsive Images
  */
-class LazyResponsiveImages {
+export class LazyResponsiveImages {
 
     //The protected modifier acts much like the private modifier with the exception that members declared protected can also be accessed by instances of deriving classes.
     protected _cloudinary: cloudinaryJS.Cloudinary = null;
@@ -46,16 +46,16 @@ class LazyResponsiveImages {
     protected _prevScreenWidth: number = null;
     protected _lazyResetTriggerWidth: number = null;
 
-   /**
-    * The data Attribute that indicates a Lazy Image.
-    * Omit the first word 'data'. E.g. Set it to  'src-lazy'
-    * Defaults to 'src-lazy'
-    */
+    /**
+     * The data Attribute that indicates a Lazy Image.
+     * Omit the first word 'data'. E.g. Set it to  'src-lazy'
+     * Defaults to 'src-lazy'
+     */
     protected _lazyDataAttribute: string = 'src-lazy';                                               //default options
-     
 
 
-    constructor(options?: isettings) { 
+
+    constructor(options?: isettings) {
         console.log('LazyResponsiveImages constructor called', options);
 
         this._cloudinaryOptions = options.cloudinaryOptions;
@@ -125,6 +125,7 @@ class LazyResponsiveImages {
 
             if (!isInViewPort && name == 'src') //make lazy (image not in view port)
             {
+       
                 name = 'data-src-lazy';
             }
             switch (false) {
@@ -166,7 +167,7 @@ class LazyResponsiveImages {
      * Returns True if the browser width has increased past the point where new images should be loaded
      */
     protected _resetNeeded(): boolean {
-        console.log('_resetNeeded called');
+        console.groupCollapsed('_resetNeeded called');
         const currentScreenWidth = this.getviewportWidth();
         console.log('currentScreenWidth', currentScreenWidth);
 
@@ -182,13 +183,15 @@ class LazyResponsiveImages {
         console.log('screenWidthBiggerThanTriggerWidth', screenWidthBiggerThanTriggerWidth);
         console.log('this.lazyResetTriggerWidth', this._lazyResetTriggerWidth);
 
+        console.groupEnd();
+
         if (!screenWidthBiggerThanTriggerWidth) {
             return false;
         }
         else {
             return true;
         }
-
+     
     }
 
     /**
@@ -235,9 +238,9 @@ class LazyResponsiveImages {
      */
     protected static cloudinarySetup(options?: cloudinaryJS.Configuration.Options): cloudinaryJS.Cloudinary {
         //if no options passed then use demo options.
-       //// if (options == null) {
-       //     options = { cloud_name: "demo" };
-       // }
+        //// if (options == null) {
+        //     options = { cloud_name: "demo" };
+        // }
 
         return new cloudinaryJS.Cloudinary(options);
         // return new cloudinaryJS.Cloudinary({ cloud_name: "demo" });
@@ -257,6 +260,7 @@ class LazyResponsiveImages {
             this._cloudinary = LazyResponsiveImages.cloudinarySetup(this._cloudinaryOptions);
 
             //  this._cloudinary = new cloudinaryJS.Cloudinary({ cloud_name: "demo" });
+            //  console.log('YOYOYOYYOthis._cloudinaryOptions', this._cloudinaryOptions);
 
             //Setup Responsive images.  
             this._cloudinary.responsive();
@@ -310,7 +314,7 @@ class LazyResponsiveImages {
     * Sets up Responsive / Lazy images
     */
     init() {
-        console.log('LazyResponsiveImages init');
+        console.groupCollapsed('LazyResponsiveImages init');
 
         //Add our custom Set Attribute to Cloudinary
         this.modifyCloudinarySetAttribute(this.cloudinaryJS_setAttribute());
@@ -323,8 +327,8 @@ class LazyResponsiveImages {
 
         //set up the Window Resize Listener.
         this.setupResizeListener();
-
+        console.groupEnd();
     }
 }
 
-export { LazyResponsiveImages, lazyLoad, lazyLoad8, isettings };
+//export { LazyResponsiveImages, lazyLoad, lazyLoad8 };
