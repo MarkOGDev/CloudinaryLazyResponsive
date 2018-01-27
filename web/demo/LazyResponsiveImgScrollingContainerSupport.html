@@ -77,19 +77,12 @@
                 + '<br />window.innerHeight: ' + window.innerHeight;
         }
     </script>
-    <script src="../dist/cloudinaryLazyResponsiveImagesScrollingContainers/cloudinaryLazyResponsiveImagesScrollingContainers.js"></script>
-    <script type="text/javascript">
-        //  console.log(clri.cloudinaryLazyResponsiveImages.LazyResponsiveImagesLoader);
-        //create the instance
+    
 
-
-        var clri = new clri.cloudinaryLazyResponsiveImagesScrollingContainers.LazyResponsiveImagesContainerSupport({ lazyDataAttribute: 'src-lazy', lazyContainorClassName: 'lazy-container' });
-        // clri.lazyContainorClassName = 'lazy-container';
-        //run setup function
-        clri.init();
-           // clri.init('src-lazy');
-
-
+    <script src="../dist/demo/demo.js"></script>
+    <script type="text/javascript">      
+        var demo = new clri.demo.Demos();
+        demo.demoLazyResponsiveImgScrollingContainerSupport();
     </script>
 
 </body>

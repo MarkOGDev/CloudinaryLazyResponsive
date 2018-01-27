@@ -70,7 +70,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 17);
+/******/ 	return __webpack_require__(__webpack_require__.s = 18);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -17223,11 +17223,142 @@ module.exports.getWidth = function () {
 /* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(18);
+"use strict";
 
+/// <reference path="../node_modules/vanilla-lazyload/typings/lazyload.d.ts" />
+/// <reference path="../node_modules/cloudinary-core/cloudinary-core.d.ts" />
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var cloudinary_lazy_responsive_images_1 = __webpack_require__(2);
+;
+
+var LazyResponsiveImagesContainerSupport = function (_cloudinary_lazy_resp) {
+    _inherits(LazyResponsiveImagesContainerSupport, _cloudinary_lazy_resp);
+
+    function LazyResponsiveImagesContainerSupport(options) {
+        _classCallCheck(this, LazyResponsiveImagesContainerSupport);
+
+        var _this = _possibleConstructorReturn(this, (LazyResponsiveImagesContainerSupport.__proto__ || Object.getPrototypeOf(LazyResponsiveImagesContainerSupport)).call(this, options));
+
+        _this._lazyLoadInstances = [];
+        _this._lazyContainerClassName = 'lazy-container'; //default 'lazy-container'
+        console.log('LazyResponsiveImages constructor called', options);
+        //add 
+        _this._lazyContainerClassName = options.lazyContainerClassName;
+        return _this;
+    }
+    //  public lazyDataAttribute: string;
+    //constructor() {
+    //    //create base class
+    //    super();
+    //}
+    /**
+     *  Sets up Lazy Load
+     * @param lazyDataAttribute
+     */
+
+
+    _createClass(LazyResponsiveImagesContainerSupport, [{
+        key: "lazyLoadInit",
+        value: function lazyLoadInit() {
+            // this.lazyDataAttribute = lazyDataAttribute;
+            console.log('lazyLoadInit called', this._lazyDataAttribute);
+            console.log('this.lazyContainorClassName', this._lazyContainerClassName);
+            //#### Setup Lazy Load ####
+            if (this._lazyLoadInstances.length == 0) {
+                //## define the calback here so that 'this' is in scope.     
+                var callback = function callback() {
+                    return function (el) {
+                        console.log('callback()', el);
+                        var oneLL = cloudinary_lazy_responsive_images_1.LazyResponsiveImages.lazyLoadProvider({
+                            container: el,
+                            data_src: lazyDataAttribute //'src-lazy'
+                        });
+                        // Push it in the lazyLoadInstances array to keep track of the instances                
+                        lazyLoadArray.push(oneLL);
+                        //console.log('Callback _lazyLoadInstances', lazyLoadArray);
+                    };
+                };
+                //Images in Scrolling Container           
+                // The "lazyLazy" instance of lazyload is used (kinda improperly)
+                // to check when the Container divs enter the viewport
+
+
+                //############ Set up scrolling conatiner LazyLoad ############
+                //get class properties into Scope
+                var lazyLoadArray = this._lazyLoadInstances;
+                var lazyDataAttribute = this._lazyDataAttribute;var lazyLazy = cloudinary_lazy_responsive_images_1.LazyResponsiveImages.lazyLoadProvider({
+                    elements_selector: '.' + this._lazyContainerClassName,
+                    // When the .horzContainer div enters the viewport...
+                    callback_set: callback()
+                });
+                //################### Normal imgaes with lazy load (images not in a scrolling container) ###############
+                //select all images that are not in a container with class '.tm-bg--underlay-wrap' and data-src set.
+                //add an extra class to these images
+                //target only images with that new class 
+                var fullDataAttibName = 'data-' + this._lazyDataAttribute;
+                var lazyImagesArray = Array.prototype.slice.call(document.querySelectorAll('img[' + fullDataAttibName + ']')); //convert to an array 
+                var lazyContainerImagesArray = Array.prototype.slice.call(document.querySelectorAll('.' + this._lazyContainerClassName + ' img[' + fullDataAttibName + ']'));
+                //console.log('lazyContainerImagesArray', lazyContainerImagesArray);
+                //filter the array to get Lazy Images not in a scrolling container
+                var lazyImagesWithoutContainer = lazyImagesArray.filter(function (obj) {
+                    return lazyContainerImagesArray.indexOf(obj) == -1;
+                });
+                console.log('lazyImagesArray', lazyImagesArray);
+                console.log('lazyContainerImagesArray', lazyContainerImagesArray);
+                console.log('nonLazyContainerImages1', lazyImagesWithoutContainer);
+                for (var i = 0; i < lazyImagesWithoutContainer.length; i++) {
+                    //add extra class to help Target these Lazy images
+                    lazyImagesWithoutContainer[i].className += ' lazy';
+                }
+                //set up lazy load to work on images with class 'lazy'
+                var myLazyLoad = cloudinary_lazy_responsive_images_1.LazyResponsiveImages.lazyLoadProvider({
+                    data_src: this._lazyDataAttribute,
+                    elements_selector: '.lazy'
+                });
+                //Add the LazyLoad instance to the array
+                this._lazyLoadInstances.push(myLazyLoad);
+            }
+        }
+        /**
+         * Updates all Lazy Load instances
+         */
+
+    }, {
+        key: "updateLazyLoad",
+        value: function updateLazyLoad() {
+            console.log('updateLazyLoad called');
+            for (var i = 0; i < this._lazyLoadInstances.length; i++) {
+                console.log('updateLazyLoadInstances', this._lazyLoadInstances[i]);
+                this._lazyLoadInstances[i].update();
+            }
+            //console.log('_lazyLoadInstances length', this._lazyLoadInstances.length);
+        }
+    }]);
+
+    return LazyResponsiveImagesContainerSupport;
+}(cloudinary_lazy_responsive_images_1.LazyResponsiveImages);
+
+exports.LazyResponsiveImagesContainerSupport = LazyResponsiveImagesContainerSupport;
+//export { LazyResponsiveImagesContainerSupport };
 
 /***/ }),
 /* 18 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__(19);
+
+
+/***/ }),
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -17235,10 +17366,10 @@ module.exports = __webpack_require__(18);
 //import { LazyResponsiveImages } from './lazy-responsive-images'
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var cloudinary_lazy_responsive_images_1 = __webpack_require__(2); //import like this to force render of js without actually needing to create and use the class
-//Load and Run Lazy Repsonive
-var myLazyResponsiveImages = new cloudinary_lazy_responsive_images_1.LazyResponsiveImages({ lazyDataAttribute: 'src-lazy' });
-myLazyResponsiveImages.init();
+var cloudinary_lazy_responsive_images_1 = __webpack_require__(2);
+exports.LazyResponsiveImages = cloudinary_lazy_responsive_images_1.LazyResponsiveImages;
+var cloudinary_lazy_responsive_images_scrolling_containers_1 = __webpack_require__(17);
+exports.LazyResponsiveImagesContainerSupport = cloudinary_lazy_responsive_images_scrolling_containers_1.LazyResponsiveImagesContainerSupport;
 
 /***/ })
 /******/ ]);

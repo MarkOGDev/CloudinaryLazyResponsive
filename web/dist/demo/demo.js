@@ -4,9 +4,9 @@
 	else if(typeof define === 'function' && define.amd)
 		define([], factory);
 	else if(typeof exports === 'object')
-		exports["cloudinaryLazyResponsiveImagesScrollingContainers"] = factory();
+		exports["demo"] = factory();
 	else
-		root["clri"] = root["clri"] || {}, root["clri"]["cloudinaryLazyResponsiveImagesScrollingContainers"] = factory();
+		root["clri"] = root["clri"] || {}, root["clri"]["demo"] = factory();
 })(typeof self !== 'undefined' ? self : this, function() {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
@@ -17220,17 +17220,7 @@ module.exports.getWidth = function () {
 };
 
 /***/ }),
-/* 17 */,
-/* 18 */,
-/* 19 */,
-/* 20 */
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports = __webpack_require__(21);
-
-
-/***/ }),
-/* 21 */
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -17359,6 +17349,68 @@ var LazyResponsiveImagesContainerSupport = function (_cloudinary_lazy_resp) {
 
 exports.LazyResponsiveImagesContainerSupport = LazyResponsiveImagesContainerSupport;
 //export { LazyResponsiveImagesContainerSupport };
+
+/***/ }),
+/* 18 */,
+/* 19 */,
+/* 20 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__(21);
+
+
+/***/ }),
+/* 21 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var cloudinary_lazy_responsive_images_1 = __webpack_require__(2); //import like this to force render of js without actually needing to create and use the class
+var cloudinary_lazy_responsive_images_scrolling_containers_1 = __webpack_require__(17);
+
+var Demos = function () {
+    function Demos() {
+        _classCallCheck(this, Demos);
+    }
+
+    _createClass(Demos, [{
+        key: "demoLazyResponsiveImg",
+
+        /**
+         *
+         */
+        value: function demoLazyResponsiveImg() {
+            //Load and Run Lazy Repsonive
+            var myLazyResponsiveImages = new cloudinary_lazy_responsive_images_1.LazyResponsiveImages({ lazyDataAttribute: 'src-lazy' });
+            //run setup function
+            myLazyResponsiveImages.init();
+        }
+        /**
+         *
+         */
+
+    }, {
+        key: "demoLazyResponsiveImgScrollingContainerSupport",
+        value: function demoLazyResponsiveImgScrollingContainerSupport() {
+            var myLazyResponsiveImagesContainerSupport = new cloudinary_lazy_responsive_images_scrolling_containers_1.LazyResponsiveImagesContainerSupport({ lazyDataAttribute: 'src-lazy', lazyContainerClassName: 'lazy-container' });
+            //run setup function
+            myLazyResponsiveImagesContainerSupport.init();
+        }
+    }]);
+
+    return Demos;
+}();
+
+exports.Demos = Demos;
+//var demo = new Demos();
+//demo.demoLazyResponsiveImg();
+//demo.demoLazyResponsiveImgScrollingContainerSupport();
 
 /***/ })
 /******/ ]);

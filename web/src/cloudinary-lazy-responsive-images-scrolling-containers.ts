@@ -3,14 +3,10 @@
 
 import { LazyResponsiveImages, isettings as isettingsBase } from './cloudinary-lazy-responsive-images';
 
-
+ 
 /**
- * Class Settings Interface. Adds lazyContainorClassName
+ * Extend the interface with custom property
  */
-//export interface isettings2 extends isettings {
-//    lazyContainerClassName: string
-//};
-
 export interface isettings extends isettingsBase {
     lazyContainerClassName?: string
 };
