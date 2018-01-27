@@ -1,5 +1,5 @@
 {
-  "name": "cloudinary-lazy-responsive",
+  "name": "og-cloudinary-lazy-responsive",
   "version": "1.0.0",
   "description": "Makes cloudinary lazy",
   "main": "src/cloudinary-lazy-responsive-images-scrolling-containers.ts",
