@@ -8,6 +8,12 @@ import * as lazyLoad from './../node_modules/vanilla-lazyload/dist/lazyload.js';
 import * as lazyLoad8 from './../custom_modules/vanilla-lazyload-v8.6.0/';         //older version supports browsers without IntersectionObserver feature. e.g. ie 11.
 import * as viewportSize from 'viewport-size';   //https://github.com/jarvys/viewportSize
 
+/*
+TODO: split Lazy from Cloudinary and store in separate ifles.
+propergate to other projects.
+*/
+
+
 /* 
 
 First Page Load:
@@ -98,7 +104,7 @@ export class LazyResponsiveImages {
  * Retruns true if element near or in viewport
  * @param element
  */
-    protected static isElementInViewPort(element: Element) {
+    public static isElementInViewPort(element: Element) {
         return inViewPort(element, { offset: 300 });
     }
 
