@@ -33,7 +33,7 @@ for Each Lazy Image:
 /**
  * Class Settings Interface
  */
-export interface isettings {
+export interface iClriSettings {
     cloudinaryOptions?: cloudinaryJS.Configuration.Options,
     lazyDataAttribute?: string
 };
@@ -61,7 +61,7 @@ export class LazyResponsiveImages {
 
 
 
-    constructor(options?: isettings) {
+    constructor(options?: iClriSettings) {
         console.log('LazyResponsiveImages constructor called', options);
 
         this._cloudinaryOptions = options.cloudinaryOptions;

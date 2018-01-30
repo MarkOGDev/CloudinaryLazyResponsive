@@ -19,7 +19,10 @@ export class Demos {
      * 
      */
     demoLazyResponsiveImgScrollingContainerSupport() {
-        const myLazyResponsiveImagesContainerSupport = new LazyResponsiveImagesContainerSupport({ lazyDataAttribute: 'src-lazy', lazyContainerClassName: 'lazy-container' });
+        const myLazyResponsiveImagesContainerSupport = new LazyResponsiveImagesContainerSupport({
+            lazyDataAttribute: 'src-lazy',
+            lazyContainerClassName: 'lazy-container'
+        });
         //run setup function
         myLazyResponsiveImagesContainerSupport.init();
     }

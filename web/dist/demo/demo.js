@@ -17398,7 +17398,10 @@ var Demos = function () {
     }, {
         key: "demoLazyResponsiveImgScrollingContainerSupport",
         value: function demoLazyResponsiveImgScrollingContainerSupport() {
-            var myLazyResponsiveImagesContainerSupport = new cloudinary_lazy_responsive_images_scrolling_containers_1.LazyResponsiveImagesContainerSupport({ lazyDataAttribute: 'src-lazy', lazyContainerClassName: 'lazy-container' });
+            var myLazyResponsiveImagesContainerSupport = new cloudinary_lazy_responsive_images_scrolling_containers_1.LazyResponsiveImagesContainerSupport({
+                lazyDataAttribute: 'src-lazy',
+                lazyContainerClassName: 'lazy-container'
+            });
             //run setup function
             myLazyResponsiveImagesContainerSupport.init();
         }
