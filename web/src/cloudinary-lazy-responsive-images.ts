@@ -33,15 +33,16 @@ for Each Lazy Image:
 /**
  * Class Settings Interface
  */
-export interface iClriSettings {
+interface iClriSettings {
     cloudinaryOptions?: cloudinaryJS.Configuration.Options,
     lazyDataAttribute?: string
-};
+    //l,azyOffSet?: string
+}
 
 /**
  * Lazy Responsive Images
  */
-export class LazyResponsiveImages {
+class LazyResponsiveImages {
 
     //The protected modifier acts much like the private modifier with the exception that members declared protected can also be accessed by instances of deriving classes.
     protected _cloudinary: cloudinaryJS.Cloudinary = null;
@@ -62,7 +63,7 @@ export class LazyResponsiveImages {
 
 
     constructor(options?: iClriSettings) {
-        console.log('LazyResponsiveImages constructor called', options);
+        console.log('BASE LazyResponsiveImages constructor called', options);
 
         this._cloudinaryOptions = options.cloudinaryOptions;
         this._lazyDataAttribute = options.lazyDataAttribute;
@@ -105,7 +106,7 @@ export class LazyResponsiveImages {
  * @param element
  */
     public static isElementInViewPort(element: Element) {
-        return inViewPort(element, { offset: 300 });
+        return inViewPort(element, { offset: 600 });
     }
 
     /**
@@ -131,7 +132,7 @@ export class LazyResponsiveImages {
 
             if (!isInViewPort && name == 'src') //make lazy (image not in view port)
             {
-       
+
                 name = 'data-src-lazy';
             }
             switch (false) {
@@ -197,7 +198,7 @@ export class LazyResponsiveImages {
         else {
             return true;
         }
-     
+
     }
 
     /**
@@ -278,6 +279,11 @@ export class LazyResponsiveImages {
 
     }
 
+
+
+
+
+
     /**
      * Sets up Lazy Load
      * @param lazyDataAttribute
@@ -289,9 +295,16 @@ export class LazyResponsiveImages {
 
             this._lazyLoad = LazyResponsiveImages.lazyLoadProvider({
                 data_src: this._lazyDataAttribute //Data attribute storing the src url.
+                , threshold: 600
             });
         }
     }
+
+
+
+
+
+
 
     /**
      * Sets up the Window Resize Listener. OnrResize Resests Lazy images so they can be reloaded.
@@ -337,4 +350,6 @@ export class LazyResponsiveImages {
     }
 }
 
-//export { LazyResponsiveImages, lazyLoad, lazyLoad8 };
+
+
+export { iClriSettings, LazyResponsiveImages, cloudinaryJS };

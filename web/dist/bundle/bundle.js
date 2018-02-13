@@ -127,12 +127,12 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var cloudinaryJS = __webpack_require__(3);
+exports.cloudinaryJS = cloudinaryJS;
 var debounce = __webpack_require__(11);
 var inViewPort = __webpack_require__(13);
 var lazyLoad = __webpack_require__(14);
 var lazyLoad8 = __webpack_require__(15); //older version supports browsers without IntersectionObserver feature. e.g. ie 11.
 var viewportSize = __webpack_require__(16); //https://github.com/jarvys/viewportSize
-;
 /**
  * Lazy Responsive Images
  */
@@ -154,7 +154,7 @@ var LazyResponsiveImages = function () {
          * Defaults to 'src-lazy'
          */
         this._lazyDataAttribute = 'src-lazy'; //default options
-        console.log('LazyResponsiveImages constructor called', options);
+        console.log('BASE LazyResponsiveImages constructor called', options);
         this._cloudinaryOptions = options.cloudinaryOptions;
         this._lazyDataAttribute = options.lazyDataAttribute;
     }
@@ -331,6 +331,8 @@ var LazyResponsiveImages = function () {
             if (this._lazyLoad == null) {
                 this._lazyLoad = LazyResponsiveImages.lazyLoadProvider({
                     data_src: this._lazyDataAttribute //Data attribute storing the src url.
+
+                    , threshold: 600
                 });
             }
         }
@@ -410,7 +412,7 @@ var LazyResponsiveImages = function () {
     }, {
         key: "isElementInViewPort",
         value: function isElementInViewPort(element) {
-            return inViewPort(element, { offset: 300 });
+            return inViewPort(element, { offset: 600 });
         }
     }, {
         key: "cloudinarySetup",
@@ -428,7 +430,6 @@ var LazyResponsiveImages = function () {
 }();
 
 exports.LazyResponsiveImages = LazyResponsiveImages;
-//export { LazyResponsiveImages, lazyLoad, lazyLoad8 };
 
 /***/ }),
 /* 3 */
@@ -17250,7 +17251,7 @@ var LazyResponsiveImagesContainerSupport = function (_cloudinary_lazy_resp) {
 
         _this._lazyLoadInstances = [];
         _this._lazyContainerClassName = 'lazy-container'; //default 'lazy-container'
-        console.log('LazyResponsiveImages constructor called', options);
+        console.log('LazyResponsiveImagesContainerSupport (Extended class) constructor called', options);
         //add 
         _this._lazyContainerClassName = options.lazyContainerClassName;
         return _this;
@@ -17348,7 +17349,6 @@ var LazyResponsiveImagesContainerSupport = function (_cloudinary_lazy_resp) {
 }(cloudinary_lazy_responsive_images_1.LazyResponsiveImages);
 
 exports.LazyResponsiveImagesContainerSupport = LazyResponsiveImagesContainerSupport;
-//export { LazyResponsiveImagesContainerSupport };
 
 /***/ }),
 /* 18 */

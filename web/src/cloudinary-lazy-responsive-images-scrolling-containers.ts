@@ -7,11 +7,11 @@ import { LazyResponsiveImages, iClriSettings as isettingsBase } from './cloudina
 /**
  * Extend the interface with custom property
  */
-export interface iClriSettings extends isettingsBase {
+interface iClriSettings extends isettingsBase {
     lazyContainerClassName?: string
 };
 
-export class LazyResponsiveImagesContainerSupport extends LazyResponsiveImages {
+class LazyResponsiveImagesContainerSupport extends LazyResponsiveImages {
 
     protected _lazyLoadInstances: Array<ILazyLoad> = [];
 
@@ -21,7 +21,7 @@ export class LazyResponsiveImagesContainerSupport extends LazyResponsiveImages {
 
     constructor(options?: iClriSettings) {
         super(options);
-        console.log('LazyResponsiveImages constructor called', options);
+        console.log('LazyResponsiveImagesContainerSupport (Extended class) constructor called', options);
 
         //add 
         this._lazyContainerClassName = options.lazyContainerClassName;
@@ -131,5 +131,5 @@ export class LazyResponsiveImagesContainerSupport extends LazyResponsiveImages {
 }
 
 
-//export { LazyResponsiveImagesContainerSupport };
+export { isettingsBase, LazyResponsiveImagesContainerSupport, iClriSettings };
 

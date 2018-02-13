@@ -1,5 +1,9 @@
 ﻿"use strict";
 
+//const webpack = require('webpack');
+//Upgarade uglyfy when using webpack v4/ v3 has built in version
+//const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
+
 const path = require('path');
 const IS_DEV = process.env.NODE_ENV === 'development';  //visual studio uses vaiable called 'NODE_ENV'
 const IS_PROD = process.env.NODE_ENV === 'production';
