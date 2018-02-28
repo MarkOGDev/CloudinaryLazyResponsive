@@ -70,7 +70,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 23);
+/******/ 	return __webpack_require__(__webpack_require__.s = 26);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -118,7 +118,150 @@ module.exports = __webpack_amd_options__;
 
 "use strict";
 
-/// <reference path="../node_modules/vanilla-lazyload/typings/lazyload.d.ts" />
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+Object.defineProperty(exports, "__esModule", { value: true });
+
+var IsClientSide = function () {
+    function IsClientSide() {
+        _classCallCheck(this, IsClientSide);
+    }
+
+    _createClass(IsClientSide, null, [{
+        key: "windowAvailable",
+
+        /**
+         * Returns True if Window Is available
+         */
+        value: function windowAvailable() {
+            var windowAvailable = typeof window !== "undefined" && window !== null ? true : false;
+            console.log('IsClientSide WindowAvailable()', windowAvailable);
+            return windowAvailable;
+        }
+        /**
+         * Returns True if Document is Available
+         */
+
+    }, {
+        key: "documentAvailable",
+        value: function documentAvailable() {
+            var documentAvailable = typeof document !== "undefined" && document !== null ? true : false;
+            console.log('IsClientSide DocumentAvailable()', documentAvailable);
+            return documentAvailable;
+        }
+        /**
+         * Returns True if all our client side checks are true.
+         * Currently Checks for Window and Document.
+         */
+
+    }, {
+        key: "true",
+        value: function _true() {
+            return IsClientSide.windowAvailable() && IsClientSide.documentAvailable();
+        }
+        /**
+         * Returns True if anyof our client side check fail.
+         */
+
+    }, {
+        key: "false",
+        value: function _false() {
+            return !IsClientSide.true();
+        }
+    }]);
+
+    return IsClientSide;
+}();
+
+exports.IsClientSide = IsClientSide;
+
+/***/ }),
+/* 3 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+/// <reference path="../../node_modules/vanilla-lazyload/typings/lazyload.d.ts" />
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var og_is_client_side_1 = __webpack_require__(2);
+/**
+ * Creates a Promise for either old or new version of LazyLoad.
+ * Should be safe server side although wont do anything.
+ */
+
+var LazyLoadFactory = function () {
+    function LazyLoadFactory() {
+        _classCallCheck(this, LazyLoadFactory);
+    }
+
+    _createClass(LazyLoadFactory, null, [{
+        key: "getLazyLoadPromise",
+
+        //TODO: look at making getLazyLoadPromise function async. Will we have to make all functions async for that?
+        //public static getLazyLoad(options: ILazyLoadOptions) {
+        //    return null;
+        //}
+        value: function getLazyLoadPromise(options) {
+            //only do smething if we are client side. 
+            if (!og_is_client_side_1.IsClientSide.true()) {
+                return null;
+            }
+            var promise = null;
+            if (LazyLoadFactory.useLazyLoadVersionV8()) {
+                //Load old 
+                promise = Promise.resolve().then(function () {
+                    return __webpack_require__(18);
+                }).then(function (lazyLoad8) {
+                    console.log('intersectionObserverSupported: OLD Version Selected');
+                    return new lazyLoad8(options);
+                });
+            }
+            //Load latest Version v10x
+            promise = Promise.resolve().then(function () {
+                return __webpack_require__(19);
+            }).then(function (lazyLoad) {
+                console.log('intersectionObserverSupported: Latest Version Selected');
+                return new lazyLoad(options);
+            });
+            return promise;
+        }
+        /**
+        * Returns true if we should use LazyLoad V8
+        */
+
+    }, {
+        key: "useLazyLoadVersionV8",
+        value: function useLazyLoadVersionV8() {
+            //new version uses IntersectionObserver which is not supported in older browsers
+            var intersectionObserverSupported = "IntersectionObserver" in window;
+            console.log('intersectionObserverSupported', intersectionObserverSupported);
+            if (intersectionObserverSupported) {
+                return false;
+            }
+            return true;
+        }
+    }]);
+
+    return LazyLoadFactory;
+}();
+
+exports.LazyLoadFactory = LazyLoadFactory;
+
+/***/ }),
+/* 4 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+///// <reference path="../node_modules/vanilla-lazyload/typings/lazyload.d.ts" />
 /// <reference path="../node_modules/cloudinary-core/cloudinary-core.d.ts" />
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -126,13 +269,18 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var cloudinaryJS = __webpack_require__(3);
+var cloudinaryJS = __webpack_require__(5);
 exports.cloudinaryJS = cloudinaryJS;
-var debounce = __webpack_require__(11);
-var inViewPort = __webpack_require__(13);
-var lazyLoad = __webpack_require__(14);
-var lazyLoad8 = __webpack_require__(15); //older version supports browsers without IntersectionObserver feature. e.g. ie 11.
+var debounce = __webpack_require__(13);
+var inViewPort = __webpack_require__(15);
+//import * as lazyLoad from './../node_modules/vanilla-lazyload/dist/lazyload.js';
+//import * as lazyLoad8 from './../custom_modules/vanilla-lazyload-v8.6.0/';         //older version supports browsers without IntersectionObserver feature. e.g. ie 11.
 var viewportSize = __webpack_require__(16); //https://github.com/jarvys/viewportSize
+//import {
+//    LazyLoadFactory
+//    //, lazyLoad, lazyLoad8
+//} from './lazy/lazy-load-factory';
+var lazy_load_1 = __webpack_require__(27);
 /**
  * Lazy Responsive Images
  */
@@ -145,7 +293,9 @@ var LazyResponsiveImages = function () {
         this._cloudinary = null;
         this._cloudinaryOptions = { cloud_name: 'demo' }; //default options
         // protected _cloudImgHtmlTags: NodeListOf<Element> = null;
+        // protected _lazyLoad: Promise<ILazyLoad> = null;
         this._lazyLoad = null;
+        // protected _lazyLoad: ILazyLoad = null;
         this._prevScreenWidth = null;
         this._lazyResetTriggerWidth = null;
         /**
@@ -154,13 +304,15 @@ var LazyResponsiveImages = function () {
          * Defaults to 'src-lazy'
          */
         this._lazyDataAttribute = 'src-lazy'; //default options
+        this._threshold = 600;
         console.log('BASE LazyResponsiveImages constructor called', options);
         this._cloudinaryOptions = options.cloudinaryOptions;
         this._lazyDataAttribute = options.lazyDataAttribute;
     }
     /**
-     * Returns true if we should use LazyLoad V8
-     */
+    * Retruns true if element near or in viewport
+    * @param element
+    */
 
 
     _createClass(LazyResponsiveImages, [{
@@ -186,15 +338,21 @@ var LazyResponsiveImages = function () {
                 //See if image is in view port.
                 var isInViewPort = LazyResponsiveImages.isElementInViewPort(element);
                 //const isInViewPort = inViewPort(element, { offset: 300 });
+                //Cloudinary is trying to set the src. we will make it set the data-src-lazy instead
                 if (!isInViewPort && name == 'src') {
                     name = 'data-src-lazy';
                 }
-                switch (false) {
-                    case !(element == null):
-                        return void 0;
-                    case !cloudinaryJS.Util.isFunction(element.setAttribute):
-                        return element.setAttribute(name, value);
-                }
+                return element.setAttribute(name, value);
+                //alert(element.setAttribute);
+                //not sure what this code was for.
+                //switch (false) {
+                //    case !(element == null):
+                //        alert(0);
+                //        return void 0;
+                //    case !cloudinaryJS.Util.isFunction(element.setAttribute):
+                //        alert(1);
+                //        return element.setAttribute(name, value);
+                //}
             };
         }
         /**
@@ -256,16 +414,6 @@ var LazyResponsiveImages = function () {
             }
         }
         /**
-         * Calls the LazyLoad Update Method.
-         */
-
-    }, {
-        key: "updateLazyLoad",
-        value: function updateLazyLoad() {
-            //tell LazyLoad to manage the images that we have just reset.
-            this._lazyLoad.update();
-        }
-        /**
          * used by window.resize
          * Rest Lazy images and allow LazyLoader to load them again at the appropiate time.
          */
@@ -319,22 +467,24 @@ var LazyResponsiveImages = function () {
             this.updateLazyResetTriggerWidth();
         }
         /**
-         * Sets up Lazy Load
-         * @param lazyDataAttribute
+         * Calls the LazyLoad Update Method.
          */
 
     }, {
-        key: "lazyLoadInit",
-        value: function lazyLoadInit() {
-            console.log('lazyLoadInit called: this._lazyDataAttribute', this._lazyDataAttribute);
-            //#### Setup Lazy Load ####
-            if (this._lazyLoad == null) {
-                this._lazyLoad = LazyResponsiveImages.lazyLoadProvider({
-                    data_src: this._lazyDataAttribute //Data attribute storing the src url.
-
-                    , threshold: 600
-                });
+        key: "updateLazyLoad",
+        value: function updateLazyLoad() {
+            if (this._lazyLoad != null) {
+                this._lazyLoad.update();
             }
+            //if (this._lazyLoad != null) {
+            //    //tell LazyLoad to manage the images that we have just reset.
+            //    // this._lazyLoad.update();
+            //    //using LazyLoad Promise
+            //    this._lazyLoad.then(lazyLoad => {
+            //        //tell LazyLoad to manage the images that we have just reset.
+            //        lazyLoad.update();
+            //    });
+            //}
         }
         /**
          * Sets up the Window Resize Listener. OnrResize Resests Lazy images so they can be reloaded.
@@ -358,6 +508,17 @@ var LazyResponsiveImages = function () {
                 callback();
             }));
         }
+    }, {
+        key: "lazyLoadInit",
+        value: function lazyLoadInit() {
+            //setup Lazy Images. Pass through the Data attribute used to indicate a Lazy Image. E.g. 'src-lazy'
+            //calling the constructor cerates which starts it lokking at page elements.
+            this._lazyLoad = new lazy_load_1.LazyLoad({
+                data_src: this._lazyDataAttribute //Data attribute storing the src url.
+
+                , threshold: this._threshold
+            });
+        }
         /**
         * Sets up Responsive / Lazy images
         */
@@ -371,45 +532,20 @@ var LazyResponsiveImages = function () {
             //setup responsive images. THis will update image urls to the responsive url or Load the image if it is on screen.
             this.responsiveImagesInit();
             //setup Lazy Images. Pass through the Data attribute used to indicate a Lazy Image. E.g. 'src-lazy'
+            //calling the constructor cerates which starts it lokking at page elements.
+            //this._lazyLoad = new LazyLoad({
+            //    data_src: this._lazyDataAttribute       //Data attribute storing the src url.
+            //    , threshold: this._threshold
+            //});
+            // this.lazyLoadInit();
+            // this._lazyLoad = myLazyLoadProvider.LazyLoadInstancePromise;
+            //set up lazy load. We override this in derived classes that do more work.
             this.lazyLoadInit();
             //set up the Window Resize Listener.
             this.setupResizeListener();
             console.groupEnd();
         }
     }], [{
-        key: "useLazyLoadVersionV8",
-        value: function useLazyLoadVersionV8() {
-            //new version uses IntersectionObserver which is not supported in older browsers
-            var intersectionObserverSupported = "IntersectionObserver" in window;
-            console.log('intersectionObserverSupported', intersectionObserverSupported);
-            if (intersectionObserverSupported) {
-                return false;
-            }
-            return true;
-        }
-        /**
-         * Returns a new instance of lazy load. Different version of LazyLoad depending on whether the browser supports intersectionObserverSupported
-         * @param options
-         */
-
-    }, {
-        key: "lazyLoadProvider",
-        value: function lazyLoadProvider(options) {
-            if (LazyResponsiveImages.useLazyLoadVersionV8()) {
-                //Load old version
-                console.log('intersectionObserverSupported: OLD Version Selected');
-                return new lazyLoad8(options);
-            }
-            //Load latest Version v10x
-            console.log('intersectionObserverSupported: Latest Version Selected');
-            return new lazyLoad(options);
-        }
-        /**
-        * Retruns true if element near or in viewport
-        * @param element
-        */
-
-    }, {
         key: "isElementInViewPort",
         value: function isElementInViewPort(element) {
             return inViewPort(element, { offset: 600 });
@@ -432,7 +568,7 @@ var LazyResponsiveImages = function () {
 exports.LazyResponsiveImages = LazyResponsiveImages;
 
 /***/ }),
-/* 3 */
+/* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -459,7 +595,7 @@ var slice = [].slice,
 (function (root, factory) {
   var name, ref, results, value;
   if (true) {
-    return !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(9)], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
+    return !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(11)], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
 				__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
 				(__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__),
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
@@ -4720,10 +4856,10 @@ var slice = [].slice,
   };
   return cloudinary;
 });
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4).Buffer, __webpack_require__(8)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(6).Buffer, __webpack_require__(10)))
 
 /***/ }),
-/* 4 */
+/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4737,9 +4873,9 @@ var slice = [].slice,
 
 
 
-var base64 = __webpack_require__(5);
-var ieee754 = __webpack_require__(6);
-var isArray = __webpack_require__(7);
+var base64 = __webpack_require__(7);
+var ieee754 = __webpack_require__(8);
+var isArray = __webpack_require__(9);
 
 exports.Buffer = Buffer;
 exports.SlowBuffer = SlowBuffer;
@@ -6467,7 +6603,7 @@ function isnan(val) {
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 5 */
+/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6587,7 +6723,7 @@ function fromByteArray(uint8) {
 }
 
 /***/ }),
-/* 6 */
+/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6679,7 +6815,7 @@ exports.write = function (buffer, value, offset, isLE, mLen, nBytes) {
 };
 
 /***/ }),
-/* 7 */
+/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6692,7 +6828,7 @@ module.exports = Array.isArray || function (arr) {
 };
 
 /***/ }),
-/* 8 */
+/* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6885,7 +7021,7 @@ process.umask = function () {
 };
 
 /***/ }),
-/* 9 */
+/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -16335,10 +16471,10 @@ else if(freeModule){// Export for Node.js.
 (freeModule.exports=_)._=_;// Export for CommonJS support.
 freeExports._=_;}else{// Export to the global object.
 root._=_;}}).call(undefined);
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0), __webpack_require__(10)(module)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0), __webpack_require__(12)(module)))
 
 /***/ }),
-/* 10 */
+/* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -16368,7 +16504,7 @@ module.exports = function (module) {
 };
 
 /***/ }),
-/* 11 */
+/* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -16376,7 +16512,7 @@ module.exports = function (module) {
 
 /* eslint-disable no-undefined */
 
-var throttle = __webpack_require__(12);
+var throttle = __webpack_require__(14);
 
 /**
  * Debounce execution of a function. Debouncing, unlike throttling,
@@ -16397,7 +16533,7 @@ module.exports = function (delay, atBegin, callback) {
 };
 
 /***/ }),
-/* 12 */
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -16493,7 +16629,7 @@ module.exports = function (delay, noTrailing, callback, debounceMode) {
 };
 
 /***/ }),
-/* 13 */
+/* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -16765,7 +16901,202 @@ function observeDOM(watches, container, cb) {
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 14 */
+/* 16 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var getSize = function getSize(Name) {
+	var size;
+	var name = Name.toLowerCase();
+	var document = window.document;
+	var documentElement = document.documentElement;
+	if (window["inner" + Name] === undefined) {
+		// IE6 & IE7 don't have window.innerWidth or innerHeight
+		size = documentElement["client" + Name];
+	} else if (window["inner" + Name] != documentElement["client" + Name]) {
+		// WebKit doesn't include scrollbars while calculating viewport size so we have to get fancy
+
+		// Insert markup to test if a media query will match document.doumentElement["client" + Name]
+		var bodyElement = document.createElement("body");
+		bodyElement.id = "vpw-test-b";
+		bodyElement.style.cssText = "overflow:scroll";
+		var divElement = document.createElement("div");
+		divElement.id = "vpw-test-d";
+		divElement.style.cssText = "position:absolute;top:-1000px";
+		// Getting specific on the CSS selector so it won't get overridden easily
+		divElement.innerHTML = "<style>@media(" + name + ":" + documentElement["client" + Name] + "px){body#vpw-test-b div#vpw-test-d{" + name + ":7px!important}}</style>";
+		bodyElement.appendChild(divElement);
+		documentElement.insertBefore(bodyElement, document.head);
+
+		if (divElement["offset" + Name] == 7) {
+			// Media query matches document.documentElement["client" + Name]
+			size = documentElement["client" + Name];
+		} else {
+			// Media query didn't match, use window["inner" + Name]
+			size = window["inner" + Name];
+		}
+		// Cleanup
+		documentElement.removeChild(bodyElement);
+	} else {
+		// Default to use window["inner" + Name]
+		size = window["inner" + Name];
+	}
+	return size;
+};
+
+module.exports.getHeight = function () {
+	return getSize("Height");
+};
+
+module.exports.getWidth = function () {
+	return getSize("Width");
+};
+
+/***/ }),
+/* 17 */,
+/* 18 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;
+
+var _typeof2 = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+var _extends = Object.assign || function (e) {
+  for (var t = 1; t < arguments.length; t++) {
+    var n = arguments[t];for (var o in n) {
+      Object.prototype.hasOwnProperty.call(n, o) && (e[o] = n[o]);
+    }
+  }return e;
+},
+    _typeof = "function" == typeof Symbol && "symbol" == _typeof2(Symbol.iterator) ? function (e) {
+  return typeof e === "undefined" ? "undefined" : _typeof2(e);
+} : function (e) {
+  return e && "function" == typeof Symbol && e.constructor === Symbol && e !== Symbol.prototype ? "symbol" : typeof e === "undefined" ? "undefined" : _typeof2(e);
+};!function (e, t) {
+  "object" === ( false ? "undefined" : _typeof(exports)) && "undefined" != typeof module ? module.exports = t() :  true ? !(__WEBPACK_AMD_DEFINE_FACTORY__ = (t),
+				__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
+				(__WEBPACK_AMD_DEFINE_FACTORY__.call(exports, __webpack_require__, exports, module)) :
+				__WEBPACK_AMD_DEFINE_FACTORY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__)) : e.LazyLoad = t();
+}(undefined, function () {
+  "use strict";
+  var e = { elements_selector: "img", container: window, threshold: 300, throttle: 150, data_src: "src", data_srcset: "srcset", class_loading: "loading", class_loaded: "loaded", class_error: "error", class_initial: "initial", skip_invisible: !0, callback_load: null, callback_error: null, callback_set: null, callback_processed: null, callback_enter: null },
+      t = !("onscroll" in window) || /glebot/.test(navigator.userAgent),
+      n = function n(e, t) {
+    e && e(t);
+  },
+      o = function o(e) {
+    return e.getBoundingClientRect().top + window.pageYOffset - e.ownerDocument.documentElement.clientTop;
+  },
+      i = function i(e, t, n) {
+    return (t === window ? window.innerHeight + window.pageYOffset : o(t) + t.offsetHeight) <= o(e) - n;
+  },
+      s = function s(e) {
+    return e.getBoundingClientRect().left + window.pageXOffset - e.ownerDocument.documentElement.clientLeft;
+  },
+      r = function r(e, t, n) {
+    var o = window.innerWidth;return (t === window ? o + window.pageXOffset : s(t) + o) <= s(e) - n;
+  },
+      l = function l(e, t, n) {
+    return (t === window ? window.pageYOffset : o(t)) >= o(e) + n + e.offsetHeight;
+  },
+      a = function a(e, t, n) {
+    return (t === window ? window.pageXOffset : s(t)) >= s(e) + n + e.offsetWidth;
+  },
+      c = function c(e, t, n) {
+    return !(i(e, t, n) || l(e, t, n) || r(e, t, n) || a(e, t, n));
+  },
+      u = function u(e, t) {
+    var n,
+        o = new e(t);try {
+      n = new CustomEvent("LazyLoad::Initialized", { detail: { instance: o } });
+    } catch (e) {
+      (n = document.createEvent("CustomEvent")).initCustomEvent("LazyLoad::Initialized", !1, !1, { instance: o });
+    }window.dispatchEvent(n);
+  },
+      d = function d(e, t) {
+    return e.getAttribute("data-" + t);
+  },
+      h = function h(e, t, n) {
+    return e.setAttribute("data-" + t, n);
+  },
+      _ = function _(e, t) {
+    var n = e.parentNode;if ("PICTURE" === n.tagName) for (var o = 0; o < n.children.length; o++) {
+      var i = n.children[o];if ("SOURCE" === i.tagName) {
+        var s = d(i, t);s && i.setAttribute("srcset", s);
+      }
+    }
+  },
+      f = function f(e, t, n) {
+    var o = e.tagName,
+        i = d(e, n);if ("IMG" === o) {
+      _(e, t);var s = d(e, t);return s && e.setAttribute("srcset", s), void (i && e.setAttribute("src", i));
+    }"IFRAME" !== o ? i && (e.style.backgroundImage = 'url("' + i + '")') : i && e.setAttribute("src", i);
+  },
+      p = "classList" in document.createElement("p"),
+      m = function m(e, t) {
+    p ? e.classList.add(t) : e.className += (e.className ? " " : "") + t;
+  },
+      g = function g(e, t) {
+    p ? e.classList.remove(t) : e.className = e.className.replace(new RegExp("(^|\\s+)" + t + "(\\s+|$)"), " ").replace(/^\s+/, "").replace(/\s+$/, "");
+  },
+      v = function v(t) {
+    this._settings = _extends({}, e, t), this._queryOriginNode = this._settings.container === window ? document : this._settings.container, this._previousLoopTime = 0, this._loopTimeout = null, this._boundHandleScroll = this.handleScroll.bind(this), this._isFirstLoop = !0, window.addEventListener("resize", this._boundHandleScroll), this.update();
+  };v.prototype = { _reveal: function _reveal(e) {
+      var t = this._settings,
+          o = function o() {
+        t && (e.removeEventListener("load", i), e.removeEventListener("error", o), g(e, t.class_loading), m(e, t.class_error), n(t.callback_error, e));
+      },
+          i = function i() {
+        t && (g(e, t.class_loading), m(e, t.class_loaded), e.removeEventListener("load", i), e.removeEventListener("error", o), n(t.callback_load, e));
+      };n(t.callback_enter, e), "IMG" !== e.tagName && "IFRAME" !== e.tagName || (e.addEventListener("load", i), e.addEventListener("error", o), m(e, t.class_loading)), f(e, t.data_srcset, t.data_src), n(t.callback_set, e);
+    }, _loopThroughElements: function _loopThroughElements() {
+      var e = this._settings,
+          o = this._elements,
+          i = o ? o.length : 0,
+          s = void 0,
+          r = [],
+          l = this._isFirstLoop;for (s = 0; s < i; s++) {
+        var a = o[s];e.skip_invisible && null === a.offsetParent || (t || c(a, e.container, e.threshold)) && (l && m(a, e.class_initial), this._reveal(a), r.push(s), h(a, "was-processed", !0));
+      }for (; r.length;) {
+        o.splice(r.pop(), 1), n(e.callback_processed, o.length);
+      }0 === i && this._stopScrollHandler(), l && (this._isFirstLoop = !1);
+    }, _purgeElements: function _purgeElements() {
+      var e = this._elements,
+          t = e.length,
+          n = void 0,
+          o = [];for (n = 0; n < t; n++) {
+        var i = e[n];d(i, "was-processed") && o.push(n);
+      }for (; o.length > 0;) {
+        e.splice(o.pop(), 1);
+      }
+    }, _startScrollHandler: function _startScrollHandler() {
+      this._isHandlingScroll || (this._isHandlingScroll = !0, this._settings.container.addEventListener("scroll", this._boundHandleScroll));
+    }, _stopScrollHandler: function _stopScrollHandler() {
+      this._isHandlingScroll && (this._isHandlingScroll = !1, this._settings.container.removeEventListener("scroll", this._boundHandleScroll));
+    }, handleScroll: function handleScroll() {
+      var e = this._settings.throttle;if (0 !== e) {
+        var t = Date.now(),
+            n = e - (t - this._previousLoopTime);n <= 0 || n > e ? (this._loopTimeout && (clearTimeout(this._loopTimeout), this._loopTimeout = null), this._previousLoopTime = t, this._loopThroughElements()) : this._loopTimeout || (this._loopTimeout = setTimeout(function () {
+          this._previousLoopTime = Date.now(), this._loopTimeout = null, this._loopThroughElements();
+        }.bind(this), n));
+      } else this._loopThroughElements();
+    }, update: function update() {
+      this._elements = Array.prototype.slice.call(this._queryOriginNode.querySelectorAll(this._settings.elements_selector)), this._purgeElements(), this._loopThroughElements(), this._startScrollHandler();
+    }, destroy: function destroy() {
+      window.removeEventListener("resize", this._boundHandleScroll), this._loopTimeout && (clearTimeout(this._loopTimeout), this._loopTimeout = null), this._stopScrollHandler(), this._elements = null, this._queryOriginNode = null, this._settings = null;
+    } };var w = window.lazyLoadOptions;return w && function (e, t) {
+    var n = t.length;if (n) for (var o = 0; o < n; o++) {
+      u(e, t[o]);
+    } else u(e, t);
+  }(v, w), v;
+});
+
+/***/ }),
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
@@ -17027,201 +17358,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 });
 
 /***/ }),
-/* 15 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;
-
-var _typeof2 = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
-
-var _extends = Object.assign || function (e) {
-  for (var t = 1; t < arguments.length; t++) {
-    var n = arguments[t];for (var o in n) {
-      Object.prototype.hasOwnProperty.call(n, o) && (e[o] = n[o]);
-    }
-  }return e;
-},
-    _typeof = "function" == typeof Symbol && "symbol" == _typeof2(Symbol.iterator) ? function (e) {
-  return typeof e === "undefined" ? "undefined" : _typeof2(e);
-} : function (e) {
-  return e && "function" == typeof Symbol && e.constructor === Symbol && e !== Symbol.prototype ? "symbol" : typeof e === "undefined" ? "undefined" : _typeof2(e);
-};!function (e, t) {
-  "object" === ( false ? "undefined" : _typeof(exports)) && "undefined" != typeof module ? module.exports = t() :  true ? !(__WEBPACK_AMD_DEFINE_FACTORY__ = (t),
-				__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
-				(__WEBPACK_AMD_DEFINE_FACTORY__.call(exports, __webpack_require__, exports, module)) :
-				__WEBPACK_AMD_DEFINE_FACTORY__),
-				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__)) : e.LazyLoad = t();
-}(undefined, function () {
-  "use strict";
-  var e = { elements_selector: "img", container: window, threshold: 300, throttle: 150, data_src: "src", data_srcset: "srcset", class_loading: "loading", class_loaded: "loaded", class_error: "error", class_initial: "initial", skip_invisible: !0, callback_load: null, callback_error: null, callback_set: null, callback_processed: null, callback_enter: null },
-      t = !("onscroll" in window) || /glebot/.test(navigator.userAgent),
-      n = function n(e, t) {
-    e && e(t);
-  },
-      o = function o(e) {
-    return e.getBoundingClientRect().top + window.pageYOffset - e.ownerDocument.documentElement.clientTop;
-  },
-      i = function i(e, t, n) {
-    return (t === window ? window.innerHeight + window.pageYOffset : o(t) + t.offsetHeight) <= o(e) - n;
-  },
-      s = function s(e) {
-    return e.getBoundingClientRect().left + window.pageXOffset - e.ownerDocument.documentElement.clientLeft;
-  },
-      r = function r(e, t, n) {
-    var o = window.innerWidth;return (t === window ? o + window.pageXOffset : s(t) + o) <= s(e) - n;
-  },
-      l = function l(e, t, n) {
-    return (t === window ? window.pageYOffset : o(t)) >= o(e) + n + e.offsetHeight;
-  },
-      a = function a(e, t, n) {
-    return (t === window ? window.pageXOffset : s(t)) >= s(e) + n + e.offsetWidth;
-  },
-      c = function c(e, t, n) {
-    return !(i(e, t, n) || l(e, t, n) || r(e, t, n) || a(e, t, n));
-  },
-      u = function u(e, t) {
-    var n,
-        o = new e(t);try {
-      n = new CustomEvent("LazyLoad::Initialized", { detail: { instance: o } });
-    } catch (e) {
-      (n = document.createEvent("CustomEvent")).initCustomEvent("LazyLoad::Initialized", !1, !1, { instance: o });
-    }window.dispatchEvent(n);
-  },
-      d = function d(e, t) {
-    return e.getAttribute("data-" + t);
-  },
-      h = function h(e, t, n) {
-    return e.setAttribute("data-" + t, n);
-  },
-      _ = function _(e, t) {
-    var n = e.parentNode;if ("PICTURE" === n.tagName) for (var o = 0; o < n.children.length; o++) {
-      var i = n.children[o];if ("SOURCE" === i.tagName) {
-        var s = d(i, t);s && i.setAttribute("srcset", s);
-      }
-    }
-  },
-      f = function f(e, t, n) {
-    var o = e.tagName,
-        i = d(e, n);if ("IMG" === o) {
-      _(e, t);var s = d(e, t);return s && e.setAttribute("srcset", s), void (i && e.setAttribute("src", i));
-    }"IFRAME" !== o ? i && (e.style.backgroundImage = 'url("' + i + '")') : i && e.setAttribute("src", i);
-  },
-      p = "classList" in document.createElement("p"),
-      m = function m(e, t) {
-    p ? e.classList.add(t) : e.className += (e.className ? " " : "") + t;
-  },
-      g = function g(e, t) {
-    p ? e.classList.remove(t) : e.className = e.className.replace(new RegExp("(^|\\s+)" + t + "(\\s+|$)"), " ").replace(/^\s+/, "").replace(/\s+$/, "");
-  },
-      v = function v(t) {
-    this._settings = _extends({}, e, t), this._queryOriginNode = this._settings.container === window ? document : this._settings.container, this._previousLoopTime = 0, this._loopTimeout = null, this._boundHandleScroll = this.handleScroll.bind(this), this._isFirstLoop = !0, window.addEventListener("resize", this._boundHandleScroll), this.update();
-  };v.prototype = { _reveal: function _reveal(e) {
-      var t = this._settings,
-          o = function o() {
-        t && (e.removeEventListener("load", i), e.removeEventListener("error", o), g(e, t.class_loading), m(e, t.class_error), n(t.callback_error, e));
-      },
-          i = function i() {
-        t && (g(e, t.class_loading), m(e, t.class_loaded), e.removeEventListener("load", i), e.removeEventListener("error", o), n(t.callback_load, e));
-      };n(t.callback_enter, e), "IMG" !== e.tagName && "IFRAME" !== e.tagName || (e.addEventListener("load", i), e.addEventListener("error", o), m(e, t.class_loading)), f(e, t.data_srcset, t.data_src), n(t.callback_set, e);
-    }, _loopThroughElements: function _loopThroughElements() {
-      var e = this._settings,
-          o = this._elements,
-          i = o ? o.length : 0,
-          s = void 0,
-          r = [],
-          l = this._isFirstLoop;for (s = 0; s < i; s++) {
-        var a = o[s];e.skip_invisible && null === a.offsetParent || (t || c(a, e.container, e.threshold)) && (l && m(a, e.class_initial), this._reveal(a), r.push(s), h(a, "was-processed", !0));
-      }for (; r.length;) {
-        o.splice(r.pop(), 1), n(e.callback_processed, o.length);
-      }0 === i && this._stopScrollHandler(), l && (this._isFirstLoop = !1);
-    }, _purgeElements: function _purgeElements() {
-      var e = this._elements,
-          t = e.length,
-          n = void 0,
-          o = [];for (n = 0; n < t; n++) {
-        var i = e[n];d(i, "was-processed") && o.push(n);
-      }for (; o.length > 0;) {
-        e.splice(o.pop(), 1);
-      }
-    }, _startScrollHandler: function _startScrollHandler() {
-      this._isHandlingScroll || (this._isHandlingScroll = !0, this._settings.container.addEventListener("scroll", this._boundHandleScroll));
-    }, _stopScrollHandler: function _stopScrollHandler() {
-      this._isHandlingScroll && (this._isHandlingScroll = !1, this._settings.container.removeEventListener("scroll", this._boundHandleScroll));
-    }, handleScroll: function handleScroll() {
-      var e = this._settings.throttle;if (0 !== e) {
-        var t = Date.now(),
-            n = e - (t - this._previousLoopTime);n <= 0 || n > e ? (this._loopTimeout && (clearTimeout(this._loopTimeout), this._loopTimeout = null), this._previousLoopTime = t, this._loopThroughElements()) : this._loopTimeout || (this._loopTimeout = setTimeout(function () {
-          this._previousLoopTime = Date.now(), this._loopTimeout = null, this._loopThroughElements();
-        }.bind(this), n));
-      } else this._loopThroughElements();
-    }, update: function update() {
-      this._elements = Array.prototype.slice.call(this._queryOriginNode.querySelectorAll(this._settings.elements_selector)), this._purgeElements(), this._loopThroughElements(), this._startScrollHandler();
-    }, destroy: function destroy() {
-      window.removeEventListener("resize", this._boundHandleScroll), this._loopTimeout && (clearTimeout(this._loopTimeout), this._loopTimeout = null), this._stopScrollHandler(), this._elements = null, this._queryOriginNode = null, this._settings = null;
-    } };var w = window.lazyLoadOptions;return w && function (e, t) {
-    var n = t.length;if (n) for (var o = 0; o < n; o++) {
-      u(e, t[o]);
-    } else u(e, t);
-  }(v, w), v;
-});
-
-/***/ }),
-/* 16 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var getSize = function getSize(Name) {
-	var size;
-	var name = Name.toLowerCase();
-	var document = window.document;
-	var documentElement = document.documentElement;
-	if (window["inner" + Name] === undefined) {
-		// IE6 & IE7 don't have window.innerWidth or innerHeight
-		size = documentElement["client" + Name];
-	} else if (window["inner" + Name] != documentElement["client" + Name]) {
-		// WebKit doesn't include scrollbars while calculating viewport size so we have to get fancy
-
-		// Insert markup to test if a media query will match document.doumentElement["client" + Name]
-		var bodyElement = document.createElement("body");
-		bodyElement.id = "vpw-test-b";
-		bodyElement.style.cssText = "overflow:scroll";
-		var divElement = document.createElement("div");
-		divElement.id = "vpw-test-d";
-		divElement.style.cssText = "position:absolute;top:-1000px";
-		// Getting specific on the CSS selector so it won't get overridden easily
-		divElement.innerHTML = "<style>@media(" + name + ":" + documentElement["client" + Name] + "px){body#vpw-test-b div#vpw-test-d{" + name + ":7px!important}}</style>";
-		bodyElement.appendChild(divElement);
-		documentElement.insertBefore(bodyElement, document.head);
-
-		if (divElement["offset" + Name] == 7) {
-			// Media query matches document.documentElement["client" + Name]
-			size = documentElement["client" + Name];
-		} else {
-			// Media query didn't match, use window["inner" + Name]
-			size = window["inner" + Name];
-		}
-		// Cleanup
-		documentElement.removeChild(bodyElement);
-	} else {
-		// Default to use window["inner" + Name]
-		size = window["inner" + Name];
-	}
-	return size;
-};
-
-module.exports.getHeight = function () {
-	return getSize("Height");
-};
-
-module.exports.getWidth = function () {
-	return getSize("Width");
-};
-
-/***/ }),
-/* 17 */
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -17238,15 +17375,23 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var cloudinary_lazy_responsive_images_1 = __webpack_require__(2);
+var cloudinary_lazy_responsive_images_1 = __webpack_require__(4);
+//import {
+//    LazyLoadFactory
+//    //, lazyLoad, lazyLoad8
+//} from './lazy/lazy-load-factory';
+var lazy_load_1 = __webpack_require__(27);
 ;
 
 var LazyResponsiveImagesContainerSupport = function (_cloudinary_lazy_resp) {
     _inherits(LazyResponsiveImagesContainerSupport, _cloudinary_lazy_resp);
 
+    // private _threshold = 600;
     function LazyResponsiveImagesContainerSupport(options) {
         _classCallCheck(this, LazyResponsiveImagesContainerSupport);
 
+        //  protected _lazyLoadInstances: Array<ILazyLoad> = [];
+        // protected _lazyLoadInstances: Array<Promise<ILazyLoad>> = [];
         var _this = _possibleConstructorReturn(this, (LazyResponsiveImagesContainerSupport.__proto__ || Object.getPrototypeOf(LazyResponsiveImagesContainerSupport)).call(this, options));
 
         _this._lazyLoadInstances = [];
@@ -17270,37 +17415,53 @@ var LazyResponsiveImagesContainerSupport = function (_cloudinary_lazy_resp) {
     _createClass(LazyResponsiveImagesContainerSupport, [{
         key: "lazyLoadInit",
         value: function lazyLoadInit() {
-            // this.lazyDataAttribute = lazyDataAttribute;
             console.log('lazyLoadInit called', this._lazyDataAttribute);
             console.log('this.lazyContainorClassName', this._lazyContainerClassName);
             //#### Setup Lazy Load ####
             if (this._lazyLoadInstances.length == 0) {
-                //## define the calback here so that 'this' is in scope.     
+                //## define the calback here so that 'this' is in scope in the lines above. We can copy data from 'this' and pass it to th call back which will run onside of 'this' scope.   
                 var callback = function callback() {
                     return function (el) {
                         console.log('callback()', el);
-                        var oneLL = cloudinary_lazy_responsive_images_1.LazyResponsiveImages.lazyLoadProvider({
+                        //Create Lazy Load instance via th Lazy Load Factory
+                        var oneLL = new lazy_load_1.LazyLoad({
                             container: el,
-                            data_src: lazyDataAttribute //'src-lazy'
+                            data_src: lazyDataAttribute,
+                            threshold: lazyThreshold
                         });
                         // Push it in the lazyLoadInstances array to keep track of the instances                
                         lazyLoadArray.push(oneLL);
+                        ////Create Lazy Load instance via th Lazy Load Factory
+                        //var oneLL = LazyLoadFactory.getLazyLoad({
+                        //    container: el,
+                        //    data_src: lazyDataAttribute, //Data attribute storing the src url.
+                        //    threshold: lazyThreshold
+                        //});
+                        //// Push it in the lazyLoadInstances array to keep track of the instances                
+                        //lazyLoadArray.push(oneLL);
                         //console.log('Callback _lazyLoadInstances', lazyLoadArray);
                     };
                 };
                 //Images in Scrolling Container           
                 // The "lazyLazy" instance of lazyload is used (kinda improperly)
                 // to check when the Container divs enter the viewport
+                //Create Lazy Load instance via th Lazy Load Factory
 
 
                 //############ Set up scrolling conatiner LazyLoad ############
                 //get class properties into Scope
                 var lazyLoadArray = this._lazyLoadInstances;
-                var lazyDataAttribute = this._lazyDataAttribute;var lazyLazy = cloudinary_lazy_responsive_images_1.LazyResponsiveImages.lazyLoadProvider({
+                var lazyDataAttribute = this._lazyDataAttribute;
+                var lazyThreshold = this._threshold;var lazyLazy = new lazy_load_1.LazyLoad({
+                    threshold: this._threshold,
                     elements_selector: '.' + this._lazyContainerClassName,
-                    // When the .horzContainer div enters the viewport...
-                    callback_set: callback()
+                    callback_set: callback() // When the .horzContainer div enters the viewport...
                 });
+                //var lazyLazy = LazyResponsiveImages.lazyLoadProvider({
+                //    elements_selector: '.' + this._lazyContainerClassName,
+                //    // When the .horzContainer div enters the viewport...
+                //    callback_set: callback()
+                //});
                 //################### Normal imgaes with lazy load (images not in a scrolling container) ###############
                 //select all images that are not in a container with class '.tm-bg--underlay-wrap' and data-src set.
                 //add an extra class to these images
@@ -17321,12 +17482,20 @@ var LazyResponsiveImagesContainerSupport = function (_cloudinary_lazy_resp) {
                     lazyImagesWithoutContainer[i].className += ' lazy';
                 }
                 //set up lazy load to work on images with class 'lazy'
-                var myLazyLoad = cloudinary_lazy_responsive_images_1.LazyResponsiveImages.lazyLoadProvider({
+                //Create Lazy Load instance via th Lazy Load Factory
+                var myLazyLoad = new lazy_load_1.LazyLoad({
                     data_src: this._lazyDataAttribute,
-                    elements_selector: '.lazy'
+                    elements_selector: '.lazy',
+                    threshold: this._threshold
                 });
+                //var myLazyLoad = LazyResponsiveImages.lazyLoadProvider({
+                //    data_src: this._lazyDataAttribute, //'src-lazy',
+                //    elements_selector: '.lazy',
+                //});
                 //Add the LazyLoad instance to the array
                 this._lazyLoadInstances.push(myLazyLoad);
+                console.log('this._lazyLoadInstances', this._lazyLoadInstances);
+                console.log('this._lazyLoadInstances myLazyLoad', myLazyLoad);
             }
         }
         /**
@@ -17340,6 +17509,12 @@ var LazyResponsiveImagesContainerSupport = function (_cloudinary_lazy_resp) {
             for (var i = 0; i < this._lazyLoadInstances.length; i++) {
                 console.log('updateLazyLoadInstances', this._lazyLoadInstances[i]);
                 this._lazyLoadInstances[i].update();
+                //call update LazyLoad Via the LazyLoad Promise
+                //this._lazyLoadInstances[i].then(lazyLoad => {
+                //    //call update
+                //    lazyLoad.update();
+                //});
+                //this._lazyLoadInstances[i].update();
             }
             //console.log('_lazyLoadInstances length', this._lazyLoadInstances.length);
         }
@@ -17351,16 +17526,76 @@ var LazyResponsiveImagesContainerSupport = function (_cloudinary_lazy_resp) {
 exports.LazyResponsiveImagesContainerSupport = LazyResponsiveImagesContainerSupport;
 
 /***/ }),
-/* 18 */,
-/* 19 */,
-/* 20 */,
 /* 21 */,
 /* 22 */,
-/* 23 */
+/* 23 */,
+/* 24 */,
+/* 25 */,
+/* 26 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(17);
+module.exports = __webpack_require__(20);
 
+
+/***/ }),
+/* 27 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var lazy_load_factory_1 = __webpack_require__(3);
+var og_is_client_side_1 = __webpack_require__(2);
+/**
+ * Represents One instance of LazyLoad with functions. Should be safe server side although won't do anything.
+ */
+
+var LazyLoad = function () {
+    /**
+     * Creates the instance of Lazy Load
+     * @param options
+     */
+    function LazyLoad(options) {
+        _classCallCheck(this, LazyLoad);
+
+        //only do smething if we are client side. 
+        if (!og_is_client_side_1.IsClientSide.true()) {
+            return null;
+        }
+        //#### Setup Lazy Load ####
+        if (this.LazyLoadInstancePromise == null) {
+            this._options = options;
+            //Select the correct version of Lazy Load Module ( Promise )
+            this.LazyLoadInstancePromise = lazy_load_factory_1.LazyLoadFactory.getLazyLoadPromise(options);
+        }
+        console.log('lazyLoadInit called: ', this.LazyLoadInstancePromise);
+    }
+
+    _createClass(LazyLoad, [{
+        key: "update",
+        value: function update() {
+            this.LazyLoadInstancePromise.then(function (lazyload) {
+                lazyload.update();
+            });
+        }
+    }, {
+        key: "destroy",
+        value: function destroy() {
+            this.LazyLoadInstancePromise.then(function (lazyload) {
+                lazyload.destroy();
+            });
+        }
+    }]);
+
+    return LazyLoad;
+}();
+
+exports.LazyLoad = LazyLoad;
 
 /***/ })
 /******/ ]);

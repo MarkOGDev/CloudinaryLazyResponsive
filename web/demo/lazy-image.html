@@ -1,0 +1,39 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title></title>
+    <style>
+        img {
+            /* css: make all images responsive to the screen width so that their width is 100%  */
+            width:100%;
+        }
+    </style>
+</head>s
+<body>
+
+    <h1>
+        Lazy Image
+    </h1>
+
+    <h3>Lazy Image</h3>
+    <p>Using Lazy Load module to load the image</p>
+    <img data-src-lazy="img/IMGA0845.JPG" />
+
+
+    <!--<script src="../../dist/demo/demo.js"></script>
+    <script type="text/javascript">
+        //alert(ps.demo.PictureSites);
+        var demo = new ps.demo.PictureSitesDemos();
+        demo.demoLazyImage();
+    </script>-->
+
+    <script src="../dist/demo/demo.js"></script>
+    <script type="text/javascript">
+        var demo = new clri.demo.Demos();
+        //  demo.demoLazyResponsiveImgScrollingContainerSupport();
+        demo.demoLazyResponsiveImg();
+    </script>
+</body>
+</html>

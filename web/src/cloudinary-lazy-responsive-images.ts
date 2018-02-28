@@ -1,18 +1,20 @@
-﻿/// <reference path="../node_modules/vanilla-lazyload/typings/lazyload.d.ts" />
+﻿///// <reference path="../node_modules/vanilla-lazyload/typings/lazyload.d.ts" />
 /// <reference path="../node_modules/cloudinary-core/cloudinary-core.d.ts" />
 
 import * as cloudinaryJS from "cloudinary-core";
 import * as debounce from 'throttle-debounce/debounce';
 import * as inViewPort from 'in-viewport';
-import * as lazyLoad from './../node_modules/vanilla-lazyload/dist/lazyload.js';
-import * as lazyLoad8 from './../custom_modules/vanilla-lazyload-v8.6.0/';         //older version supports browsers without IntersectionObserver feature. e.g. ie 11.
+//import * as lazyLoad from './../node_modules/vanilla-lazyload/dist/lazyload.js';
+//import * as lazyLoad8 from './../custom_modules/vanilla-lazyload-v8.6.0/';         //older version supports browsers without IntersectionObserver feature. e.g. ie 11.
 import * as viewportSize from 'viewport-size';   //https://github.com/jarvys/viewportSize
 
-/*
-TODO: split Lazy from Cloudinary and store in separate ifles.
-propergate to other projects.
-*/
+//import {
+//    LazyLoadFactory
+//    //, lazyLoad, lazyLoad8
+//} from './lazy/lazy-load-factory';
 
+
+import { LazyLoad } from './lazy/lazy-load';
 
 /* 
 
@@ -49,7 +51,11 @@ class LazyResponsiveImages {
     protected _cloudinaryOptions: cloudinaryJS.Configuration.Options = { cloud_name: 'demo' };      //default options
     // protected _cloudImgHtmlTags: NodeListOf<Element> = null;
 
-    protected _lazyLoad: ILazyLoad = null;
+    // protected _lazyLoad: Promise<ILazyLoad> = null;
+
+    private _lazyLoad: LazyLoad = null;
+
+    // protected _lazyLoad: ILazyLoad = null;
     protected _prevScreenWidth: number = null;
     protected _lazyResetTriggerWidth: number = null;
 
@@ -59,7 +65,7 @@ class LazyResponsiveImages {
      * Defaults to 'src-lazy'
      */
     protected _lazyDataAttribute: string = 'src-lazy';                                               //default options
-
+    public readonly _threshold: number = 600;
 
 
     constructor(options?: iClriSettings) {
@@ -69,37 +75,6 @@ class LazyResponsiveImages {
         this._lazyDataAttribute = options.lazyDataAttribute;
     }
 
-
-    /**
-     * Returns true if we should use LazyLoad V8
-     */
-    protected static useLazyLoadVersionV8(): boolean {
-        //new version uses IntersectionObserver which is not supported in older browsers
-
-        const intersectionObserverSupported = ("IntersectionObserver" in window);
-
-        console.log('intersectionObserverSupported', intersectionObserverSupported);
-        if (intersectionObserverSupported) {
-            return false;
-        }
-        return true;
-    }
-
-    /**
-     * Returns a new instance of lazy load. Different version of LazyLoad depending on whether the browser supports intersectionObserverSupported
-     * @param options
-     */
-    protected static lazyLoadProvider(options) {
-        if (LazyResponsiveImages.useLazyLoadVersionV8()) {
-            //Load old version
-            console.log('intersectionObserverSupported: OLD Version Selected');
-            return new lazyLoad8(options);
-        }
-
-        //Load latest Version v10x
-        console.log('intersectionObserverSupported: Latest Version Selected');
-        return new lazyLoad(options);
-    }
 
     /**
  * Retruns true if element near or in viewport
@@ -130,17 +105,27 @@ class LazyResponsiveImages {
             let isInViewPort: boolean = LazyResponsiveImages.isElementInViewPort(element);
             //const isInViewPort = inViewPort(element, { offset: 300 });
 
+
+            //Cloudinary is trying to set the src. we will make it set the data-src-lazy instead
             if (!isInViewPort && name == 'src') //make lazy (image not in view port)
             {
-
                 name = 'data-src-lazy';
             }
-            switch (false) {
-                case !(element == null):
-                    return void 0;
-                case !cloudinaryJS.Util.isFunction(element.setAttribute):
-                    return element.setAttribute(name, value);
-            }
+
+            return element.setAttribute(name, value);
+
+            //alert(element.setAttribute);
+
+
+            //not sure what this code was for.
+            //switch (false) {
+            //    case !(element == null):
+            //        alert(0);
+            //        return void 0;
+            //    case !cloudinaryJS.Util.isFunction(element.setAttribute):
+            //        alert(1);
+            //        return element.setAttribute(name, value);
+            //}
         };
     }
 
@@ -201,13 +186,6 @@ class LazyResponsiveImages {
 
     }
 
-    /**
-     * Calls the LazyLoad Update Method.
-     */
-    protected updateLazyLoad() {
-        //tell LazyLoad to manage the images that we have just reset.
-        this._lazyLoad.update();
-    }
 
     /**
      * used by window.resize
@@ -281,28 +259,27 @@ class LazyResponsiveImages {
 
 
 
-
-
-
     /**
-     * Sets up Lazy Load
-     * @param lazyDataAttribute
+     * Calls the LazyLoad Update Method.
      */
-    protected lazyLoadInit() {
-        console.log('lazyLoadInit called: this._lazyDataAttribute', this._lazyDataAttribute);
-        //#### Setup Lazy Load ####
-        if (this._lazyLoad == null) {
+    protected updateLazyLoad() {
 
-            this._lazyLoad = LazyResponsiveImages.lazyLoadProvider({
-                data_src: this._lazyDataAttribute //Data attribute storing the src url.
-                , threshold: 600
-            });
+        if (this._lazyLoad != null) {
+            this._lazyLoad.update();
         }
+
+        //if (this._lazyLoad != null) {
+        //    //tell LazyLoad to manage the images that we have just reset.
+        //    // this._lazyLoad.update();
+
+        //    //using LazyLoad Promise
+        //    this._lazyLoad.then(lazyLoad => {
+        //        //tell LazyLoad to manage the images that we have just reset.
+        //        lazyLoad.update();
+        //    });
+
+        //}
     }
-
-
-
-
 
 
 
@@ -329,7 +306,20 @@ class LazyResponsiveImages {
         }));
     }
 
-    /**
+
+
+
+    protected lazyLoadInit() {
+        //setup Lazy Images. Pass through the Data attribute used to indicate a Lazy Image. E.g. 'src-lazy'
+        //calling the constructor cerates which starts it lokking at page elements.
+        this._lazyLoad = new LazyLoad({
+            data_src: this._lazyDataAttribute       //Data attribute storing the src url.
+            , threshold: this._threshold
+        });
+    }
+
+
+    /** 
     * Sets up Responsive / Lazy images
     */
     init() {
@@ -342,7 +332,18 @@ class LazyResponsiveImages {
         this.responsiveImagesInit();
 
         //setup Lazy Images. Pass through the Data attribute used to indicate a Lazy Image. E.g. 'src-lazy'
+        //calling the constructor cerates which starts it lokking at page elements.
+        //this._lazyLoad = new LazyLoad({
+        //    data_src: this._lazyDataAttribute       //Data attribute storing the src url.
+        //    , threshold: this._threshold
+        //});
+
+        // this.lazyLoadInit();
+        // this._lazyLoad = myLazyLoadProvider.LazyLoadInstancePromise;
+
+        //set up lazy load. We override this in derived classes that do more work.
         this.lazyLoadInit();
+
 
         //set up the Window Resize Listener.
         this.setupResizeListener();

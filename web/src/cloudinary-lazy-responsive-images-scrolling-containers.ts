@@ -2,8 +2,13 @@
 /// <reference path="../node_modules/cloudinary-core/cloudinary-core.d.ts" />
 
 import { LazyResponsiveImages, iClriSettings as isettingsBase } from './cloudinary-lazy-responsive-images';
+//import {
+//    LazyLoadFactory
+//    //, lazyLoad, lazyLoad8
+//} from './lazy/lazy-load-factory';
 
- 
+import { LazyLoad } from './lazy/lazy-load';
+
 /**
  * Extend the interface with custom property
  */
@@ -13,10 +18,16 @@ interface iClriSettings extends isettingsBase {
 
 class LazyResponsiveImagesContainerSupport extends LazyResponsiveImages {
 
-    protected _lazyLoadInstances: Array<ILazyLoad> = [];
+    //  protected _lazyLoadInstances: Array<ILazyLoad> = [];
+
+   // protected _lazyLoadInstances: Array<Promise<ILazyLoad>> = [];
+
+    protected _lazyLoadInstances: Array<LazyLoad> = [];
+
 
     protected _lazyContainerClassName: string = 'lazy-container';      //default 'lazy-container'
 
+    // private _threshold = 600;
 
 
     constructor(options?: iClriSettings) {
@@ -39,7 +50,7 @@ class LazyResponsiveImagesContainerSupport extends LazyResponsiveImages {
      * @param lazyDataAttribute
      */
     protected lazyLoadInit() {
-        // this.lazyDataAttribute = lazyDataAttribute;
+
 
         console.log('lazyLoadInit called', this._lazyDataAttribute);
         console.log('this.lazyContainorClassName', this._lazyContainerClassName);
@@ -50,19 +61,40 @@ class LazyResponsiveImagesContainerSupport extends LazyResponsiveImages {
             //get class properties into Scope
             var lazyLoadArray = this._lazyLoadInstances;
             var lazyDataAttribute = this._lazyDataAttribute;
+            var lazyThreshold = this._threshold;
 
-            //## define the calback here so that 'this' is in scope.     
+            //## define the calback here so that 'this' is in scope in the lines above. We can copy data from 'this' and pass it to th call back which will run onside of 'this' scope.   
             function callback() {
                 return function (el) {
                     console.log('callback()', el);
 
-                    var oneLL = LazyResponsiveImages.lazyLoadProvider({
+
+
+                    //Create Lazy Load instance via th Lazy Load Factory
+                    var oneLL = new LazyLoad({
                         container: el,
-                        data_src: lazyDataAttribute     //'src-lazy'
+                        data_src: lazyDataAttribute, //Data attribute storing the src url.
+                        threshold: lazyThreshold
                     });
 
                     // Push it in the lazyLoadInstances array to keep track of the instances                
                     lazyLoadArray.push(oneLL);
+
+
+
+                    ////Create Lazy Load instance via th Lazy Load Factory
+                    //var oneLL = LazyLoadFactory.getLazyLoad({
+                    //    container: el,
+                    //    data_src: lazyDataAttribute, //Data attribute storing the src url.
+                    //    threshold: lazyThreshold
+                    //});
+                     
+                    //// Push it in the lazyLoadInstances array to keep track of the instances                
+                    //lazyLoadArray.push(oneLL);
+
+
+
+
                     //console.log('Callback _lazyLoadInstances', lazyLoadArray);
                 }
             }
@@ -70,11 +102,20 @@ class LazyResponsiveImagesContainerSupport extends LazyResponsiveImages {
             //Images in Scrolling Container           
             // The "lazyLazy" instance of lazyload is used (kinda improperly)
             // to check when the Container divs enter the viewport
-            var lazyLazy = LazyResponsiveImages.lazyLoadProvider({
+
+
+            //Create Lazy Load instance via th Lazy Load Factory
+            var lazyLazy = new LazyLoad({
+                threshold: this._threshold,
                 elements_selector: '.' + this._lazyContainerClassName,
-                // When the .horzContainer div enters the viewport...
-                callback_set: callback()
+                callback_set: callback()   // When the .horzContainer div enters the viewport...
             });
+
+            //var lazyLazy = LazyResponsiveImages.lazyLoadProvider({
+            //    elements_selector: '.' + this._lazyContainerClassName,
+            //    // When the .horzContainer div enters the viewport...
+            //    callback_set: callback()
+            //});
 
 
             //################### Normal imgaes with lazy load (images not in a scrolling container) ###############
@@ -104,15 +145,28 @@ class LazyResponsiveImagesContainerSupport extends LazyResponsiveImages {
             }
 
             //set up lazy load to work on images with class 'lazy'
-            var myLazyLoad = LazyResponsiveImages.lazyLoadProvider({
+            //Create Lazy Load instance via th Lazy Load Factory
+            var myLazyLoad = new LazyLoad({
                 data_src: this._lazyDataAttribute, //'src-lazy',
                 elements_selector: '.lazy',
+                threshold: this._threshold
             });
+
+            //var myLazyLoad = LazyResponsiveImages.lazyLoadProvider({
+            //    data_src: this._lazyDataAttribute, //'src-lazy',
+            //    elements_selector: '.lazy',
+            //});
             //Add the LazyLoad instance to the array
             this._lazyLoadInstances.push(myLazyLoad);
+
+
+            console.log('this._lazyLoadInstances', this._lazyLoadInstances);
+            console.log('this._lazyLoadInstances myLazyLoad', myLazyLoad);
+
+
         }
     }
-
+     
 
     /**
      * Updates all Lazy Load instances
@@ -122,7 +176,18 @@ class LazyResponsiveImagesContainerSupport extends LazyResponsiveImages {
         console.log('updateLazyLoad called');
         for (var i = 0; i < this._lazyLoadInstances.length; i++) {
             console.log('updateLazyLoadInstances', this._lazyLoadInstances[i]);
+
             this._lazyLoadInstances[i].update();
+
+            //call update LazyLoad Via the LazyLoad Promise
+            //this._lazyLoadInstances[i].then(lazyLoad => {
+            //    //call update
+            //    lazyLoad.update();
+            //});
+
+            //this._lazyLoadInstances[i].update();
+
+
         }
         //console.log('_lazyLoadInstances length', this._lazyLoadInstances.length);
     }

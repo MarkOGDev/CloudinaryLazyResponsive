@@ -16,6 +16,7 @@
     "in-viewport": "^3.6.0",
     "install": "^0.10.2",
     "npm": "^5.6.0",
+    "og-is-client-side": "file:C:\\Work\\Components\\IsClientSide\\IsClientSide",
     "ts-loader": "^3.2.0",
     "throttle-debounce": "^1.0.1",
     "typescript": "^2.6.2",
