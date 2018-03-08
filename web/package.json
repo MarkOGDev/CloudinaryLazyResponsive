@@ -2,17 +2,11 @@
   "name": "og-cloudinary-lazy-responsive",
   "version": "1.0.0",
   "scripts": {
-    "dev": "webpack --mode development --devtool eval-source-map ./src/main.ts --output ./dist/bundle/bundle.js",
-    "prod": "webpack --mode production ./src/main.ts --output ./dist/bundle/bundle.min.js",
-    "demoDev": "webpack --mode development --devtool eval-source-map ./src/demo.ts --output ./dist/demo/demo.js",
-    "demoProd": "webpack --mode production ./src/demo.ts --output ./dist/demo/demo.min.js",
-    "cloudinaryLazyResponsiveImagesDev": "webpack --mode development --devtool eval-source-map ./src/cloudinary-lazy-responsive-images.ts --output ./dist/cloudinaryLazyResponsiveImages/cloudinaryLazyResponsiveImages.js",
-    "cloudinaryLazyResponsiveImagesProd": "webpack --mode production ./src/cloudinary-lazy-responsive-images.ts --output ./dist/cloudinaryLazyResponsiveImages/cloudinaryLazyResponsiveImages.min.js",
-    "cloudinaryLazyResponsiveImagesScrollingContainersDev": "webpack --mode development --devtool eval-source-map ./src/cloudinary-lazy-responsive-images-scrolling-containers.ts --output ./dist/cloudinaryLazyResponsiveImagesScrollingContainers/cloudinaryLazyResponsiveImagesScrollingContainers.js",
-    "cloudinaryLazyResponsiveImagesScrollingContainersProd": "webpack --mode production ./src/cloudinary-lazy-responsive-images-scrolling-containers.ts --output ./dist/cloudinaryLazyResponsiveImagesScrollingContainers/cloudinaryLazyResponsiveImagesScrollingContainers.min.js"
+    "dev": "webpack --config ./webpack.config.js",
+    "prod": "webpack --config ./webpack.config.prod.js"
   },
   "description": "Makes cloudinary lazy",
-  "main": "dist/bundle.js",
+  "main": "src/main.js",
   "keywords": [],
   "author": "MarkOG",
   "license": "private",
