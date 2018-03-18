@@ -261,7 +261,4 @@ __pycache__/
 *.pyc
 
 # custom ignors
-*FullScreenFixedBgImg2.html
-/web/custom_modules/vanilla-lazyload-v8.6.0/img
-*cloudinaryLazyResponsiveImagesFixedBgScrollReveal*
-*.exclude
+*.exclude 
