@@ -9,7 +9,7 @@
   "main": "src/main.ts",
   "keywords": [ "cloudinary", "lazyload", "responsive" ],
   "author": "MarkOGDev",
-  "license": "private",
+  "license": "GPL-3.0",
   "private": false,
   "dependencies": {},
   "devDependencies": {
