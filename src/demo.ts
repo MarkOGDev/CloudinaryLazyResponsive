@@ -1,4 +1,4 @@
-﻿import { LazyResponsiveImages } from './cloudinary-lazy-responsive-images'       //import like this to force render of js without actually needing to create and use the class
+﻿import { LazyResponsiveImages } from './cloudinary-lazy-responsive-images'     
 import { LazyResponsiveImagesContainerSupport } from './cloudinary-lazy-responsive-images-scrolling-containers'
 import * as debounce from 'throttle-debounce/debounce';
 
@@ -29,8 +29,4 @@ export class Demos {
 
 }
 
-
-
-//var demo = new Demos();
-//demo.demoLazyResponsiveImg();
-//demo.demoLazyResponsiveImgScrollingContainerSupport();
+ 
