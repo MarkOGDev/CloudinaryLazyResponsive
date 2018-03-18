@@ -15,10 +15,7 @@ class LazyResponsiveImages {
         //The protected modifier acts much like the private modifier with the exception that members declared protected can also be accessed by instances of deriving classes.
         this._cloudinary = null;
         this._cloudinaryOptions = { cloud_name: 'demo' }; //default options
-        // protected _cloudImgHtmlTags: NodeListOf<Element> = null;
-        // protected _lazyLoad: Promise<ILazyLoad> = null;
         this._lazyLoad = null;
-        // protected _lazyLoad: ILazyLoad = null;
         this._prevScreenWidth = null;
         this._lazyResetTriggerWidth = null;
         /**
