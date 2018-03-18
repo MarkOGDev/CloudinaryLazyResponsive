@@ -20,11 +20,8 @@ Now a LazyLoad lib can manage the image loading rather than have all images load
 
  
 #### Example
-Normal Responsive Cloudinory Image 
-```html 
-<img class="cld-responsive"  data-img="/v1511253818/rss/vehicles/maybach62/maybach_wedding1.jpg" />
-```
+ 
 Lazy Responsive Cloudinory Image 
 ```html 
-<img class="cld-responsive"  data-img="/v1511253818/rss/vehicles/maybach62/maybach_wedding1.jpg" />
+<img class="cld-responsive"  data-src="https://res.cloudinary.com/demo/image/upload/w_400,c_scale/sample.jpg" />
 ```
