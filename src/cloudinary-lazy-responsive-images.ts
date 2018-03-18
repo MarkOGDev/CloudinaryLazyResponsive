@@ -31,7 +31,6 @@ for Each Lazy Image:
 interface iClriSettings {
     cloudinaryOptions?: cloudinaryJS.Configuration.Options,
     lazyDataAttribute?: string
-    //l,azyOffSet?: string
 }
 
 /**
@@ -42,13 +41,7 @@ class LazyResponsiveImages {
     //The protected modifier acts much like the private modifier with the exception that members declared protected can also be accessed by instances of deriving classes.
     protected _cloudinary: cloudinaryJS.Cloudinary = null;
     protected _cloudinaryOptions: cloudinaryJS.Configuration.Options = { cloud_name: 'demo' };      //default options
-    // protected _cloudImgHtmlTags: NodeListOf<Element> = null;
-
-    // protected _lazyLoad: Promise<ILazyLoad> = null;
-
     private _lazyLoad: LazyLoad = null;
-
-    // protected _lazyLoad: ILazyLoad = null;
     protected _prevScreenWidth: number = null;
     protected _lazyResetTriggerWidth: number = null;
 
@@ -293,7 +286,7 @@ class LazyResponsiveImages {
         this.modifyCloudinarySetAttribute(this.cloudinaryJS_setAttribute());
 
         //setup responsive images. THis will update image urls to the responsive url or Load the image if it is on screen.
-        this.responsiveImagesInit();      
+        this.responsiveImagesInit();
 
         //set up lazy load. We override this in derived classes that need more config/complex setup.
         this.lazyLoadInit();
