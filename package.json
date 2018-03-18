@@ -1,0 +1,30 @@
+{
+  "name": "og-cloudinary-lazy-responsive",
+  "version": "0.0.1",
+  "scripts": {
+    "dev": "webpack --config ./webpack.config.js",
+    "prod": "webpack --config ./webpack.config.prod.js"
+  },
+  "description": "Makes cloudinary lazy",
+  "main": "src/main.ts",
+  "keywords": [ "cloudinary", "lazyload", "responsive" ],
+  "author": "MarkOGDev",
+  "license": "private",
+  "private": false,
+  "dependencies": {},
+  "devDependencies": {
+    "babel-core": "^6.26.0",
+    "babel-loader": "^7.1.4",
+    "babel-preset-env": "^1.6.1",
+    "cloudinary-core": "^2.5.0",
+    "in-viewport": "^3.6.0",
+    "is-client-side": "^1.0.0",
+    "throttle-debounce": "^1.0.1",
+    "ts-loader": "^4.0.1",
+    "typescript": "^2.7.2",
+    "vanilla-lazyload": "^10.4.2",
+    "viewport-size": "0.0.1",
+    "webpack": "^4.1.0",
+    "webpack-cli": "^2.0.10"
+  }
+}
