@@ -76,7 +76,6 @@
     <TypeScriptCompile Include="index.ts" />
     <TypeScriptCompile Include="src\cloudinary-lazy-responsive-images-scrolling-containers.ts" />
     <TypeScriptCompile Include="src\cloudinary-lazy-responsive-images.ts" />
-    <TypeScriptCompile Include="src\cloudinary\cloudinary-factory.ts" />
     <TypeScriptCompile Include="src\demo.ts" />
     <TypeScriptCompile Include="src\lazy\ilazy-load-options.ts" />
     <TypeScriptCompile Include="src\lazy\lazy-load-factory.ts" />
