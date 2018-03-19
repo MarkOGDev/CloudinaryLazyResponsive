@@ -1,8 +1,8 @@
 ﻿
-import { LazyResponsiveImages, cloudinaryJS } from './cloudinary-lazy-responsive-images';
-import { LazyResponsiveImagesContainerSupport, iClriSettings } from './cloudinary-lazy-responsive-images-scrolling-containers';
+import { CloudinaryLazyResponsive, ICloudinaryLazyOptions } from './cloudinary/cloudinary-lazy-responsive';
+import { CloudinaryLazyResponsiveScrollingContainerSupport } from './cloudinary/cloudinary-lazy-responsive-with-scrolling-container-support';
 
 
-export { LazyResponsiveImages, LazyResponsiveImagesContainerSupport, iClriSettings, cloudinaryJS }
-
+export { CloudinaryLazyResponsive, ICloudinaryLazyOptions, CloudinaryLazyResponsiveScrollingContainerSupport }
+ 
 

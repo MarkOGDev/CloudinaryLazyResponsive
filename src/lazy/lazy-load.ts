@@ -15,6 +15,9 @@ class LazyLoad {
      * @param options
      */
     constructor(options: ILazyLoadOptions) {
+
+        console.groupCollapsed('LazyLoad constructor: options', options);
+
         //only do smething if we are client side. 
         if (!IsClientSide.true()) {
             return null;
@@ -27,7 +30,9 @@ class LazyLoad {
             //Select the correct version of Lazy Load Module ( Promise )
             this.LazyLoadInstancePromise = LazyLoadFactory.getLazyLoadPromise(options);
         }
-        console.log('lazyLoadInit called: ', this.LazyLoadInstancePromise);
+
+        console.log('LazyLoadInstancePromise', this.LazyLoadInstancePromise);
+        console.groupEnd();
     }
 
 
@@ -48,4 +53,4 @@ class LazyLoad {
 }
 
 
-export { LazyLoad }
+export { LazyLoad, ILazyLoadOptions }

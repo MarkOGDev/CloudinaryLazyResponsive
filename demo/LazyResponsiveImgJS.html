@@ -32,15 +32,20 @@
     <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
     <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
     Scroll Up
-     
 
 
-    <script src="../dist/demo/demo.js"></script>
 
-
+    <script src="../dist/bundle/bundle.js"></script>
     <script type="text/javascript">
-        var demo = new clri.Demos();
-        demo.demoLazyResponsiveImg();
+        var myclri = new clri.CloudinaryLazyResponsive({
+            cloudinaryOptions: { cloud_name: 'demo' },
+            lazyLoadOptions: {
+                data_src: 'src-lazy',
+                threshold: 300
+            }
+        });
+        myclri.init();
+
     </script>
 
 

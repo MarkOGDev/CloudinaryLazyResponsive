@@ -1,5 +1,5 @@
 "use strict";
-/// <reference path="../../node_modules/vanilla-lazyload/typings/lazyload.d.ts" />
+/// <reference path="../../node_modules/vanilla-lazyload/typings/lazyload.d.ts" /> 
 Object.defineProperty(exports, "__esModule", { value: true });
 const is_client_side_1 = require("is-client-side");
 /**
@@ -16,13 +16,13 @@ class LazyLoadFactory {
         if (LazyLoadFactory.useLazyLoadVersionV8()) {
             //Load old 
             promise = Promise.resolve().then(() => require('./../../custom_modules/vanilla-lazyload-v8.6.0/')).then(lazyLoad8 => {
-                console.log('intersectionObserverSupported: OLD Version Selected');
+                console.log('intersection Observer Not Supported: OLD LazyLoad Version Loaded');
                 return new lazyLoad8(options);
             });
         }
         //Load latest Version v10x
         promise = Promise.resolve().then(() => require('./../../node_modules/vanilla-lazyload/dist/lazyload.js')).then(lazyLoad => {
-            console.log('intersectionObserverSupported: Latest Version Selected');
+            console.log('intersection Observer Supported: Latest LazyLoad Version Loaded');
             return new lazyLoad(options);
         });
         return promise;
@@ -33,7 +33,6 @@ class LazyLoadFactory {
     static useLazyLoadVersionV8() {
         //new version uses IntersectionObserver which is not supported in older browsers
         const intersectionObserverSupported = ("IntersectionObserver" in window);
-        console.log('intersectionObserverSupported', intersectionObserverSupported);
         if (intersectionObserverSupported) {
             return false;
         }

@@ -16,28 +16,18 @@
     <h1>Demo of Lazy Loaded Responsive Images with Scrolling Container Support</h1>
     Scroll Down
     <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+    <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />    <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+    <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />    <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
     <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
-    <br />
-    <br />
-    NON Responsive Image - NON Lazy - 400px wide
-    <br />
-    <img src="https://res.cloudinary.com/demo/image/upload/w_400,c_scale/smiling_man.jpg" />
-    <br />
-    <br />
-    Non Responsive Image - Lazy Loading Image - 400px wide
-    <br />
-    <img data-src-lazy="https://res.cloudinary.com/demo/image/upload/w_400,c_scale/sample.jpg" />
-    <br />
-    <br />
-    <br />
+
+
     Responsive Image Using CloudinoryJS and Lazy Loading Image
     <br />
-    <img id="imgLazyResponsive" data-src="https://res.cloudinary.com/idemo/image/upload/w_auto,c_scale/woman.jpg" onload="CheckWidth(this, info)"
+    <img id="imgLazyResponsive" data-src="https://res.cloudinary.com/idemo/image/upload/w_auto,c_scale/woman.jpg"
          class="cld-responsive" />
     <br />
 
-    <div id="info">
-    </div>
+
 
     <div id="scrollContainer" style="margin:60px;border:1px solid silver;overflow:scroll;height:400px;"
          class="lazy-container">
@@ -55,8 +45,6 @@
         <img class="cld-responsive" data-src="https://res.cloudinary.com/idemo/image/upload/ar_200:131,c_fill,dpr_1.0,g_faces,w_auto/balloons.jpg" />
     </div>
 
-    <div id="info">
-    </div>
 
 
     <br /><br />
@@ -66,21 +54,9 @@
 
 
 
-    <script type="text/javascript">
-        function CheckWidth(element, infoElemnt) {
-
-            infoElemnt.innerHTML = 'Image element.clientWidth: ' + element.clientWidth
-                + '<br />document.getElementsByTagName("body")[0].clientWidth: ' + document.getElementsByTagName("body")[0].clientWidth
-                + '<br />window.outerWidth: ' + window.outerWidth
-                + '<br />window.innerWidth: ' + window.innerWidth
-                + '<br />window.outerHeight: ' + window.outerHeight
-                + '<br />window.innerHeight: ' + window.innerHeight;
-        }
-    </script>
-    
 
     <script src="../dist/demo/demo.js"></script>
-    <script type="text/javascript">      
+    <script type="text/javascript">
         var demo = new clri.Demos();
         demo.demoLazyResponsiveImgScrollingContainerSupport();
     </script>

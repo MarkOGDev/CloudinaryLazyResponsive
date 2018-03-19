@@ -1,7 +1,6 @@
 "use strict";
-/// <reference path="../node_modules/cloudinary-core/cloudinary-core.d.ts" />
 Object.defineProperty(exports, "__esModule", { value: true });
-const cloudinaryJS = require("../node_modules/cloudinary-core/cloudinary-core.js");
+const cloudinaryJS = require("cloudinary-core");
 exports.cloudinaryJS = cloudinaryJS;
 const debounce = require("throttle-debounce/debounce");
 const inViewPort = require("in-viewport");
@@ -12,6 +11,7 @@ const lazy_load_1 = require("./lazy/lazy-load");
  */
 class LazyResponsiveImages {
     constructor(options) {
+        this._cloudinaryLazy = null;
         //The protected modifier acts much like the private modifier with the exception that members declared protected can also be accessed by instances of deriving classes.
         this._cloudinary = null;
         this._cloudinaryOptions = { cloud_name: 'demo' }; //default options
@@ -28,9 +28,10 @@ class LazyResponsiveImages {
         console.log('BASE LazyResponsiveImages constructor called', options);
         this._cloudinaryOptions = options.cloudinaryOptions;
         this._lazyDataAttribute = options.lazyDataAttribute;
+        //  this._cloudinaryLazy = new CloudinaryLazy();
     }
     /**
- * Retruns true if element near or in viewport
+ * Returns true if element near or in viewport
  * @param element
  */
     static isElementInViewPort(element) {
@@ -114,15 +115,18 @@ class LazyResponsiveImages {
     resetLazyStatus() {
         console.log('resetLazyStatus called');
         if (this._resetNeeded()) {
+            // alert('reset lazy images');
             //Get All Lazy img tags 
             const processedLazyElements = document.querySelectorAll('[data-was-processed]');
-            // console.log('processedLazyElements', processedLazyElements);
+            console.log('Images with data-was-processed', processedLazyElements);
             for (var i = 0; i < processedLazyElements.length; i++) {
                 //If not in view port then make LazyLoad manage the image by removing the Attribute data-was-processed
                 const isInViewPort = inViewPort(processedLazyElements[i], { offset: 300 });
+                console.log('Image ' + i + ' isInViewPort', isInViewPort);
                 if (!isInViewPort) {
                     //LAZYLOAD: remove data-was-processed="true" so that Lazy Load knows it has not procedded this element
                     processedLazyElements[i].removeAttribute('data-was-processed');
+                    console.log('Removing data-was-processed from ', processedLazyElements[i]);
                 }
             }
             //tell LazyLoad to manage the images that we have just reset.
@@ -167,7 +171,7 @@ class LazyResponsiveImages {
         }
     }
     /**
-     * Sets up the Window Resize Listener. OnrResize Resests Lazy images so they can be reloaded.
+     * Sets up the Window Resize Listener. On Resize Resets Lazy images so they can be reloaded.
      */
     setupResizeListener() {
         const lazyResponsiveImagesInstance = this;
@@ -182,6 +186,7 @@ class LazyResponsiveImages {
         }
         //Listen for browser resize- Resets Lazy Images. If 100 images are on screeen and user changes screen width, we dont want to load 100 images again if they are off screen.
         window.addEventListener('resize', debounce(300, function (e) {
+            //  alert('Screen Size Chanaged');
             callback();
         }));
     }

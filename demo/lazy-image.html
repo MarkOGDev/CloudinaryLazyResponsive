@@ -14,7 +14,7 @@
 <body>
 
     <h1>
-        Lazy Image
+        Just a Lazy Image. No Cloudinary, No Reponsive.
     </h1>
     Scroll Down to load the image.
     <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />    <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />    <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />    <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />    <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
@@ -22,10 +22,17 @@
     <p>Using Lazy Load module to load the image</p>
     <img data-src-lazy="img/IMGA0845.JPG" />
 
-    <script src="../dist/demo/demo.min.js"></script>
+    <script src="../dist/bundle/bundle.js"></script>
     <script type="text/javascript">
-        var demo = new clri.Demos();
-        demo.demoLazyResponsiveImg();
+
+        var myclri = new clri.CloudinaryLazyResponsive({            
+            lazyLoadOptions: {
+                data_src: 'src-lazy',
+                threshold: 600
+            }
+        });
+        myclri.init();
+
     </script>
 </body>
 </html>

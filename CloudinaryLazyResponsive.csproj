@@ -47,6 +47,7 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Content Include="demo\LazyResponsiveImgJS.html" />
     <Content Include="distvs\custom_modules\vanilla-lazyload-v8.6.0\dist\lazyload.min.js" />
     <Content Include="distvs\src\cloudinary-lazy-responsive-images-scrolling-containers.js" />
     <Content Include="distvs\src\cloudinary-lazy-responsive-images.js" />
@@ -74,8 +75,10 @@
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="index.ts" />
-    <TypeScriptCompile Include="src\cloudinary-lazy-responsive-images-scrolling-containers.ts" />
-    <TypeScriptCompile Include="src\cloudinary-lazy-responsive-images.ts" />
+    <TypeScriptCompile Include="src\helpers\client-helpers.ts" />
+    <TypeScriptCompile Include="src\cloudinary\cloudinary-lazy-responsive-with-scrolling-container-support.ts" />
+    <TypeScriptCompile Include="src\cloudinary\cloudinary-lazy-responsive.ts" />
+    <TypeScriptCompile Include="src\cloudinary\icloudinary-lazy-options.ts" />
     <TypeScriptCompile Include="src\demo.ts" />
     <TypeScriptCompile Include="src\lazy\ilazy-load-options.ts" />
     <TypeScriptCompile Include="src\lazy\lazy-load-factory.ts" />

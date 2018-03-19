@@ -15,8 +15,6 @@ module.exports = {
     entry: {
         bundle: [path.resolve('./index.ts')]
         , demo: [path.resolve('./src/demo.ts')]
-        , cloudinaryLazyResponsiveImages: [path.resolve('./src/cloudinary-lazy-responsive-images.ts')]
-        , cloudinaryLazyResponsiveImagesScrollingContainers: [path.resolve('./src/cloudinary-lazy-responsive-images-scrolling-containers.ts')]
     },
     output: {
         path: path.resolve(__dirname, 'dist'),
