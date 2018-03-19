@@ -1,5 +1,5 @@
 {
-  "name": "og-cloudinary-lazy-responsive",
+  "name": "cloudinary-lazy-responsive",
   "version": "0.0.1",
   "scripts": {
     "dev": "webpack --config ./webpack.config.js",
