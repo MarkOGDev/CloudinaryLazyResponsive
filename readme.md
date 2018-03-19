@@ -20,7 +20,7 @@ Now a LazyLoad lib can manage the image loading rather than have all images load
 
 #### Demo
 
-see: <a href="\demo\index.html">\demo\index.html</a>
+see: <a href="\demo">\demo</a>
 
  
 #### Example
