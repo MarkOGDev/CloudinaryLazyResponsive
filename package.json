@@ -1,9 +1,13 @@
 {
   "name": "cloudinary-lazy-responsive",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "scripts": {
     "dev": "webpack --config ./webpack.config.js",
     "prod": "webpack --config ./webpack.config.prod.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/MarkOGDev/CloudinaryLazyResponsive"
   },
   "description": "Makes cloudinary lazy",
   "main": "src/main.ts",
