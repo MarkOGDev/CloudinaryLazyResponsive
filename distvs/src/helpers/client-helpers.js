@@ -20,5 +20,13 @@ class ClientHelpers {
         console.log('getViewportWidth()', width);
         return width;
     }
+    static promiseSupported() {
+        let supported = false;
+        //Chck for Promise support. If none load the polyfill
+        if (typeof Promise !== "undefined" && Promise.toString().indexOf("[native code]") !== -1) {
+            supported = true;
+        }
+        return supported;
+    }
 }
 exports.ClientHelpers = ClientHelpers;

@@ -1,6 +1,10 @@
 "use strict";
+/// <reference path="../../node_modules/es6-promise/es6-promise.d.ts" />
 Object.defineProperty(exports, "__esModule", { value: true });
+const client_helpers_1 = require("./../helpers/client-helpers");
 const is_client_side_1 = require("is-client-side");
+const es6Promise = require("es6-promise");
+//import { Promise as lalala   } from 'es6-promise';
 /**
  * Creates a Promise for either old or new version of LazyLoad.
  * Should be safe server side although wont do anything.
@@ -13,6 +17,11 @@ class LazyLoadFactory {
         }
         let promise = null;
         if (LazyLoadFactory.useLazyLoadVersionV8()) {
+            //Chck for Promise support. If none load the polyfill
+            if (!client_helpers_1.ClientHelpers.promiseSupported()) {
+                //old browser may need Promise polyfill. eg. IE 11
+                es6Promise.polyfill();
+            }
             //Load old 
             promise = Promise.resolve().then(() => require('./../../custom_modules/vanilla-lazyload-v8.6.0/')).then(lazyLoad8 => {
                 console.log('intersection Observer Not Supported: OLD LazyLoad Version Loaded');
