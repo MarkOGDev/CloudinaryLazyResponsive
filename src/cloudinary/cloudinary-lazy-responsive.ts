@@ -52,7 +52,19 @@ class CloudinaryLazyResponsive {
         if (options != null) {
             this._options = options;
         }
-         
+
+
+        //default params - threshold and data_src
+        if (this._options.lazyLoadOptions.threshold == null) {
+            this._options.lazyLoadOptions.threshold = 300;
+            console.log("Set Default lazyLoadOptions.threshold", this._options.lazyLoadOptions.threshold); 
+        }
+        if (this._options.lazyLoadOptions.data_src == null) {
+            this._options.lazyLoadOptions.data_src = 'src-lazy';
+            console.log("Set Default lazyLoadOptions.data_src", this._options.lazyLoadOptions.data_src);
+        }
+      
+
 
     }
 
@@ -69,7 +81,7 @@ class CloudinaryLazyResponsive {
         this.responsiveImagesInit();
 
         //set up lazy load. We override this in derived classes that need more config/complex setup.
-        this.lazyLoadInit(); 
+        this.lazyLoadInit();
 
         //set up the Window Resize Listener.
         this.setupResizeListener();
