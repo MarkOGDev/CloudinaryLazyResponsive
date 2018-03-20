@@ -19,19 +19,20 @@
   "author": "MarkOGDev",
   "license": "GPL-3.0",
   "private": false,
-  "dependencies": {},
-  "devDependencies": {
-    "babel-core": "^6.26.0",
-    "babel-loader": "^7.1.4",
-    "babel-preset-env": "^1.6.1",
+  "dependencies": {
     "cloudinary-core": "^2.5.0",
     "in-viewport": "^3.6.0",
     "is-client-side": "^1.0.0",
     "throttle-debounce": "^1.0.1",
+    "viewport-size": "0.0.1",
+    "vanilla-lazyload": "^10.4.2"
+  },
+  "devDependencies": {
+    "babel-core": "^6.26.0",
+    "babel-loader": "^7.1.4",
+    "babel-preset-env": "^1.6.1",
     "ts-loader": "^4.0.1",
     "typescript": "^2.7.2",
-    "vanilla-lazyload": "^10.4.2",
-    "viewport-size": "0.0.1",
     "webpack": "^4.1.0",
     "webpack-cli": "^2.0.10"
   }
