@@ -1,6 +1,6 @@
 {
   "name": "cloudinary-lazy-responsive",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "scripts": {
     "dev": "webpack --config ./webpack.config.js",
     "prod": "webpack --config ./webpack.config.prod.js"
@@ -23,7 +23,7 @@
     "cloudinary-core": "^2.5.0",
     "in-viewport": "^3.6.0",
     "is-client-side": "^1.0.0",
-    "es6-promise": "^4.2.4", 
+    "es6-promise": "^4.2.4",
     "throttle-debounce": "^1.0.1",
     "viewport-size": "0.0.1",
     "vanilla-lazyload": "^10.4.2"
