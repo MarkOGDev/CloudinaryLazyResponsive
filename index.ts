@@ -1,4 +1,4 @@
-﻿import { CloudinaryLazyResponsive, ICloudinaryLazyOptions, CloudinaryLazyResponsiveScrollingContainerSupport } from './src/main';
+﻿import { CloudinaryLazyResponsive, ICloudinaryLazyOptions, CloudinaryLazyResponsiveScrollingContainerSupport, ClientHelpers } from './src/main';
   
  
-export { CloudinaryLazyResponsive, ICloudinaryLazyOptions, CloudinaryLazyResponsiveScrollingContainerSupport }
+export { CloudinaryLazyResponsive, ICloudinaryLazyOptions, CloudinaryLazyResponsiveScrollingContainerSupport, ClientHelpers }
