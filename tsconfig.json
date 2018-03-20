@@ -8,9 +8,7 @@
     "outDir": "distvs"
   },
   "include": [
-    "src",
-    "node_modules/es6-promise",
-    "custom_modules" //includes LazyLoad typing
+    "src" 
   ],
   "exclude": [
     "node_modules"

@@ -1,7 +1,8 @@
 ﻿import { ClientHelpers } from './../helpers/client-helpers';
 import { ILazyLoadOptions } from './ilazy-load-options';
 import { IsClientSide } from 'is-client-side';
-import * as es6Promise from 'es6-promise'; 
+import * as es6Promise from 'es6-promise';
+import { ILazyLoad } from 'vanilla-lazyload';
 
 /**
  * Creates a Promise for either old or new version of LazyLoad.
@@ -17,15 +18,16 @@ class LazyLoadFactory {
             return null;
         }
 
+        //####### Check for Promise support. If none load the polyfill ######
+        console.log("ClientHelpers.promiseSupported()", ClientHelpers.promiseSupported());
+        if (!ClientHelpers.promiseSupported()) {
+            console.log("Adding Promise polyfill");
+            //old browser may need Promise polyfill. eg. IE 11
+            es6Promise.polyfill();
+        }
+
         let promise: Promise<any> = null;
         if (LazyLoadFactory.useLazyLoadVersionV8()) {
-
-            //####### Check for Promise support. If none load the polyfill ######
-            if (!ClientHelpers.promiseSupported()) {
-                //old browser may need Promise polyfill. eg. IE 11
-                es6Promise.polyfill();
-            }
-            
 
             //Load old 
             promise = import('./../../custom_modules/vanilla-lazyload-v8.6.0/').then(lazyLoad8 => {

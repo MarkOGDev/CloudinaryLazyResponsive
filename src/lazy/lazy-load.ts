@@ -3,7 +3,7 @@
 import { ILazyLoadOptions } from './ilazy-load-options';
 import { LazyLoadFactory } from './lazy-load-factory';
 import { IsClientSide } from 'is-client-side';
-
+import { ILazyLoad } from 'vanilla-lazyload';
  
 
 
