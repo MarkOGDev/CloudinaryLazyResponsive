@@ -34,12 +34,6 @@ class Demos {
         });
         //Run init method
         myCloudinaryLazyResponsiveScrollingContainerSupport.init();
-        //const myLazyResponsiveImagesContainerSupport = new LazyResponsiveImagesContainerSupport({
-        //    lazyDataAttribute: 'src-lazy',
-        //    lazyContainerClassName: 'lazy-container'
-        //});
-        ////run setup function
-        //myLazyResponsiveImagesContainerSupport.init();
     }
 }
 exports.Demos = Demos;

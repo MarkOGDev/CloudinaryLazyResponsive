@@ -49,14 +49,19 @@
   <ItemGroup>
     <Content Include="demo\LazyResponsiveImgJS.html" />
     <Content Include="distvs\custom_modules\vanilla-lazyload-v8.6.0\dist\lazyload.min.js" />
-    <Content Include="distvs\src\cloudinary-lazy-responsive-images-scrolling-containers.js" />
-    <Content Include="distvs\src\cloudinary-lazy-responsive-images.js" />
-    <Content Include="distvs\src\cloudinary\cloudinary-factory.js" />
+    <Content Include="distvs\src\cloudinary\cloudinary-lazy-responsive-with-scrolling-container-support.js" />
+    <Content Include="distvs\src\cloudinary\cloudinary-lazy-responsive.js" />
+    <Content Include="distvs\src\cloudinary\icloudinary-lazy-options.js" />
     <Content Include="distvs\src\demo.js" />
+    <Content Include="distvs\src\helpers\client-helpers.js" />
     <Content Include="distvs\src\lazy\ilazy-load-options.js" />
     <Content Include="distvs\src\lazy\lazy-load-factory.js" />
     <Content Include="distvs\src\lazy\lazy-load.js" />
     <Content Include="distvs\src\main.js" />
+    <Content Include="dist\bundle\bundle.js" />
+    <Content Include="dist\bundle\bundle.min.js" />
+    <Content Include="dist\demo\demo.js" />
+    <Content Include="dist\demo\demo.min.js" />
     <Content Include="package.json" />
     <Content Include="readme.md" />
     <Content Include="tsconfig.json" />
@@ -74,6 +79,7 @@
     <Content Include="webpack.config.prod.js" />
   </ItemGroup>
   <ItemGroup>
+    <TypeScriptCompile Include="custom_modules\vanilla-lazyload-v8.6.0\typings\lazyload.d.ts" />
     <TypeScriptCompile Include="index.ts" />
     <TypeScriptCompile Include="src\helpers\client-helpers.ts" />
     <TypeScriptCompile Include="src\cloudinary\cloudinary-lazy-responsive-with-scrolling-container-support.ts" />
@@ -89,7 +95,6 @@
     <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="dist\" />
     <Folder Include="Properties\" />
   </ItemGroup>
   <ItemGroup>

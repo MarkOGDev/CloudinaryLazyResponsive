@@ -1,5 +1,4 @@
 "use strict";
-/// <reference path="../../node_modules/vanilla-lazyload/typings/lazyload.d.ts" /> 
 Object.defineProperty(exports, "__esModule", { value: true });
 const is_client_side_1 = require("is-client-side");
 /**
@@ -21,7 +20,8 @@ class LazyLoadFactory {
             });
         }
         //Load latest Version v10x
-        promise = Promise.resolve().then(() => require('./../../node_modules/vanilla-lazyload/dist/lazyload.js')).then(lazyLoad => {
+        //promise = import('./../../node_modules/vanilla-lazyload/dist/lazyload.js').then(lazyLoad => {
+        promise = Promise.resolve().then(() => require('vanilla-lazyload/dist/lazyload.js')).then(lazyLoad => {
             console.log('intersection Observer Supported: Latest LazyLoad Version Loaded');
             return new lazyLoad(options);
         });

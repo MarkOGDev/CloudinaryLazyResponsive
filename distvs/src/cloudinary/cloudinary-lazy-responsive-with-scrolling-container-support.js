@@ -9,10 +9,6 @@ class CloudinaryLazyResponsiveScrollingContainerSupport extends cloudinary_lazy_
         super(options);
         this._lazyLoadInstances = [];
         console.log('LazyResponsiveImagesContainerSupport (Extended class) constructor called', options);
-        // if () { }
-        //add 
-        //  this._lazyContainerClassName = options.lazyContainerClassName;
-        // alert(options.lazyLoadOptions.container);
     }
     /**
      *  Sets up Lazy Load
@@ -66,6 +62,7 @@ class CloudinaryLazyResponsiveScrollingContainerSupport extends cloudinary_lazy_
             console.log('lazyImagesArray', lazyImagesArray);
             console.log('lazyContainerImagesArray', lazyContainerImagesArray);
             console.log('nonLazyContainerImages1', lazyImagesWithoutContainer);
+            //Add the class .lazy to the Lazy images without container
             for (var i = 0; i < lazyImagesWithoutContainer.length; i++) {
                 //add extra class to help Target these Lazy images
                 lazyImagesWithoutContainer[i].className += ' lazy';

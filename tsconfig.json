@@ -4,13 +4,17 @@
     "allowJs": true,
     "module": "commonjs",
     "moduleResolution": "node",
-    "target": "es6",
+    "target": "es2015", //includes promise
+    "lib": [ "es2015", "es2015.promise", "dom" ],
     "outDir": "distvs"
   },
   "include": [
-    "src"
+    "src",
+    "node_modules/es6-promise",
+    "custom_modules" //includes LazyLoad typing
   ],
   "exclude": [
     "node_modules"
   ]
+
 }

@@ -37,6 +37,21 @@ class CloudinaryLazyResponsive {
         }
     }
     /**
+     * Sets up Responsive / Lazy images
+     */
+    init() {
+        console.log('LazyResponsiveImages init');
+        //Add our custom Set Attribute to Cloudinary
+        this.modifyCloudinarySetAttribute(this.cloudinaryJS_setAttribute());
+        //setup responsive images. THis will update image urls to the responsive url or Load the image if it is on screen.
+        this.responsiveImagesInit();
+        //set up lazy load. We override this in derived classes that need more config/complex setup.
+        this.lazyLoadInit();
+        //set up the Window Resize Listener.
+        this.setupResizeListener();
+        console.groupEnd();
+    }
+    /**
      * Overrides cloudinary-core.Util.setAttribute. Takes the new function.
      * @param newFunction
      */
@@ -184,21 +199,6 @@ class CloudinaryLazyResponsive {
             data_src: this._options.lazyLoadOptions.data_src,
             threshold: this._options.lazyLoadOptions.threshold
         });
-    }
-    /**
-    * Sets up Responsive / Lazy images
-    */
-    init() {
-        console.log('LazyResponsiveImages init');
-        //Add our custom Set Attribute to Cloudinary
-        this.modifyCloudinarySetAttribute(this.cloudinaryJS_setAttribute());
-        //setup responsive images. THis will update image urls to the responsive url or Load the image if it is on screen.
-        this.responsiveImagesInit();
-        //set up lazy load. We override this in derived classes that need more config/complex setup.
-        this.lazyLoadInit();
-        //set up the Window Resize Listener.
-        this.setupResizeListener();
-        console.groupEnd();
     }
 }
 exports.CloudinaryLazyResponsive = CloudinaryLazyResponsive;

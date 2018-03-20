@@ -1,6 +1,11 @@
-﻿import { ILazyLoadOptions } from './ilazy-load-options';
+﻿ 
+
+import { ILazyLoadOptions } from './ilazy-load-options';
 import { LazyLoadFactory } from './lazy-load-factory';
 import { IsClientSide } from 'is-client-side';
+
+ 
+
 
 /**
  * Represents One instance of LazyLoad with functions. Should be safe server side although won't do anything.
