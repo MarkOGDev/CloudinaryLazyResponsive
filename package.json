@@ -1,6 +1,6 @@
 {
   "name": "cloudinary-lazy-responsive",
-  "version": "0.0.9",
+  "version": "0.0.10",
   "scripts": {
     "dev": "webpack --config ./webpack.config.js",
     "prod": "webpack --config ./webpack.config.prod.js"
