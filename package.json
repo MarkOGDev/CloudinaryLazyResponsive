@@ -22,7 +22,7 @@
   "dependencies": {
     "cloudinary-core": "^2.5.0",
     "in-viewport": "^3.6.0",
-    "is-client-side": "^1.0.0",
+    "is-client-side": "^1.0.4",
     "es6-promise": "^4.2.4",
     "throttle-debounce": "^1.0.1",
     "viewport-size": "0.0.1",
