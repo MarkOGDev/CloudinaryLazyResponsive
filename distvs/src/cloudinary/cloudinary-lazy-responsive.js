@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const client_helpers_1 = require("./../helpers/client-helpers");
-const cloudinary_core_1 = require("cloudinary-core");
+const cloudinary_factory_1 = require("./cloudinary-factory");
 const lazy_load_1 = require("./../lazy/lazy-load");
 //import { debounce1 } from 'throttle-debounce/debounce';          //Throttle/debounce your functions. https://github.com/niksy/throttle-debounce
 const debounce = require("throttle-debounce/debounce");
@@ -66,7 +66,7 @@ class CloudinaryLazyResponsive {
      */
     modifyCloudinarySetAttribute(newFunction) {
         console.log('modifyCloudinarySetAttribute called');
-        cloudinary_core_1.Util.setAttribute = newFunction;
+        cloudinary_factory_1.Util.setAttribute = newFunction;
     }
     /**
      * Define a new function for cloudinary-core.Util.setAttribute.
@@ -160,7 +160,7 @@ class CloudinaryLazyResponsive {
         //https://cloudinary.com/documentation/responsive_images#automating_responsive_images_with_javascript
         if (this.cloudinaryJs == null) {
             //Set up Cloudinary
-            this.cloudinaryJs = new cloudinary_core_1.Cloudinary(this._options.cloudinaryOptions);
+            this.cloudinaryJs = cloudinary_factory_1.CloudinaryFactory.getCloudinary(this._options.cloudinaryOptions); //new Cloudinary(this._options.cloudinaryOptions);
             //Setup Responsive images.  
             this.cloudinaryJs.responsive();
         }

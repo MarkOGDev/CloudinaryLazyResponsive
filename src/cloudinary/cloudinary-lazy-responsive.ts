@@ -1,5 +1,6 @@
 ﻿import { ClientHelpers } from './../helpers/client-helpers';
-import { Cloudinary, Configuration as CloudinaryConfiguration, Util as CloudinaryUtil } from 'cloudinary-core';
+import { CloudinaryFactory, Cloudinary, Configuration, Util as CloudinaryUtil } from './cloudinary-factory';
+//import { Cloudinary, Configuration as CloudinaryConfiguration, Util as CloudinaryUtil } from 'cloudinary-core';
 import { ICloudinaryLazyOptions } from './icloudinary-lazy-options';
 import { IsClientSide } from 'is-client-side';
 
@@ -57,13 +58,13 @@ class CloudinaryLazyResponsive {
         //default params - threshold and data_src
         if (this._options.lazyLoadOptions.threshold == null) {
             this._options.lazyLoadOptions.threshold = 300;
-            console.log("Set Default lazyLoadOptions.threshold", this._options.lazyLoadOptions.threshold); 
+            console.log("Set Default lazyLoadOptions.threshold", this._options.lazyLoadOptions.threshold);
         }
         if (this._options.lazyLoadOptions.data_src == null) {
             this._options.lazyLoadOptions.data_src = 'src-lazy';
             console.log("Set Default lazyLoadOptions.data_src", this._options.lazyLoadOptions.data_src);
         }
-      
+
 
 
     }
@@ -230,7 +231,7 @@ class CloudinaryLazyResponsive {
         if (this.cloudinaryJs == null) {
 
             //Set up Cloudinary
-            this.cloudinaryJs = new Cloudinary(this._options.cloudinaryOptions);
+            this.cloudinaryJs = CloudinaryFactory.getCloudinary(this._options.cloudinaryOptions); //new Cloudinary(this._options.cloudinaryOptions);
 
             //Setup Responsive images.  
             this.cloudinaryJs.responsive();

@@ -81,6 +81,7 @@
   <ItemGroup>
     <TypeScriptCompile Include="custom_modules\vanilla-lazyload-v8.6.0\typings\lazyload.d.ts" />
     <TypeScriptCompile Include="index.ts" />
+    <TypeScriptCompile Include="src\cloudinary\cloudinary-factory.ts" />
     <TypeScriptCompile Include="src\helpers\client-helpers.ts" />
     <TypeScriptCompile Include="src\cloudinary\cloudinary-lazy-responsive-with-scrolling-container-support.ts" />
     <TypeScriptCompile Include="src\cloudinary\cloudinary-lazy-responsive.ts" />
