@@ -7,6 +7,10 @@ import { IsClientSide } from 'is-client-side';
 import { LazyLoad } from './../lazy/lazy-load';
 //import { debounce1 } from 'throttle-debounce/debounce';          //Throttle/debounce your functions. https://github.com/niksy/throttle-debounce
 import * as debounce from 'throttle-debounce/debounce';
+
+//import {  debounce } from 'throttle-debounce';
+
+
 //import * as cloudinaryJS from "cloudinary-core";
 //import * as debounce from 'throttle-debounce/debounce';
 //import * as inViewPort from 'in-viewport';

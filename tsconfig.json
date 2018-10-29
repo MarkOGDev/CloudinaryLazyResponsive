@@ -4,20 +4,17 @@
     "allowJs": true,
     "module": "commonjs",
     "moduleResolution": "node",
-    "target": "esnext" //esnext includes promise
+    "target": "esnext", //esnext includes promise
+
     //We don't want Visual Studio to compile the Typescript. We are using Webpack.
     //We have set the build action of the Typescript files to 'None'
-    //We have also added a line to the project file IsClientSide.csproj.
-    //WE have added the following line to the 'PropertyGroup' section.
+
+    //WE have added the following line to the 'PropertyGroup' section of the Visula Studio Project file.
     //<TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
-    ,//Just incase Vs does compile ts files then put them here
-    "outDir": "distvs"
-  },
-  "include": [
-    "src" 
-  ],
-  "exclude": [
-    "node_modules"
-  ]
+
+    //Just incase Vs does compile ts files then put them here
+    "outDir": "./distvs",
+    "rootDir": "./"
+  }
 
 }

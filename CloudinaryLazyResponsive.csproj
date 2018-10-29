@@ -67,6 +67,7 @@
     <Content Include="demo\LazyResponsiveImg.html" />
     <Content Include="demo\LazyResponsiveImgScrollingContainerSupport.html" />
     <Content Include="webpack.config.js" />
+    <Content Include="webpack.configNew.js" />
     <Content Include="webpack.config.prod.js" />
   </ItemGroup>
   <ItemGroup>
