@@ -24,6 +24,7 @@
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
     <TypeScriptToolsVersion>Latest</TypeScriptToolsVersion>
+    <TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
     <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -48,16 +49,6 @@
   </PropertyGroup>
   <ItemGroup>
     <Content Include="demo\LazyResponsiveImgJS.html" />
-    <Content Include="distvs\custom_modules\vanilla-lazyload-v8.6.0\dist\lazyload.min.js" />
-    <Content Include="distvs\src\cloudinary\cloudinary-lazy-responsive-with-scrolling-container-support.js" />
-    <Content Include="distvs\src\cloudinary\cloudinary-lazy-responsive.js" />
-    <Content Include="distvs\src\cloudinary\icloudinary-lazy-options.js" />
-    <Content Include="distvs\src\demo.js" />
-    <Content Include="distvs\src\helpers\client-helpers.js" />
-    <Content Include="distvs\src\lazy\ilazy-load-options.js" />
-    <Content Include="distvs\src\lazy\lazy-load-factory.js" />
-    <Content Include="distvs\src\lazy\lazy-load.js" />
-    <Content Include="distvs\src\main.js" />
     <Content Include="dist\bundle\bundle.js" />
     <Content Include="dist\bundle\bundle.min.js" />
     <Content Include="dist\demo\demo.js" />
@@ -80,17 +71,17 @@
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="custom_modules\vanilla-lazyload-v8.6.0\typings\lazyload.d.ts" />
-    <TypeScriptCompile Include="index.ts" />
-    <TypeScriptCompile Include="src\cloudinary\cloudinary-factory.ts" />
-    <TypeScriptCompile Include="src\helpers\client-helpers.ts" />
-    <TypeScriptCompile Include="src\cloudinary\cloudinary-lazy-responsive-with-scrolling-container-support.ts" />
-    <TypeScriptCompile Include="src\cloudinary\cloudinary-lazy-responsive.ts" />
-    <TypeScriptCompile Include="src\cloudinary\icloudinary-lazy-options.ts" />
-    <TypeScriptCompile Include="src\demo.ts" />
-    <TypeScriptCompile Include="src\lazy\ilazy-load-options.ts" />
-    <TypeScriptCompile Include="src\lazy\lazy-load-factory.ts" />
-    <TypeScriptCompile Include="src\lazy\lazy-load.ts" />
-    <TypeScriptCompile Include="src\main.ts" />
+    <None Include="index.ts" />
+    <None Include="src\cloudinary\cloudinary-factory.ts" />
+    <None Include="src\helpers\client-helpers.ts" />
+    <None Include="src\cloudinary\cloudinary-lazy-responsive-with-scrolling-container-support.ts" />
+    <None Include="src\cloudinary\cloudinary-lazy-responsive.ts" />
+    <None Include="src\cloudinary\icloudinary-lazy-options.ts" />
+    <None Include="src\demo.ts" />
+    <None Include="src\lazy\ilazy-load-options.ts" />
+    <None Include="src\lazy\lazy-load-factory.ts" />
+    <None Include="src\lazy\lazy-load.ts" />
+    <None Include="src\main.ts" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
